@@ -74,6 +74,20 @@ class Navica extends Association implements RETS {
         }
     }
 
+    public function buildPhotos()
+    {
+        $mlsNumbers = Listing::pluck('mls_acct');
+        foreach ($mlsNumbers as $mlsNumber)  {
+            $photos = $this->rets->GetObject('Property', 'Photo', '25532', '*', 1);
+            foreach ($photos as $photo) {
+                dd(base64_decode($photo->getContent()));
+            }
+
+        }
+
+        dd($photos->first());
+    }
+
     public function getMLSList()
     {
         return;
