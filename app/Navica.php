@@ -4,6 +4,7 @@ namespace App;
 use PHRETS\Session;
 use App\Contracts\RETS;
 use PHRETS\Configuration;
+use Carbon\Carbon;
 
 class Navica extends Association implements RETS {
     const CLASSES = ['COMM', 'Land', 'Rental', 'RESI'];
@@ -74,13 +75,29 @@ class Navica extends Association implements RETS {
         }
     }
 
+    public function updateListings($resource, $class)
+    {
+        $lastModified = $resource::pluck('sys_Last_Modified')->max();
+        $dateTime = Carbon::parse($lastModified)->toDateString();
+        $query = 'sys_Last_Modified=' . $dateTime . '+';
+        $results = $this->rets->Search('Property', $class, $query, self::QUERY_OPTIONS);
+        echo '---------------------------------------------------------' . PHP_EOL;
+        echo 'Class: ' . $class . PHP_EOL;
+        echo 'Returned Results: ' . $results->getReturnedResultsCount() . PHP_EOL;
+        echo 'Total Results: ' . $results->getTotalResultsCount() . PHP_EOL;
+        foreach ($results as $result) {
+            $resource::updateOrCreate(['MST_MLS_NUMBER' => $result['MST_MLS_NUMBER']], $result->toArray());
+        }
+    }
+
     public function buildPhotos()
     {
+        // doesn't work right now because navica sucks
         $mlsNumbers = Listing::pluck('mls_acct');
         foreach ($mlsNumbers as $mlsNumber)  {
             $photos = $this->rets->GetObject('Property', 'Photo', '25532', '*', 1);
             foreach ($photos as $photo) {
-                dd(base64_decode($photo->getContent()));
+
             }
 
         }

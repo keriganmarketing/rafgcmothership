@@ -14,11 +14,39 @@ class Listing extends Model
         RentalListing::class
     ];
 
+    public static function boot() {
+        parent::boot();
+
+        static::saved(function ($instance) {
+            echo 'Saved Listing: #' . $instance->mls_acct . PHP_EOL;
+        });
+    }
+
+    public function fullBuild()
+    {
+        foreach ($this->childClasses as $child) {
+            $resourceClass = new $child;
+            $resourceClass->buildListings();
+        }
+        $this->masterTable();
+    }
+
     public function masterTable()
     {
         foreach ($this->childClasses as $child) {
             $resourceClass = new $child;
             $resourceClass->populateMasterTable();
         }
+    }
+
+    public function getUpdates()
+    {
+        foreach ($this->childClasses as $child) {
+            $resourceClass = new $child;
+            $resourceClass->updateListings();
+        }
+        echo 'Populating master table';
+        $listing = new Listing();
+        $listing->masterTable();
     }
 }

@@ -43,12 +43,18 @@ trait RetsResource {
         $navica->connect()->buildListings($this->resource, $this->class);
     }
 
+    public function updateListings()
+    {
+        $navica = new Navica();
+        $navica->connect()->updateListings($this->resource, $this->class);
+    }
+
     public function populateMasterTable()
     {
-        $class = new $this->resource;
-        $class->chunk(200, function ($listings) use ($class) {
+        $resource = new $this->resource;
+        $resource->chunk(200, function ($listings) use ($resource) {
             foreach($listings as $listing) {
-                $columns = $class::mapColumns($listing);
+                $columns = $resource::mapColumns($listing);
                 Listing::updateOrCreate(['mls_acct' => $columns['mls_acct']], $columns);
             }
         });
