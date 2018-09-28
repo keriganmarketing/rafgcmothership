@@ -46,7 +46,7 @@ trait RetsResource {
         $navica->connect()->build($lastModified);
     }
 
-    public function getUpdates($modifiedColumn = self::MODIFIED_COLUMN)
+    public function getUpdates($modifiedColumn)
     {
         $navica = new Navica(
             $this->local_resource,

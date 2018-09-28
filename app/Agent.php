@@ -18,4 +18,9 @@ class Agent extends RetsModel
     {
         $this->build(self::MODIFIED_COLUMN . '=1970-01-01+');
     }
+
+    public function fullUpdate()
+    {
+        $this->getUpdates(self::MODIFIED_COLUMN);
+    }
 }

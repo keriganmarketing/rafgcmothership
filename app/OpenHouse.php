@@ -21,4 +21,9 @@ class OpenHouse extends RetsModel
         $start = Carbon::now()->copy()->toDateString();
         $this->build(self::MODIFIED_COLUMN . '=' . $start . '+');
     }
+
+    public function fullUpdate()
+    {
+        $this->getUpdates(self::MODIFIED_COLUMN);
+    }
 }
