@@ -8,8 +8,11 @@ use PHRETS\Session;
 abstract class Association {
     protected $url;
     protected $rets;
-    protected $username;
     protected $password;
+    protected $username;
+    protected $retsClass;
+    protected $retsResource;
+    protected $localResource;
 
     public function connect()
     {

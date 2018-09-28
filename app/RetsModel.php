@@ -9,8 +9,8 @@ abstract class RetsModel extends Model
 {
     use RetsResource;
 
-    protected $class;
-    protected $resource;
-    protected $rets_resource;
+    protected $rets_class;
     protected $guarded = [];
+    protected $rets_resource;
+    protected $local_resource;
 }

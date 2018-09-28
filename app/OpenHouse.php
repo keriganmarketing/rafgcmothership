@@ -11,9 +11,9 @@ class OpenHouse extends RetsModel
 
     public function __construct()
     {
-        $this->class = 'OpenHouse';
-        $this->resource = get_class();
+        $this->rets_class = 'OpenHouse';
         $this->rets_resource = 'OpenHouse';
+        $this->local_resource = get_class();
     }
 
     public function fullBuild()

@@ -21,33 +21,36 @@ class Navica extends Association implements RETS {
         'DateTime' => 'dateTime'
     ];
 
-    public function __construct()
+    public function __construct($localResource, $retsResource, $retsClass)
     {
         $this->url      = config('navica.url');
         $this->username = config('navica.username');
         $this->password = config('navica.password');
+        $this->retsResource = $retsResource;
+        $this->localResource = $localResource;
+        $this->retsClass = $retsClass;
     }
 
-    public function getTableMetadata($resource, $class)
+    public function getTableMetadata()
     {
-        return $this->rets->GetTableMetadata($resource, $class);
+        return $this->rets->GetTableMetadata($this->retsResource, $this->retsClass);
     }
 
-    public function build($resource, $rets_resource, $class, $query)
+    public function build($query)
     {
         $offset = 0;
         $maxRowsReached = false;
         while (!$maxRowsReached) {
             $options = self::QUERY_OPTIONS;
             $options['Offset'] = $offset;
-            $results = $this->rets->Search($rets_resource, $class, $query, $options);
+            $results = $this->rets->Search($this->retsResource, $this->retsClass, $query, $options);
             echo '---------------------------------------------------------' . PHP_EOL;
-            echo 'Class: ' . $class . PHP_EOL;
+            echo 'Class: ' . $this->retsClass . PHP_EOL;
             echo 'Returned Results: ' . $results->getReturnedResultsCount() . PHP_EOL;
             echo 'Total Results: ' . $results->getTotalResultsCount() . PHP_EOL;
             echo 'Offset before this batch: ' . $offset . PHP_EOL;
             foreach ($results as $result) {
-                $resource::updateOrCreate([$resource::MASTER_COLUMN => $result[$resource::MASTER_COLUMN]], $result->toArray());
+                $this->localResource::updateOrCreate([$this->localResource::MASTER_COLUMN => $result[$this->localResource::MASTER_COLUMN]], $result->toArray());
             }
             $offset += $results->getReturnedResultsCount();
             echo 'Offset after this batch: ' . $offset . PHP_EOL;
@@ -58,18 +61,18 @@ class Navica extends Association implements RETS {
         }
     }
 
-    public function getUpdates($resource, $rets_resource, $class, $column)
+    public function getUpdates($column)
     {
-        $lastModified = $resource::pluck($column)->max();
+        $lastModified = $this->localResource::pluck($column)->max();
         $dateTime = Carbon::parse($lastModified)->toDateString();
         $query = $column . '=' . $dateTime . '+';
-        $results = $this->rets->Search($rets_resource, $class, $query, self::QUERY_OPTIONS);
+        $results = $this->rets->Search($this->retsResource, $this->retsClass, $query, self::QUERY_OPTIONS);
         echo '---------------------------------------------------------' . PHP_EOL;
-        echo 'Class: ' . $class . PHP_EOL;
+        echo 'Class: ' . $this->retsClass . PHP_EOL;
         echo 'Returned Results: ' . $results->getReturnedResultsCount() . PHP_EOL;
         echo 'Total Results: ' . $results->getTotalResultsCount() . PHP_EOL;
         foreach ($results as $result) {
-            $resource::updateOrCreate([$resource::MASTER_COLUMN => $result[$resource::MASTER_COLUMN]], $result->toArray());
+            $this->localResource::updateOrCreate([$this->localResource::MASTER_COLUMN => $result[$this->localResource::MASTER_COLUMN]], $result->toArray());
         }
     }
 
@@ -81,10 +84,5 @@ class Navica extends Association implements RETS {
             $photos = $this->rets->GetObject('Property', 'Photo', $mlsNumber, '*', 1);
             dd($photos->first());
         }
-    }
-
-    public function getMLSList()
-    {
-        return;
     }
 }

@@ -9,8 +9,8 @@ trait RetsResource {
     public function getMetadata()
     {
         $formatted = [];
-        $navica = new Navica();
-        $results = $navica->connect()->getTableMetadata($this->rets_resource, $this->class);
+        $navica = new Navica($this->local_resource, $this->rets_resource, $this->rets_class);
+        $results = $navica->connect()->getTableMetadata();
         foreach ($results as $result) {
             $dataType = $navica::LOOKUP[$result['DataType']];
             $length = $this->maxLength($result);
@@ -38,29 +38,27 @@ trait RetsResource {
 
     public function build($lastModified)
     {
-        $navica = new Navica();
-        $navica->connect()->build(
-            $this->resource,
+        $navica = new Navica(
+            $this->local_resource,
             $this->rets_resource,
-            $this->class,
-            $lastModified
+            $this->rets_class
         );
+        $navica->connect()->build($lastModified);
     }
 
     public function getUpdates($modifiedColumn = self::MODIFIED_COLUMN)
     {
-        $navica = new Navica();
-        $navica->connect()->getUpdates(
-            $this->resource,
+        $navica = new Navica(
+            $this->local_resource,
             $this->rets_resource,
-            $this->class,
-            $modifiedColumn
+            $this->rets_class
         );
+        $navica->connect()->getUpdates($modifiedColumn);
     }
 
     public function populateMasterTable()
     {
-        $resource = new $this->resource;
+        $resource = new $this->local_resource;
         $resource->chunk(200, function ($listings) use ($resource) {
             foreach($listings as $listing) {
                 $columns = $resource::mapColumns($listing);

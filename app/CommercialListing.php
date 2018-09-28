@@ -9,9 +9,9 @@ class CommercialListing extends RetsModel implements MapsColumns
 
     public function __construct()
     {
-        $this->class = 'COMM';
-        $this->resource = get_class();
+        $this->rets_class = 'COMM';
         $this->rets_resource = 'Property';
+        $this->local_resource = get_class();
     }
 
     public static function mapColumns($listing)

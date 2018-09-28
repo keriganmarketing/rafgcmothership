@@ -9,9 +9,9 @@ class Office extends RetsModel
 
     public function __construct()
     {
-        $this->class = 'Office';
-        $this->resource = get_class();
+        $this->rets_class = 'Office';
         $this->rets_resource = 'Office';
+        $this->local_resource = get_class();
     }
 
     public function fullBuild()
