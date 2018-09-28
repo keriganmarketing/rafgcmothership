@@ -2,20 +2,12 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
 
-class OpenHouse extends Model
+class OpenHouse extends RetsModel
 {
-    use RetsResource;
-
     const MASTER_COLUMN = 'rets_oh_id';
     const MODIFIED_COLUMN = 'rets_oh_start';
-
-    protected $class;
-    protected $resource;
-    protected $rets_resource;
-    protected $guarded = [];
 
     public function __construct()
     {

@@ -2,18 +2,10 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Model;
-
-class Office extends Model
+class Office extends RetsModel
 {
-    use RetsResource;
-
     const MASTER_COLUMN = 'DO_OFFICE_ID';
     const MODIFIED_COLUMN = 'DO_MODIFIED';
-    protected $class;
-    protected $resource;
-    protected $rets_resource;
-    protected $guarded = [];
 
     public function __construct()
     {

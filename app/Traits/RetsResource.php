@@ -1,8 +1,8 @@
 <?php
-namespace App;
+namespace App\Traits;
 
-use Illuminate\Support\Facades\DB;
-use Illuminate\Mail\Message;
+use App\Navica;
+use App\Listing;
 
 trait RetsResource {
 
