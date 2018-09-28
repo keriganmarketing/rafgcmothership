@@ -1,9 +1,10 @@
 <?php
 namespace App;
 
-class CommercialListing extends RetsModel
-{
+use App\Contracts\MapsColumns;
 
+class CommercialListing extends RetsModel implements MapsColumns
+{
     const MASTER_COLUMN = 'MST_MLS_NUMBER';
 
     public function __construct()

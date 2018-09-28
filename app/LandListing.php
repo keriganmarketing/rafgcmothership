@@ -1,7 +1,9 @@
 <?php
 namespace App;
 
-class LandListing extends RetsModel
+use App\Contracts\MapsColumns;
+
+class LandListing extends RetsModel implements MapsColumns
 {
     const MASTER_COLUMN = 'MST_MLS_NUMBER';
 
