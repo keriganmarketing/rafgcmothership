@@ -15,7 +15,7 @@ class CreateCommericalListingsTable extends Migration
     public function up()
     {
         Schema::create('commercial_listings', function (Blueprint $table) {
-            $fields = (new CommercialListing)->getPropertyMetadata();
+            $fields = (new CommercialListing)->getMetadata();
             $table->increments('id');
             foreach ($fields as $field) {
                 if($field['dataType'] == 'boolean') {

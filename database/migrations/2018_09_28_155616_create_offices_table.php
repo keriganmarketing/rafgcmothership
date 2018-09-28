@@ -1,11 +1,11 @@
 <?php
 
-use App\LandListing;
+use App\Office;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateLandListingsTable extends Migration
+class CreateOfficesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -14,8 +14,8 @@ class CreateLandListingsTable extends Migration
      */
     public function up()
     {
-        Schema::create('land_listings', function (Blueprint $table) {
-            $fields = (new LandListing)->getMetadata();
+        Schema::create('offices', function (Blueprint $table) {
+            $fields = (new Office)->getMetadata();
             $table->increments('id');
             foreach ($fields as $field) {
                 if($field['dataType'] == 'boolean') {
@@ -38,6 +38,6 @@ class CreateLandListingsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('land_listings');
+        Schema::dropIfExists('offices');
     }
 }

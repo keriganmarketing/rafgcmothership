@@ -15,7 +15,7 @@ class CreateResidentialListingsTable extends Migration
     public function up()
     {
         Schema::create('residential_listings', function (Blueprint $table) {
-            $fields = (new ResidentialListing)->getPropertyMetadata();
+            $fields = (new ResidentialListing)->getMetadata();
             $table->increments('id');
             foreach ($fields as $field) {
                 if($field['dataType'] == 'boolean') {

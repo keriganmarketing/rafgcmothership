@@ -4,14 +4,13 @@ namespace App;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Mail\Message;
 
-
 trait RetsResource {
 
-    public function getPropertyMetadata()
+    public function getMetadata()
     {
         $formatted = [];
         $navica = new Navica();
-        $results = $navica->connect()->getTableMetadata($this->class);
+        $results = $navica->connect()->getTableMetadata($this->rets_resource, $this->class);
         foreach ($results as $result) {
             $dataType = $navica::LOOKUP[$result['DataType']];
             $length = $this->maxLength($result);
@@ -37,16 +36,26 @@ trait RetsResource {
         return $result['MaximumLength'];
     }
 
-    public function buildListings()
+    public function build($lastModified)
     {
         $navica = new Navica();
-        $navica->connect()->buildListings($this->resource, $this->class);
+        $navica->connect()->build(
+            $this->resource,
+            $this->rets_resource,
+            $this->class,
+            $lastModified
+        );
     }
 
-    public function updateListings()
+    public function getUpdates($modifiedColumn = self::MODIFIED_COLUMN)
     {
         $navica = new Navica();
-        $navica->connect()->updateListings($this->resource, $this->class);
+        $navica->connect()->getUpdates(
+            $this->resource,
+            $this->rets_resource,
+            $this->class,
+            $modifiedColumn
+        );
     }
 
     public function populateMasterTable()

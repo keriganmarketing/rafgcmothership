@@ -13,6 +13,7 @@ class Listing extends Model
         CommercialListing::class,
         RentalListing::class
     ];
+    const MODIFIED_COLUMN = 'sys_Last_Modified';
 
     public static function boot() {
         parent::boot();
@@ -26,12 +27,12 @@ class Listing extends Model
     {
         foreach ($this->childClasses as $child) {
             $resourceClass = new $child;
-            $resourceClass->buildListings();
+            $resourceClass->build(self::MODIFIED_COLUMN . '=2010-01-01+');
         }
-        $this->masterTable();
+        $this->populateMasterTable();
     }
 
-    public function masterTable()
+    public function populateMasterTable()
     {
         foreach ($this->childClasses as $child) {
             $resourceClass = new $child;
@@ -43,10 +44,9 @@ class Listing extends Model
     {
         foreach ($this->childClasses as $child) {
             $resourceClass = new $child;
-            $resourceClass->updateListings();
+            $resourceClass->getUpdates(self::MODIFIED_COLUMN);
         }
         echo 'Populating master table';
-        $listing = new Listing();
-        $listing->masterTable();
+        $this->populateMasterTable();
     }
 }

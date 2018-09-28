@@ -8,14 +8,17 @@ class CommercialListing extends Model
 {
     use RetsResource;
 
+    const MASTER_COLUMN = 'MST_MLS_NUMBER';
     protected $class;
     protected $resource;
+    protected $rets_resource;
     protected $guarded = [];
 
     public function __construct()
     {
-        $this->resource = get_class();
         $this->class = 'COMM';
+        $this->resource = get_class();
+        $this->rets_resource = 'Property';
     }
 
     public static function mapColumns($listing)
