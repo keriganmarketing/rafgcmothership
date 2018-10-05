@@ -3,6 +3,7 @@ namespace App;
 
 use Carbon\Carbon;
 use App\Contracts\RETS;
+use Illuminate\Support\Facades\Storage;
 
 class Navica extends Association implements RETS {
     const QUERY_OPTIONS = [
@@ -71,11 +72,13 @@ class Navica extends Association implements RETS {
 
     public function buildPhotos()
     {
-        // doesn't work right now because navica sucks
-        $mlsNumbers = Listing::pluck('mls_acct');
-        foreach ($mlsNumbers as $mlsNumber)  {
-            $photos = $this->rets->GetObject('Property', 'Photo', $mlsNumber, '*', 1);
-            dd($photos->first());
-        }
+        // $mlsNumbers = Listing::pluck('mls_acct');
+        // foreach ($mlsNumbers as $mlsNumber)  {
+            $photos = $this->rets->GetObject('Property', 'Photo', '252375', '*', 1);
+            foreach ($photos as $photo) {
+                $path = Storage::disk('s3')->put('test/1.jpg', $photo->getContent());
+                dd($path);
+            }
+        // }
     }
 }

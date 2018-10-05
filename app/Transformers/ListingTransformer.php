@@ -10,7 +10,6 @@ class ListingTransformer extends TransformerAbstract
 {
     // protected $defaultIncludes = [
     //     'media_objects',
-    //     'location'
     // ];
     /**
      * A Fractal transformer.
@@ -19,11 +18,12 @@ class ListingTransformer extends TransformerAbstract
      */
     public function transform(Listing $listing)
     {
+        $baths = $listing->baths_full + $listing->baths_half;
         return [
             'id'                  => (int) $listing->id,
             'acreage'             => $listing->acreage,
             'area'                => $listing->area,
-            'total_bathrooms'     => $listing->baths,
+            'total_bathrooms'     => $baths,
             'full_baths'          => $listing->baths_full,
             'half_baths'          => $listing->baths_half,
             'bedrooms'            => $listing->bedrooms,
@@ -105,10 +105,10 @@ class ListingTransformer extends TransformerAbstract
         return $this->collection($mediaObjects, new MediaObjectTransformer);
     }
 
-    public function includeLocation(Listing $listing)
-    {
-        $location = $listing->location ?? new Location();
+    // public function includeLocation(Listing $listing)
+    // {
+    //     $location = $listing->location ?? new Location();
 
-        return $this->item($location, new LocationTransformer);
-    }
+    //     return $this->item($location, new LocationTransformer);
+    // }
 }

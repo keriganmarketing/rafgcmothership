@@ -9,5 +9,7 @@ class Builder
         (new Agent)->fullBuild();
         (new Office)->fullBuild();
         (new OpenHouse)->fullBuild();
+        AddressBuilder::populateEmpty();
+        (new OmniBar)->buildTable();
     }
 }
