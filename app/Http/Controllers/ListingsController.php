@@ -14,7 +14,7 @@ class ListingsController extends Controller
      * @param  \App\Listing  $listing
      * @return \Illuminate\Http\Response
      */
-    public function show(Listing $listing)
+    public function show($id)
     {
         $listing = Listing::where('mls_acct', $id)->first();
 
