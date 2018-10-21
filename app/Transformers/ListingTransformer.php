@@ -93,6 +93,11 @@ class ListingTransformer extends TransformerAbstract
             'waterfront_feet'     => $listing->wf_feet,
             'year_built'          => (int) $listing->year_built,
             'zip'                 => $listing->zip,
+            'location'            => [
+                'listing_id'    => $listing->id,
+                'lat'           => $listing->latitude,
+                'long'          => $listing->longitude,
+            ]
         ];
     }
 
