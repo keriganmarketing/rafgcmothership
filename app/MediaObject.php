@@ -32,7 +32,7 @@ class MediaObject extends Model
                 if (! $preferredPhoto) {
                     $preferredPhoto = $photos->where('media_order', 1)->first();
                     $preferredPhoto->update([
-                        'isPreferred' => 1
+                        'is_preferred' => 1
                     ]);
                 }
             }
