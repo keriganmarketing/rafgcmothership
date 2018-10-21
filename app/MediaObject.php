@@ -30,7 +30,7 @@ class MediaObject extends Model
                 $photos = $listing->mediaObjects;
                 $preferredPhoto = $photos->where('isPreferred', true)->first();
                 if (! $preferredPhoto) {
-                    $preferredPhoto = $listing->mediaObjects->where('media_order', 1)->first();
+                    $preferredPhoto = $photos->where('media_order', 1)->first();
                     $preferredPhoto->update([
                         'isPreferred' => 1
                     ]);
