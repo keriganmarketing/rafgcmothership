@@ -20,7 +20,7 @@ class MediaObjectTransformer extends TransformerAbstract
             'media_order'   => $mediaObject->media_order,
             'media_type'    => $mediaObject->media_type,
             'mls_account'   => $mediaObject->mls_acct,
-            'url'           => config('AWS_URL') . $mediaObject->url,
+            'url'           => env('AWS_URL') . $mediaObject->url,
             'is_preferred'  => $mediaObject->is_preferred,
         ];
     }
