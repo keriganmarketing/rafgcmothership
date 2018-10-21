@@ -14,12 +14,12 @@ class Navica extends Association implements RETS {
         'StandardNames' => 0, // give system names
     ];
     const LOOKUP = [
-        'Int' => 'integer',
+        'Int'       => 'integer',
         'Character' => 'string',
-        'Boolean' => 'boolean',
-        'Decimal' => 'decimal',
-        'Date' => 'date',
-        'DateTime' => 'dateTime'
+        'Boolean'   => 'boolean',
+        'Decimal'   => 'decimal',
+        'Date'      => 'date',
+        'DateTime'  => 'dateTime'
     ];
 
     public function __construct($localResource, $retsResource, $retsClass)
@@ -72,13 +72,25 @@ class Navica extends Association implements RETS {
 
     public function buildPhotos()
     {
-        // $mlsNumbers = Listing::pluck('mls_acct');
-        // foreach ($mlsNumbers as $mlsNumber)  {
-            $photos = $this->rets->GetObject('Property', 'Photo', '252375', '*', 1);
-            foreach ($photos as $photo) {
-                $path = Storage::disk('s3')->put('test/1.jpg', $photo->getContent());
-                dd($path);
+        $listings = Listing::chunk(250, function ($listings) {
+            foreach ($listings as $listing) {
+                $photos = $this->rets->GetObject('Property', 'Photo', $listing->mls_acct, '*', 1);
+                foreach($photos as $photo) {
+                    $path = 'images/' . $photo->getContentId() . '/' . $photo->getObjectId() . '.jpg';
+                    $uploaded = Storage::disk('s3')->put($path, $photo->getContent());
+                    if ($uploaded) {
+                        MediaObject::create([
+                            'listing_id'    => $listing->id,
+                            'media_remarks' => $photo->getContentDescription(),
+                            'media_type'    => $photo->getContentType(),
+                            'media_order'   => $photo->getObjectId(),
+                            'mls_acct'      => $photo->getContentId(),
+                            'url'           => $path,
+                            'is_preferred'  => $photo->isPreferred(),
+                        ]);
+                    }
+                }
             }
-        // }
+        });
     }
 }

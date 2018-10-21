@@ -1,7 +1,4 @@
 <?php
-
-// TODO: Analytics engine
-
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
@@ -10,10 +7,10 @@ class Listing extends Model
 {
     protected $guarded = [];
     protected $childClasses = [
-        ResidentialListing::class,
         LandListing::class,
+        RentalListing::class,
         CommercialListing::class,
-        RentalListing::class
+        ResidentialListing::class
     ];
     const MODIFIED_COLUMN = 'sys_Last_Modified';
 
@@ -23,6 +20,11 @@ class Listing extends Model
         static::saved(function ($instance) {
             echo '.';
         });
+    }
+
+    public function mediaObjects()
+    {
+        return $this->hasMany(MediaObject::class);
     }
 
     public function fullBuild()
@@ -63,9 +65,7 @@ class Listing extends Model
     public static function forAgent($agentCode)
     {
         $listings = Listing::where('la_code', $agentCode)->orWhere('co_la_code', $agentCode)->orWhere('sa_code', $agentCode)->get();
-
         // ProcessImpression::dispatch($listings);
-
         return fractal($listings, new ListingTransformer);
     }
 
@@ -77,8 +77,8 @@ class Listing extends Model
     public function nuke()
     {
         $mediaObjects = MediaObject::where('listing_id', $this->id)->get();
-        foreach ($mediaObjects as $MediaObject) {
-            $MediaObject->delete();
+        foreach ($mediaObjects as $mediaObject) {
+            $mediaObject->delete();
         }
         $locations = Location::where('listing_id', $this->id)->get();
         foreach ($locations as $location) {
@@ -152,6 +152,5 @@ class Listing extends Model
     public function scopeExcludeAreas($query, $areas)
     {
         return $query->whereNotIn('area', $areas);
-
     }
 }

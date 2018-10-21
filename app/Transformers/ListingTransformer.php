@@ -8,9 +8,9 @@ use App\Listing;
 
 class ListingTransformer extends TransformerAbstract
 {
-    // protected $defaultIncludes = [
-    //     'media_objects',
-    // ];
+    protected $defaultIncludes = [
+        'media_objects',
+    ];
     /**
      * A Fractal transformer.
      *
