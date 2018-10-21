@@ -109,11 +109,4 @@ class ListingTransformer extends TransformerAbstract
 
         return $this->collection($mediaObjects, new MediaObjectTransformer);
     }
-
-    // public function includeLocation(Listing $listing)
-    // {
-    //     $location = $listing->location ?? new Location();
-
-    //     return $this->item($location, new LocationTransformer);
-    // }
 }

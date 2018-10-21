@@ -10,7 +10,7 @@ class PropTypeTranslator
     public function __construct($propertyType)
     {
         $this->propertyType = $propertyType;
-        $this->lookUp['RES'] = [
+        $this->lookUp['RESI'] = [
             'Detached Single Family',
             'ASF/Attached Individual Unit',
             'Mobile/Manufactured',
@@ -20,13 +20,13 @@ class PropTypeTranslator
             'Condominiums',
             'Dup/Tri/Quad MULTI Unit'
         ];
-        $this->lookUp['LND'] = [
+        $this->lookUp['Land'] = [
             'Commercial Land',
             'Residential Lots/Land',
             'Improved RV Site',
             'Farm/Timberland',
         ];
-        $this->lookUp['CIB'] = [
+        $this->lookUp['COMM'] = [
             'Improved Comm',
             'Residential & Business',
             'Business Only',
@@ -36,7 +36,7 @@ class PropTypeTranslator
             'Industrial',
             'Farm Comm'
         ];
-        $this->lookUp['DOC'] = [
+        $this->lookUp['Rental'] = [
             'Boat Condo',
             'Land/Acres',
         ];
