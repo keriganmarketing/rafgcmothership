@@ -17,11 +17,10 @@ class MediaObjectTransformer extends TransformerAbstract
         return [
             'id'            => $mediaObject->id,
             'listing_id'    => $mediaObject->listing_id,
-            'date_modified' => $mediaObject->date_modified,
             'media_order'   => $mediaObject->media_order,
             'media_type'    => $mediaObject->media_type,
             'mls_account'   => $mediaObject->mls_acct,
-            'url'           => $mediaObject->url,
+            'url'           => config('AWS_URL') . $mediaObject->url,
             'is_preferred'  => $mediaObject->is_preferred,
         ];
     }
