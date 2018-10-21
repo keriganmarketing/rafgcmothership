@@ -77,7 +77,7 @@ class Navica extends Association implements RETS {
                 $photos = $this->rets->GetObject('Property', 'Photo', $listing->mls_acct, '*', 1);
                 foreach($photos as $photo) {
                     $path = 'images/' . $photo->getContentId() . '/' . $photo->getObjectId() . '.jpg';
-                    $uploaded = Storage::disk('s3')->put($path, $photo->getContent());
+                    $uploaded = MediaObject::uploadIfNotUploaded($path, $photo);
                     if ($uploaded) {
                         MediaObject::create([
                             'listing_id'    => $listing->id,
