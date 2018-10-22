@@ -132,7 +132,6 @@ class Search
         if ($status) {
             $status = explode('|', $status);
         }
-
         $listings = DB::table('listings')
             ->select(
                 'listings.id',
@@ -149,15 +148,14 @@ class Search
                 'listings.acreage',
                 'listings.mls_acct',
                 'listings.status',
-                'media_objects.url',
-                'locations.lat',
-                'locations.long'
+                'listings.latitude',
+                'listings.longitude',
+                'media_objects.url'
             )
             ->join('media_objects', function ($join) {
                 $join->on('listings.id', '=', 'media_objects.listing_id')
                      ->where('media_objects.is_preferred', 1);
             })
-            ->join('locations', 'listings.id', '=', 'locations.listing_id')
             ->when($omni, function ($query) use ($omni) {
                 $query->where(function ($query) use ($omni) {
                     $query->whereRaw("listings.city LIKE '%{$omni}%'")

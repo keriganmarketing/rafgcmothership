@@ -25,15 +25,18 @@ class MediaObject extends Model
 
     public static function labelPreferredImages()
     {
+        // This is pretty bad code. Clean this up ASAP
         Listing::with('mediaObjects')->chunk(200, function ($listings) {
             foreach($listings as $listing) {
                 $photos = $listing->mediaObjects;
-                $preferredPhoto = $photos->where('isPreferred', true)->first();
-                if (! $preferredPhoto) {
-                    $preferredPhoto = $photos->where('media_order', 1)->first();
-                    $preferredPhoto->update([
-                        'is_preferred' => 1
-                    ]);
+                if (! $photos->isEmpty()) {
+                    $preferredPhoto = $photos->where('is_preferred', true)->first();
+                    if (! $preferredPhoto) {
+                        $preferredPhoto = $photos->where('media_order', 1)->first();
+                        $preferredPhoto->update([
+                            'is_preferred' => 1
+                        ]);
+                    }
                 }
             }
         });
