@@ -2,7 +2,6 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Carbon;
 
 class Listing extends Model
 {
@@ -103,7 +102,7 @@ class Listing extends Model
     public function scopeRecentlySold($query, $days)
     {
         $days = $days ?? 90;
-        $now = Carbon::now();
+        $now = \Carbon\Carbon::now();
         $daysAgo = $now->copy()->subDays($days);
         return $query->where('sold_date', '>=', $daysAgo);
     }
@@ -111,7 +110,7 @@ class Listing extends Model
     public function scopeNewListings($query, $days)
     {
         $days = $days ?? 10;
-        $now = Carbon::now();
+        $now = \Carbon\Carbon::now();
         $daysAgo = $now->copy()->subDays($days);
         return $query->where('list_date', '>=', $daysAgo);
     }
@@ -125,7 +124,7 @@ class Listing extends Model
 
     public function scopeRecentlySoldBy($query, $officeCode)
     {
-        $oneYearAgo = Carbon::now()->copy()->subYearNoOverflow();
+        $oneYearAgo = \Carbon\Carbon::now()->copy()->subYearNoOverflow();
         return $query->where('lo_code', $officeCode)
                      /* ->orWhere('co_lo_code', $officeCode) */
                      /* ->orWhere('so_code', $officeCode) */
