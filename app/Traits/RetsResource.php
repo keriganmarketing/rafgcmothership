@@ -53,7 +53,7 @@ trait RetsResource {
             $this->rets_resource,
             $this->rets_class
         );
-        $navica->connect()->getUpdates($modifiedColumn);
+        $navica->connect()->getUpdates($modifiedColumn, false);
     }
 
     public function populateMasterTable()

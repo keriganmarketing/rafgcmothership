@@ -55,11 +55,16 @@ class Navica extends Association implements RETS {
         }
     }
 
-    public function getUpdates($column)
+    public function getUpdates($column, $incremental = true)
     {
-        $lastModified = $this->localResource::pluck($column)->max();
-        $dateTime = Carbon::parse($lastModified)->toDateString();
-        $query = $column . '=' . $dateTime . '+';
+        $query = '';
+        if ($incremental) {
+            $lastModified = $this->localResource::pluck($column)->max();
+            $dateTime = Carbon::parse($lastModified)->toDateString();
+            $query = $column . '=' . $dateTime . '+';
+        } else {
+            $query = $column . '=1970-01-01+';
+        }
         $results = $this->rets->Search($this->retsResource, $this->retsClass, $query, self::QUERY_OPTIONS);
         echo '---------------------------------------------------------' . PHP_EOL;
         echo 'Class: ' . $this->retsClass . PHP_EOL;
