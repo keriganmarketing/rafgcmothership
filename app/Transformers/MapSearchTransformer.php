@@ -27,7 +27,7 @@ class MapSearchTransformer extends TransformerAbstract
             'long'           => $listing->longitude,
             'lot_dimensions' => $listing->lot_dimensions,
             'mls_acct'       => $listing->mls_acct,
-            'photo_url'      => $listing->url,
+            'photo_url'      => env('AWS_URL') . '/' . $listing->url,
             'price'          => (int) $listing->list_price,
             'property_type'  => $listing->prop_type,
             'state'          => $listing->state,
