@@ -203,9 +203,6 @@ class Search
                             ->orWhere('listings.ftr_ownership', 'like', '%Foreclosure%')
                             ->orWhere('listings.ftr_ownership', 'like', '%REO%');
             })
-            ->where(function ($query) use ($sixMonthsAgo) {
-                return $query->where('sold_date', '>=', $sixMonthsAgo)->orWhereNull('sold_date');
-            })
             ->get();
 
         // ProcessImpression::dispatch($listings);

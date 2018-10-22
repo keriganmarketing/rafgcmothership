@@ -11,7 +11,7 @@ class Navica extends Association implements RETS {
         'Count' => 1, // count and records
         'Format' => 'COMPACT-DECODED',
         'Limit' => 9999,
-        'StandardNames' => 0, // give system names
+        'StandardNames' => 0 // give system names
     ];
     const LOOKUP = [
         'Int'       => 'integer',
@@ -46,7 +46,6 @@ class Navica extends Association implements RETS {
             $options['Offset'] = $offset;
             $results = $this->rets->Search($this->retsResource, $this->retsClass, $query, $options);
             foreach ($results as $result) {
-                dd($result->toArray());
                 $this->localResource::updateOrCreate([$this->localResource::MASTER_COLUMN => $result[$this->localResource::MASTER_COLUMN]], $result->toArray());
             }
             $offset += $results->getReturnedResultsCount();
