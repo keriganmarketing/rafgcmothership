@@ -21,7 +21,6 @@ trait RetsResource {
                 'length' => $length
             ]);
         }
-
         return $formatted;
     }
 
@@ -32,6 +31,12 @@ trait RetsResource {
         }
         if ($result['DataType'] == 'Boolean') {
             return null;
+       }
+       if ($result['SystemName'] == 'Property_Type') {
+           return 50;
+       }
+       if ($result['SystemName'] == 'Property_Status') {
+           return 50;
        }
         return $result['MaximumLength'];
     }

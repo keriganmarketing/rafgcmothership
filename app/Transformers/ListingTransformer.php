@@ -18,12 +18,11 @@ class ListingTransformer extends TransformerAbstract
      */
     public function transform(Listing $listing)
     {
-        $baths = $listing->baths_full + $listing->baths_half;
         return [
             'id'                  => (int) $listing->id,
             'acreage'             => $listing->acreage,
             'area'                => $listing->area,
-            'total_bathrooms'     => $baths,
+            'total_bathrooms'     => $listing->baths,
             'full_baths'          => $listing->baths_full,
             'half_baths'          => $listing->baths_half,
             'bedrooms'            => $listing->bedrooms,

@@ -11,5 +11,8 @@ class Builder
         (new OpenHouse)->fullBuild();
         AddressBuilder::populateEmpty();
         (new OmniBar)->buildTable();
+        echo 'Checking Photos' . PHP_EOL;
+        (new Navica('foo', 'foo', 'foo'))->connect()->buildPhotos();
+        MediaObject::labelPreferredImages();
     }
 }

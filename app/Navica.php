@@ -79,6 +79,7 @@ class Navica extends Association implements RETS {
     {
         $listings = Listing::chunk(250, function ($listings) {
             foreach ($listings as $listing) {
+                echo 'Getting Photos for listing: ' . $listing->mls_acct . PHP_EOL;
                 $photos = $this->rets->GetObject('Property', 'Photo', $listing->mls_acct, '*', 1);
                 foreach($photos as $photo) {
                     $path = 'images/' . $photo->getContentId() . '/' . $photo->getObjectId() . '.jpg';
@@ -93,8 +94,10 @@ class Navica extends Association implements RETS {
                             'url'           => $path,
                             'is_preferred'  => $photo->isPreferred(),
                         ]);
+                         echo '.';
                     }
                 }
+                echo 'Done!' . PHP_EOL;
             }
         });
     }
