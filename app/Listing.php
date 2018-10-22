@@ -1,7 +1,7 @@
 <?php
 namespace App;
 
-use Illuminate\Support\Carbon;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 class Listing extends Model
