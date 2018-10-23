@@ -39,7 +39,7 @@ trait HasScopes {
 
     public function scopeWaterFront($query)
     {
-        return $query->where('ftr_waterfront', '!=', null)->orWhere('ftr_waterfront', '!=', '');
+        return $query->where('ftr_waterfront', '!=', '');
     }
 
     public function scopeForclosures($query)

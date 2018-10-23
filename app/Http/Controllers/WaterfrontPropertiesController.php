@@ -12,7 +12,7 @@ class WaterfrontPropertiesController extends Controller
     public function index(Request $request)
     {
         $search = new ScopedSearch($request);
-        $listings = $search->setScope('waterfront')->get();
+        $listings = $search->setScope('waterFront')->get();
 
         return $listings;
     }
