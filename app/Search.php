@@ -91,6 +91,9 @@ class Search
                                 ->orWhere('ftr_ownership', 'like', '%Foreclosure%')
                                 ->orWhere('ftr_ownership', 'like', '%REO%');
         })
+        ->whereHas('mediaObjects', function ($query) {
+            return $query->where('media_type', 'image/jpeg');
+        })
         ->excludeAreas($excludes)
         ->orderBy($sortBy, $orderBy)
         ->paginate(36);
