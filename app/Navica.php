@@ -79,12 +79,14 @@ class Navica extends Association implements RETS {
     {
         $listings = Listing::chunk(250, function ($listings) {
             foreach ($listings as $listing) {
-                echo 'Getting Photos for listing: ' . $listing->mls_acct . PHP_EOL;
                 $photos = $this->rets->GetObject('Property', 'Photo', $listing->mls_acct, '*', 1);
+                if (collect($photos)->isEmpty()) {
+                    echo 'No photos being returned for listing ' . $listing->mls_acct . PHP_EOL;
+                }
                 foreach($photos as $photo) {
                     $path = 'images/' . $photo->getContentId() . '/' . $photo->getObjectId() . '.jpg';
                     $uploaded = MediaObject::uploadIfNotUploaded($path, $photo);
-                    if ($uploaded) {
+                    if ($uploaded && $photo->getContentType() == 'image/jpeg') {
                         MediaObject::create([
                             'listing_id'    => $listing->id,
                             'media_remarks' => $photo->getContentDescription(),
@@ -94,10 +96,8 @@ class Navica extends Association implements RETS {
                             'url'           => $path,
                             'is_preferred'  => $photo->isPreferred(),
                         ]);
-                         echo '.';
                     }
                 }
-                echo 'Done!' . PHP_EOL;
             }
         });
     }

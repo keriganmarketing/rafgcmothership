@@ -203,6 +203,9 @@ class Search
                             ->orWhere('listings.ftr_ownership', 'like', '%Foreclosure%')
                             ->orWhere('listings.ftr_ownership', 'like', '%REO%');
             })
+            ->whereHas('mediaObjects', function ($query) {
+                return $query->where('media_type', 'image/jpeg');
+            })
             ->get();
 
         // ProcessImpression::dispatch($listings);
