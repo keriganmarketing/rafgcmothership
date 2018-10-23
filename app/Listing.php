@@ -2,6 +2,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Transformers\ListingTransformer;
 
 class Listing extends Model
 {
