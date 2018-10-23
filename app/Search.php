@@ -81,10 +81,10 @@ class Search
             return $query->where('acreage', '>=', $acreage);
         })
         ->when($waterfront, function ($query) use ($waterfront) {
-            return $query->where('ftr_waterfront', '!=', null)->orWhere('ftr_waterfront', '!=', '');
+            return $query->where('ftr_waterfront', '!=', '');
         })
         ->when($waterview, function ($query) use ($waterview) {
-            return $query->where('ftr_waterview', '!=', null)->orWhere('ftr_waterview', '!=', '');
+            return $query->where('ftr_waterview', '!=', '');
         })
         ->when($forclosure, function ($query) use ($forclosure) {
             return $query->where('ftr_ownership', 'like', '%Bankruptcy%')
