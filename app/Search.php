@@ -47,7 +47,7 @@ class Search
                 $query->whereRaw("city LIKE '%{$omni}%'")
                     ->orWhereRaw("zip LIKE '%{$omni}%'")
                     ->orWhereRaw("subdivision LIKE '%{$omni}%'")
-                    ->orWhereRaw("full_address LIKE '%{$omni}%'") ->orWhereRaw("mls_acct LIKE '%{$omni}%'");
+                    ->orWhereRaw("full_address LIKE '%{$omni}%'")->orWhereRaw("mls_acct LIKE '%{$omni}%'");
             });
         })
         ->when($propertyType, function ($query) use ($propertyType) {
@@ -88,8 +88,9 @@ class Search
         })
         ->when($forclosure, function ($query) use ($forclosure) {
             return $query->where('ftr_ownership', 'like', '%Bankruptcy%')
-                                ->orWhere('ftr_ownership', 'like', '%Foreclosure%')
-                                ->orWhere('ftr_ownership', 'like', '%REO%');
+                            ->orWhere('ftr_ownership', 'like', '%Foreclosure%')
+                            ->orWhere('ftr_ownership', 'like', '%Short Sale%')
+                            ->orWhere('ftr_ownership', 'like', '%Real Estate Owned%');
         })
         ->whereHas('mediaObjects', function ($query) {
             return $query->where('media_type', 'image/jpeg');
@@ -203,8 +204,9 @@ class Search
             })
             ->when($forclosure, function ($query) use ($forclosure) {
                 return $query->where('listings.ftr_ownership', 'like', '%Bankruptcy%')
-                            ->orWhere('listings.ftr_ownership', 'like', '%Foreclosure%')
-                            ->orWhere('listings.ftr_ownership', 'like', '%REO%');
+                                ->orWhere('ftr_ownership', 'like', '%Foreclosure%')
+                                ->orWhere('ftr_ownership', 'like', '%Short Sale%')
+                                ->orWhere('ftr_ownership', 'like', '%Real Estate Owned%');
             })
             ->get();
 

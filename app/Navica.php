@@ -79,23 +79,25 @@ class Navica extends Association implements RETS {
     {
         $listings = Listing::chunk(250, function ($listings) {
             foreach ($listings as $listing) {
-                $photos = $this->rets->GetObject('Property', 'Photo', $listing->mls_acct, '*', 1);
-                if (collect($photos)->isEmpty()) {
-                    echo 'No photos being returned for listing ' . $listing->mls_acct . PHP_EOL;
-                }
-                foreach($photos as $photo) {
-                    $path = 'images/' . $photo->getContentId() . '/' . $photo->getObjectId() . '.jpg';
-                    $uploaded = MediaObject::uploadIfNotUploaded($path, $photo);
-                    if ($uploaded && $photo->getContentType() == 'image/jpeg') {
-                        MediaObject::create([
-                            'listing_id'    => $listing->id,
-                            'media_remarks' => $photo->getContentDescription(),
-                            'media_type'    => $photo->getContentType(),
-                            'media_order'   => $photo->getObjectId(),
-                            'mls_acct'      => $photo->getContentId(),
-                            'url'           => $path,
-                            'is_preferred'  => $photo->isPreferred(),
-                        ]);
+                if ($listing->id > 3212){
+                    $photos = $this->rets->GetObject('Property', 'Photo', $listing->mls_acct, '*', 1);
+                    if (collect($photos)->isEmpty()) {
+                        echo 'No photos being returned for listing ' . $listing->mls_acct . PHP_EOL;
+                    }
+                    foreach($photos as $photo) {
+                        $path = 'images/' . $photo->getContentId() . '/' . $photo->getObjectId() . '.jpg';
+                        $uploaded = MediaObject::uploadIfNotUploaded($path, $photo);
+                        if ($uploaded && $photo->getContentType() == 'image/jpeg') {
+                            MediaObject::create([
+                                'listing_id'    => $listing->id,
+                                'media_remarks' => $photo->getContentDescription(),
+                                'media_type'    => $photo->getContentType(),
+                                'media_order'   => $photo->getObjectId(),
+                                'mls_acct'      => $photo->getContentId(),
+                                'url'           => $path,
+                                'is_preferred'  => $photo->isPreferred(),
+                            ]);
+                        }
                     }
                 }
             }
