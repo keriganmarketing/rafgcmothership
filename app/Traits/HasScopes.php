@@ -31,8 +31,8 @@ trait HasScopes {
     {
         $oneYearAgo = \Carbon\Carbon::now()->copy()->subYearNoOverflow();
         return $query->where('lo_code', $officeCode)
-                     /* ->orWhere('co_lo_code', $officeCode) */
-                     /* ->orWhere('so_code', $officeCode) */
+                     ->orWhere('co_lo_code', $officeCode)
+                     ->orWhere('so_code', $officeCode)
             ->where('sold_date', '>=', $oneYearAgo)
             ->whereNotNull('sold_date');
     }
