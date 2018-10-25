@@ -79,7 +79,7 @@ class Navica extends Association implements RETS {
     {
         $listings = Listing::chunk(250, function ($listings) {
             foreach ($listings as $listing) {
-                if ($listing->id > 5390){
+                if ($listing->id > 6379){
                     $photos = $this->rets->GetObject('Property', 'Photo', $listing->mls_acct, '*', 1);
                     if (collect($photos)->isEmpty()) {
                         echo 'No photos being returned for listing ' . $listing->mls_acct . PHP_EOL;
