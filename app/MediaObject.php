@@ -16,11 +16,11 @@ class MediaObject extends Model
 
     public static function uploadIfNotUploaded($path, $photo)
     {
-        if (Storage::disk('s3')->exists($path)) {
-            return true;
+        if (! Storage::disk('s3')->exists($path)) {
+            return Storage::disk('s3')->put($path, $photo->getContent());
         }
 
-        return Storage::disk('s3')->put($path, $photo->getContent());
+        return false;
     }
 
     public static function labelPreferredImages()
