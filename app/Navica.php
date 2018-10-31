@@ -55,29 +55,36 @@ class Navica extends Association implements RETS {
         }
     }
 
-    public function getUpdates($column, $incremental = true)
+    public function getUpdates($column)
     {
         $query = '';
-        if ($incremental) {
-            $lastModified = $this->localResource::pluck($column)->max();
-            $dateTime = Carbon::parse($lastModified)->toDateString();
-            $query = $column . '=' . $dateTime . '+';
-        } else {
-            $query = $column . '=1970-01-01+';
-        }
-        $results = $this->rets->Search($this->retsResource, $this->retsClass, $query, self::QUERY_OPTIONS);
-        echo '---------------------------------------------------------' . PHP_EOL;
-        echo 'Class: ' . $this->retsClass . PHP_EOL;
-        echo 'Returned Results: ' . $results->getReturnedResultsCount() . PHP_EOL;
-        echo 'Total Results: ' . $results->getTotalResultsCount() . PHP_EOL;
-        foreach ($results as $result) {
-            $this->localResource::updateOrCreate([$this->localResource::MASTER_COLUMN => $result[$this->localResource::MASTER_COLUMN]], $result->toArray());
+        $lastModified = $this->localResource::pluck($column)->max();
+        $dateTime = Carbon::parse($lastModified)->toDateString();
+        $query = $column . '=' . $dateTime . '+';
+        $offset = 0;
+        $maxRowsReached = false;
+        while (!$maxRowsReached) {
+            $options = self::QUERY_OPTIONS;
+            $options['Offset'] = $offset;
+            $results = $this->rets->Search($this->retsResource, $this->retsClass, $query, self::QUERY_OPTIONS);
+            echo '---------------------------------------------------------' . PHP_EOL;
+            echo 'Class: ' . $this->retsClass . PHP_EOL;
+            echo 'Returned Results: ' . $results->getReturnedResultsCount() . PHP_EOL;
+            echo 'Total Results: ' . $results->getTotalResultsCount() . PHP_EOL;
+            foreach ($results as $result) {
+                $this->localResource::updateOrCreate([$this->localResource::MASTER_COLUMN => $result[$this->localResource::MASTER_COLUMN]], $result->toArray());
+            }
+
+            $offset += $results->getReturnedResultsCount();
+            if ($offset >= $results->getTotalResultsCount()) {
+                $maxRowsReached = true;
+            }
         }
     }
 
     public function buildPhotos()
     {
-        $listings = Listing::chunk(250, function ($listings) {
+        $listings = Listing::chunk(1000, function ($listings) {
             foreach ($listings as $listing) {
                 if ($listing){
                     $photos = $this->rets->GetObject('Property', 'Photo', $listing->mls_acct, '*', 1);
