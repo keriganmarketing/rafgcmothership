@@ -113,4 +113,47 @@ class Navica extends Association implements RETS {
             }
         });
     }
+
+    public function patchMissingPhotos()
+    {
+        Listing::without('mediaObjects')->chunk(200, function ($listings) {
+            foreach ($listings as $listing) {
+                echo '-- ' . $listing->mls_acct . ' ---------' . PHP_EOL;
+                $this->getPhotosForListing($listing);
+            }
+        });
+    }
+
+    public function getPhotosForListing($listing){
+
+        if(!$listing){
+            return;
+        }
+
+        $photos = $this->rets->GetObject('Property', 'Photo', $listing->mls_acct, '*', 1);
+        if (collect($photos)->isEmpty()) {
+            echo 'No photos being returned for listing ' . $listing->mls_acct . PHP_EOL;
+            return;
+        }
+
+        foreach($photos as $photo) {
+            if (! $photo->isError()) {
+                echo $photo->getObjectId() . PHP_EOL;
+                $path = 'images/' . $photo->getContentId() . '/' . $photo->getObjectId() . '.jpg';
+                $uploaded = MediaObject::uploadIfNotUploaded($path, $photo);
+                if ($uploaded && $photo->getContentType() == 'image/jpeg') {
+                    MediaObject::create([
+                        'listing_id'    => $listing->id,
+                        'media_remarks' => $photo->getContentDescription(),
+                        'media_type'    => $photo->getContentType(),
+                        'media_order'   => $photo->getObjectId(),
+                        'mls_acct'      => $photo->getContentId(),
+                        'url'           => $path,
+                        'is_preferred'  => $photo->isPreferred(),
+                    ]);
+                }
+            }
+        }
+
+    }
 }
