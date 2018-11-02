@@ -45,9 +45,9 @@ class ScopedSearch
                                      ->orWhere('subdivision', $filters->area);
                         });
                     })
-                    ->whereHas('mediaObjects', function ($query) {
-                        return $query->where('media_type', 'image/jpeg');
-                    })
+                    // ->whereHas('mediaObjects', function ($query) {
+                    //     return $query->where('media_type', 'image/jpeg');
+                    // })
                     ->excludeAreas($excludes)
                     ->orderBy($filters->sortBy, $filters->orderBy)
                     ->paginate(36);

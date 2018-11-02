@@ -84,8 +84,9 @@ class Navica extends Association implements RETS {
 
     public function buildPhotos()
     {
-        $listings = Listing::chunk(1000, function ($listings) {
+        $listings = Listing::chunk(200, function ($listings) {
             foreach ($listings as $listing) {
+                echo '+';
                 if ($listing){
                     $photos = $this->rets->GetObject('Property', 'Photo', $listing->mls_acct, '*', 1);
                     if (collect($photos)->isEmpty()) {
