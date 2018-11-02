@@ -12,7 +12,7 @@ class NewListingsController extends Controller
     public function index(Request $request)
     {
         $search   = new ScopedSearch($request);
-        $days     = $request->days ?? 10;
+        $days     = $request->days ?? 30;
         $listings = $search->setScope('newListings', [$request->days])->get();
 
         return $listings;
