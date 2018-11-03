@@ -116,15 +116,36 @@ class Navica extends Association implements RETS {
 
     public function patchMissingPhotos()
     {
-        Listing::without('mediaObjects')->chunk(200, function ($listings) {
+        Listing::chunk(200, function ($listings) {
             foreach ($listings as $listing) {
-                echo '-- ' . $listing->mls_acct . ' ---------' . PHP_EOL;
-                $this->getPhotosForListing($listing);
+                echo '-- ' . $listing->mls_acct . ' ---------';
+                if(! MediaObject::where('mls_acct', '=', $listing->mls_acct)->exists()) {
+                    echo ' nope --' . PHP_EOL;
+                    $this->getPhotosForListing($listing);
+                }else{
+                    echo ' ok ----' . PHP_EOL;
+                }
+            }
+        });
+    }
+
+    public function patchMissingPhotosByMls($mls)
+    {
+        Listing::where('mls_acct',$mls)->chunk(200, function ($listings) {
+            foreach ($listings as $listing) {
+                echo '-- ' . $listing->mls_acct . ' ---------';
+                if(! MediaObject::where('mls_acct', '=', $listing->mls_acct)->exists()) {
+                    echo ' nope --' . PHP_EOL;
+                    $this->getPhotosForListing($listing);
+                }else{
+                    echo ' ok ----' . PHP_EOL;
+                }
             }
         });
     }
 
     public function getPhotosForListing($listing){
+        $skipPreferred = false;
 
         if(!$listing){
             return;
@@ -133,12 +154,15 @@ class Navica extends Association implements RETS {
         $photos = $this->rets->GetObject('Property', 'Photo', $listing->mls_acct, '*', 1);
         if (collect($photos)->isEmpty()) {
             echo 'No photos being returned for listing ' . $listing->mls_acct . PHP_EOL;
+            $skipPreferred = true;
             return;
         }
 
+        $preferredPhotos = 0;
+
         foreach($photos as $photo) {
             if (! $photo->isError()) {
-                echo $photo->getObjectId() . PHP_EOL;
+                
                 $path = 'images/' . $photo->getContentId() . '/' . $photo->getObjectId() . '.jpg';
                 $uploaded = MediaObject::uploadIfNotUploaded($path, $photo);
                 if ($uploaded && $photo->getContentType() == 'image/jpeg') {
@@ -152,8 +176,20 @@ class Navica extends Association implements RETS {
                         'is_preferred'  => $photo->isPreferred(),
                     ]);
                 }
+
+                if($photo->isPreferred()){
+                    $preferredPhotos ++;
+                }
+
+                echo $photo->getObjectId() . ($uploaded ? ' uploaded' : '') . PHP_EOL;
             }
+
         }
+
+        if($preferredPhotos == 0 && $skipPreferred){
+            $listing->setMissingPreferredPhoto();
+        }
+
 
     }
 }

@@ -16,7 +16,7 @@ class MediaObject extends Model
 
     public static function uploadIfNotUploaded($path, $photo)
     {
-        if (! MediaObject::where('url', $path)->exists()) {
+        if(!file_exists('https://navicaphotos.kerigan.com/' . $path)){
             return Storage::disk('s3')->put($path, $photo->getContent());
         }
 

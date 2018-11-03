@@ -57,6 +57,7 @@ class Listing extends Model
         echo 'Populating master table';
         $this->populateMasterTable();
     }
+
     public static function featuredList($mlsNumbers)
     {
         $listings = Listing::whereIn('mls_acct', $mlsNumbers)->get();
@@ -113,11 +114,27 @@ class Listing extends Model
                     $preferredPhoto->update([
                         'is_preferred' => 1
                     ]);
+                    echo 'preferred set';
                 } catch (Illuminate\Database\Eloquent\ModelNotFoundException $e) {
                     echo $e->getMessage();
                     return;
                 }
             }
+        }
+    }
+
+    public function setMissingPreferredPhoto()
+    {
+        $photos = $this->mediaObjects;
+        try {
+            $preferredPhoto = $photos->first();
+            $preferredPhoto->update([
+                'is_preferred' => 1
+            ]);
+            echo 'preferred photo set' . PHP_EOL;
+        } catch (Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            echo $e->getMessage();
+            return;
         }
     }
 }
