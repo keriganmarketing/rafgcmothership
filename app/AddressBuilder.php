@@ -5,6 +5,7 @@ class AddressBuilder
 {
     public static function populateEmpty()
     {
+        echo 'Populating full addresses' . PHP_EOL;
         Listing::chunk(500, function ($listings) {
         // DB::table('listings')->where('full_address', null)->orderBy('id', 'asc')->chunk(500, function ($listings) {
             foreach ($listings as $listing) {
@@ -17,7 +18,8 @@ class AddressBuilder
                     $listing->update([
                         'full_address' => $address
                     ]);
-                    echo $listing->id . PHP_EOL;
+                    //echo $listing->id . PHP_EOL;
+                    echo '|';
                 }
             }
         });

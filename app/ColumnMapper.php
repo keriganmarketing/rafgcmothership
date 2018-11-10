@@ -65,6 +65,8 @@ class ColumnMapper
             'sub_area'            => $listing->SubArea,
             'tot_heat_sqft'       => $listing->LivingSqFt,
             'unit_num'            => $listing->Unit_Num,
+            'virtual_tour'        => $listing->Virtual_Tour,
+            'virtual_tour2'       => $listing->Virtual_Tour2,
             'wf_feet'             => $listing->WaterFrontFeet,
             'year_built'          => $listing->ActualYearBuilt,
             'zip'                 => $listing->ZipCode
@@ -129,6 +131,8 @@ class ColumnMapper
             'sub_area'            => $listing->SubArea,
             'tot_heat_sqft'       => $listing->SqFtHeatedCooled,
             'unit_num'            => $listing->Unit_Num,
+            'virtual_tour'        => $listing->Virtual_Tour,
+            'virtual_tour2'       => $listing->Virtual_Tour2,
             'wf_feet'             => $listing->WaterFrontFeet,
             'year_built'          => $listing->ActualYearBuilt,
             'zip'                 => $listing->ZipCode
@@ -182,6 +186,8 @@ class ColumnMapper
             'subdivision'         => $listing->Subdivision,
             'sub_area'            => $listing->SubArea,
             'unit_num'            => $listing->Unit_Num,
+            'virtual_tour'        => $listing->Virtual_Tour,
+            'virtual_tour2'       => $listing->Virtual_Tour2,
             'wf_feet'             => $listing->WaterFrontFeet,
             'year_built'          => $listing->ActualYearBuilt,
             'zip'                 => $listing->ZipCode
@@ -249,6 +255,8 @@ class ColumnMapper
             'sub_area'            => $listing->SubArea,
             'tot_heat_sqft'       => $listing->LivingSqFt,
             'unit_num'            => $listing->Unit_Num,
+            'virtual_tour'        => $listing->Virtual_Tour,
+            'virtual_tour2'       => $listing->Virtual_Tour2,
             'wf_feet'             => $listing->WaterFrontFeet,
             'year_built'          => $listing->ActualYearBuilt,
             'zip'                 => $listing->ZipCode

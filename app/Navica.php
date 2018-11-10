@@ -84,34 +84,28 @@ class Navica extends Association implements RETS {
 
     public function buildPhotos()
     {
-        $listings = Listing::chunk(200, function ($listings) {
-            foreach ($listings as $listing) {
-                echo '+';
-                if ($listing){
-                    $photos = $this->rets->GetObject('Property', 'Photo', $listing->mls_acct, '*', 1);
-                    if (collect($photos)->isEmpty()) {
-                        echo 'No photos being returned for listing ' . $listing->mls_acct . PHP_EOL;
-                    }
-                    foreach($photos as $photo) {
-                        if (! $photo->isError()) {
-                            $path = 'images/' . $photo->getContentId() . '/' . $photo->getObjectId() . '.jpg';
-                            $uploaded = MediaObject::uploadIfNotUploaded($path, $photo);
-                            if ($uploaded && $photo->getContentType() == 'image/jpeg') {
-                                MediaObject::create([
-                                    'listing_id'    => $listing->id,
-                                    'media_remarks' => $photo->getContentDescription(),
-                                    'media_type'    => $photo->getContentType(),
-                                    'media_order'   => $photo->getObjectId(),
-                                    'mls_acct'      => $photo->getContentId(),
-                                    'url'           => $path,
-                                    'is_preferred'  => $photo->isPreferred(),
-                                ]);
-                            }
-                        }
-                    }
-                }
+        echo 'Building Photo Database' . PHP_EOL;
+
+        // Required for backward lookup of listing_id in savePhoto()
+        $mlsNumbers = [];
+        $pass = 1;
+
+        Listing::chunk(2000, function ($listings) use (&$mlsNumbers) {
+            foreach ($listings as $listing) { 
+                $mlsNumbers[$listing->id] = $listing->mls_acct;
             }
         });
+
+        // Retrieve all photos for group of listings
+        foreach(array_chunk($mlsNumbers, 100) as $chunk){
+            $photos = $this->rets->GetObject('Property', 'Photo', implode(',',$chunk), '*', 1);
+            foreach($photos as $photo){
+                if (! $photo->isError()) {
+                    MediaObject::savePhoto($mlsNumbers, $photo);
+                }
+            }
+            echo PHP_EOL . $photos->count() . ' photos received in pass ' . $pass++ . '.' . PHP_EOL;
+        }
     }
 
     public function patchMissingPhotos()
