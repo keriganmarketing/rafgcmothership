@@ -12,7 +12,7 @@ class Builder
         AddressBuilder::populateEmpty();
         (new OmniBar)->buildTable();
         echo 'Checking Photos' . PHP_EOL;
-        (new Navica('foo', 'foo', 'foo'))->connect()->buildPhotos();
+        (new Navica())->connect()->buildPhotos();
         MediaObject::labelPreferredImages();
     }
 }

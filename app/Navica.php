@@ -22,7 +22,7 @@ class Navica extends Association implements RETS {
         'DateTime'  => 'dateTime'
     ];
 
-    public function __construct($localResource, $retsResource, $retsClass)
+    public function __construct($localResource = '', $retsResource = '', $retsClass = '')
     {
         $this->url      = config('navica.url');
         $this->username = config('navica.username');

@@ -63,6 +63,7 @@ class ListingTransformer extends TransformerAbstract
             'mls_account'         => $listing->mls_acct,
             'num_units'           => $listing->num_units,
             'occupancy'           => $listing->occupancy_yn,
+            'original_list_price' => $listing->original_list_price,              
             'parcel_id'           => $listing->parcel_id,
             'parking_spaces'      => (int) $listing->parking_spaces,
             'parking_type'        => $listing->parking_type,
