@@ -65,7 +65,6 @@ trait RetsResource {
     {
         $resource = new $this->local_resource;
         $resource->chunk(200, function ($listings) use ($resource) {
-            echo '|';
             foreach($listings as $listing) {
                 $columns = $resource::mapColumns($listing);
                 Listing::updateOrCreate(['mls_acct' => $columns['mls_acct']], $columns);

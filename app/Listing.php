@@ -34,6 +34,7 @@ class Listing extends Model
     public function fullBuild()
     {
         foreach ($this->childClasses as $child) {
+            echo 'starting ' . $child . ' builder' . PHP_EOL;
             $resourceClass = new $child;
             $resourceClass->build(self::MODIFIED_COLUMN . '=2010-01-01+');
         }
