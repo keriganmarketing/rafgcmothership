@@ -61,7 +61,7 @@ class Listing extends Model
 
     public static function featuredList($mlsNumbers)
     {
-        $listings = Listing::whereIn('mls_acct', $mlsNumbers)->get();
+        $listings = Listing::whereIn('mls_acct', $mlsNumbers)->orderBy('list_date', 'DESC')->get();
 
         // ProcessImpression::dispatch($listings);
 
