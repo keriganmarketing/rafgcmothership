@@ -51,6 +51,15 @@ class Search
             });
         })
         ->when($propertyType, function ($query) use ($propertyType) {
+            if($propertyType == 'Residential'){
+                return $query->whereIn('prop_type', [
+                    'Detached Single Family',
+                    'Condominium',
+                    'ASF (Attached Single Family)',
+                    'Dup/Tri/Quad (Multi-Unit)',
+                    'Mobile/Manufactured'
+                ]);
+            }
             return $query->where('prop_type', 'like', $propertyType);
         })
         ->when($status, function ($query) use ($status) {
