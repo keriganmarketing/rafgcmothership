@@ -51,13 +51,36 @@ class Search
             });
         })
         ->when($propertyType, function ($query) use ($propertyType) {
-            if($propertyType == 'Residential'){
+            if($propertyType == 'AllHomes'){
                 return $query->whereIn('prop_type', [
                     'Detached Single Family',
                     'Condominium',
                     'ASF (Attached Single Family)',
                     'Dup/Tri/Quad (Multi-Unit)',
-                    'Mobile/Manufactured'
+                    'Mobile/Manufactured',
+                    'Pre-Construction'
+                ]);
+            }
+            if($propertyType == 'AllLand'){
+                return $query->whereIn('prop_type', [
+                    'Residential Lots/Land',
+                    'Commercial Land',
+                    'Vacant Land',
+                    'Farm/Timberland'
+                ]);
+            }
+            if($propertyType == 'MultiUnit'){
+                return $query->whereIn('prop_type', [
+                    'Condominium',
+                    'ASF (Attached Single Family)',
+                    'Dup/Tri/Quad (Multi-Unit)',
+                    'Apartments/Multi-Family'
+                ]);
+            }
+            if($propertyType == 'Commercial'){
+                return $query->whereIn('prop_type', [
+                    'Business Only',
+                    'Commercial Land',
                 ]);
             }
             return $query->where('prop_type', 'like', $propertyType);
