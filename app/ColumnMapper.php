@@ -174,6 +174,7 @@ class ColumnMapper
             'photo_count'         => $listing->rets_photo_count,
             'photo_date_modified' => $listing->rets_photo_timestamp,
             'prop_type'           => $listing->Property_Type,
+            'pending_agent'       => $listing->PendingAgent,
             'remarks'             => $listing->Remarks,
             'res_hoa_fee'         => $listing->AssociationFeeAmount,
             'res_hoa_term'        => $listing->AssociationFeePaidFrequency,
