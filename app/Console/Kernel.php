@@ -28,7 +28,6 @@ class Kernel extends ConsoleKernel
     {
         $schedule->job(new Update, 'updaters')->hourly();
         $schedule->command('horizon:snapshot')->everyFiveMinutes();
-        $schedule->job(new SendNotification)->everyMinute();
     }
 
     /**
