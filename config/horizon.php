@@ -90,14 +90,14 @@ return [
             'updater-supervisor' => [
                 'connection' => 'redis',
                 'queue' => ['navica-updaters'],
-                'balance' => 'simple',
+                'balance' => 'auto',
                 'processes' => 3,
                 'tries' => 3,
             ],
             'stats-supervisor' => [
                 'connection' => 'redis',
                 'queue' => ['navica-stats'],
-                'balance' => 'simple',
+                'balance' => 'auto',
                 'processes' => 3,
                 'tries' => 3,
             ],
