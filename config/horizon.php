@@ -89,14 +89,14 @@ return [
         'production' => [
             'updater-supervisor' => [
                 'connection' => 'redis-updaters',
-                'queue' => ['navica-updaters'],
+                'queue' => ['updaters'],
                 'balance' => 'auto',
                 'processes' => 3,
                 'tries' => 3,
             ],
             'stats-supervisor' => [
                 'connection' => 'redis-stats',
-                'queue' => ['navica-stats'],
+                'queue' => ['stats'],
                 'balance' => 'auto',
                 'processes' => 3,
                 'tries' => 3,
@@ -106,14 +106,14 @@ return [
         'local' => [
             'updater-supervisor' => [
                 'connection' => 'redis-updaters',
-                'queue' => ['navica-updaters'],
+                'queue' => ['updaters'],
                 'balance' => 'auto',
                 'processes' => 3,
                 'tries' => 3,
             ],
             'stats-supervisor' => [
                 'connection' => 'redis-stats',
-                'queue' => ['navica-stats'],
+                'queue' => ['stats'],
                 'balance' => 'auto',
                 'processes' => 3,
                 'tries' => 3,

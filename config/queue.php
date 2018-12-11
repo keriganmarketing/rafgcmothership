@@ -60,7 +60,7 @@ return [
         'redis-stats' => [
             'driver' => 'redis',
             'connection' => 'default',
-            'queue' => 'navica-stats',
+            'queue' => 'stats',
             'retry_after' => 90,
             'block_for' => null,
         ],
@@ -68,8 +68,8 @@ return [
         'redis-updaters' => [
             'driver' => 'redis',
             'connection' => 'default',
-            'queue' => 'navica-updaters',
-            'retry_after' => 90,
+            'queue' => 'updaters',
+            'retry_after' => 1200,
             'block_for' => null,
         ],
 

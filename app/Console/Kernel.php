@@ -5,6 +5,7 @@ namespace App\Console;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 use App\Jobs\Update;
+use App\Jobs\SendNotification;
 
 class Kernel extends ConsoleKernel
 {
@@ -25,8 +26,9 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->job(new Update, 'navica-updaters')->hourly();
+        $schedule->job(new Update, 'updaters')->hourly();
         $schedule->command('horizon:snapshot')->everyFiveMinutes();
+        $schedule->job(new SendNotification)->everyMinute();
     }
 
     /**
