@@ -57,10 +57,18 @@ return [
             'region' => env('SQS_REGION', 'us-east-1'),
         ],
 
-        'redis' => [
+        'redis-stats' => [
             'driver' => 'redis',
             'connection' => 'default',
-            'queue' => 'default',
+            'queue' => 'navica-stats',
+            'retry_after' => 90,
+            'block_for' => null,
+        ],
+
+        'redis-updaters' => [
+            'driver' => 'redis',
+            'connection' => 'default',
+            'queue' => 'navica-updaters',
             'retry_after' => 90,
             'block_for' => null,
         ],

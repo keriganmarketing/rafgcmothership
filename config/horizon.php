@@ -88,14 +88,14 @@ return [
     'environments' => [
         'production' => [
             'updater-supervisor' => [
-                'connection' => 'redis',
+                'connection' => 'redis-updaters',
                 'queue' => ['navica-updaters'],
                 'balance' => 'auto',
                 'processes' => 3,
                 'tries' => 3,
             ],
             'stats-supervisor' => [
-                'connection' => 'redis',
+                'connection' => 'redis-stats',
                 'queue' => ['navica-stats'],
                 'balance' => 'auto',
                 'processes' => 3,
