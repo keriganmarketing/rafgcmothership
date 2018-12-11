@@ -104,10 +104,17 @@ return [
         ],
 
         'local' => [
-            'supervisor-1' => [
-                'connection' => 'redis',
-                'queue' => ['default'],
-                'balance' => 'simple',
+            'updater-supervisor' => [
+                'connection' => 'redis-updaters',
+                'queue' => ['navica-updaters'],
+                'balance' => 'auto',
+                'processes' => 3,
+                'tries' => 3,
+            ],
+            'stats-supervisor' => [
+                'connection' => 'redis-stats',
+                'queue' => ['navica-stats'],
+                'balance' => 'auto',
                 'processes' => 3,
                 'tries' => 3,
             ],
