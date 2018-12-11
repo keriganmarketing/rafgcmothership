@@ -55,7 +55,7 @@ return [
     */
 
     'trim' => [
-        'recent' => 60,
+        'recent' => 5040,
         'failed' => 10080,
     ],
 
@@ -87,11 +87,18 @@ return [
 
     'environments' => [
         'production' => [
-            'supervisor-1' => [
+            'updater-supervisor' => [
                 'connection' => 'redis',
-                'queue' => ['default'],
+                'queue' => ['navica-updaters'],
                 'balance' => 'simple',
-                'processes' => 10,
+                'processes' => 3,
+                'tries' => 3,
+            ],
+            'stats-supervisor' => [
+                'connection' => 'redis',
+                'queue' => ['navica-stats'],
+                'balance' => 'simple',
+                'processes' => 3,
                 'tries' => 3,
             ],
         ],
