@@ -60,7 +60,7 @@ return [
         'redis' => [
             'driver' => 'redis',
             'connection' => 'default',
-            'queue' => 'updaters',
+            'queue' => 'default',
             'retry_after' => 1200,
             'block_for' => null,
         ],
