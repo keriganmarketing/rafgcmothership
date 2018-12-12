@@ -87,51 +87,23 @@ return [
 
     'environments' => [
         'production' => [
-            'default-supervisor' => [
+            'supervisor' => [
                 'connection' => 'redis',
-                'queue' => ['default'],
+                'queue' => ['stats','updaters','default'],
                 'balance' => 'auto',
-                'processes' => 3,
+                'processes' => 10,
                 'tries' => 3,
             ],
-            'stats-supervisor' => [
-                'connection' => 'redis',
-                'queue' => ['stats'],
-                'balance' => 'auto',
-                'processes' => 3,
-                'tries' => 3,
-            ],
-            'updater-supervisor' => [
-                'connection' => 'redis',
-                'queue' => ['updaters'],
-                'balance' => 'auto',
-                'processes' => 3,
-                'tries' => 3,
-            ]
         ],
 
         'local' => [
-            'default-supervisor' => [
+            'supervisor' => [
                 'connection' => 'redis',
-                'queue' => ['default'],
+                'queue' => ['stats','updaters','default'],
                 'balance' => 'auto',
-                'processes' => 3,
-                'tries' => 3,
-            ],
-            'stats-supervisor' => [
-                'connection' => 'redis',
-                'queue' => ['stats'],
-                'balance' => 'auto',
-                'processes' => 1,
+                'processes' => 10,
                 'tries' => 1,
             ],
-            'updater-supervisor' => [
-                'connection' => 'redis',
-                'queue' => ['updaters'],
-                'balance' => 'auto',
-                'processes' => 1,
-                'tries' => 1,
-            ]
         ],
     ],
 ];
