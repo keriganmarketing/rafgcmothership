@@ -30,7 +30,7 @@ class Kernel extends ConsoleKernel
         //Queue Updater
         $schedule->call(function () {
             Update::dispatch()->onQueue('updaters');
-        })->hourly()->name('Update')->withOutOverlapping();
+        })->hourly()->name('Update2')->withOutOverlapping();
 
         //Save metrics snapshot
         $schedule->command('horizon:snapshot')->everyFiveMinutes();
