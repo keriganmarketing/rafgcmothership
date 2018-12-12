@@ -127,7 +127,7 @@ return [
             ],
             'updater-supervisor' => [
                 'connection' => 'redis',
-                'queue' => ['updater'],
+                'queue' => ['updaters'],
                 'balance' => 'auto',
                 'processes' => 1,
                 'tries' => 1,
