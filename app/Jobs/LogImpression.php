@@ -40,7 +40,7 @@ class LogImpression implements ShouldQueue
             $impression = Impression::where('listing_id', $listing->id)
                 ->where('date', $today)->first();
 
-            if ($impression->count() > 0) {
+            if ($impression) {
                 $impression->increment('counter');
             } else {
                 Impression::create([
