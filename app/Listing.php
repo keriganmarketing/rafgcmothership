@@ -22,7 +22,8 @@ class Listing extends Model
 
     public static function boot() {
         parent::boot();
-        static::saved();
+
+        static::saved(function ($instance) {});
     }
 
     public function mediaObjects()
