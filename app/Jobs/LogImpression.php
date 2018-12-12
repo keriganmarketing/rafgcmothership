@@ -4,6 +4,7 @@ namespace App\Jobs;
 
 use App\Listing;
 use App\Impression;
+use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
