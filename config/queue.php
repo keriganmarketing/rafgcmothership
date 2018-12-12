@@ -57,17 +57,9 @@ return [
             'region' => env('SQS_REGION', 'us-east-1'),
         ],
 
-        'redis-stats' => [
+        'redis' => [
             'driver' => 'redis',
-            'connection' => 'stats',
-            'queue' => 'stats',
-            'retry_after' => 90,
-            'block_for' => null,
-        ],
-
-        'redis-updaters' => [
-            'driver' => 'redis',
-            'connection' => 'updaters',
+            'connection' => 'default',
             'queue' => 'updaters',
             'retry_after' => 1200,
             'block_for' => null,
