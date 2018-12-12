@@ -36,5 +36,17 @@ class LogListingClick implements ShouldQueue
     {
         $today = Carbon::now()->toDateString();
 
+        $click = Click::where('listing_id', $this->listing->id)
+            ->where('date', $today)->first();
+
+        if (count($click) > 0) {
+            $click->increment('counter');
+        } else {
+            Click::create([
+                'listing_id' => $this->listing->id,
+                'date'       => $today,
+                'counter'    => 1
+            ]);
+        }
     }
 }
