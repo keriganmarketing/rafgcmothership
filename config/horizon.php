@@ -107,6 +107,7 @@ return [
                 'balance' => 'auto',
                 'processes' => 2,
                 'tries' => 1,
+                'timeout' => 600
             ],
             
         ],
