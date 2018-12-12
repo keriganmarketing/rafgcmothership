@@ -36,17 +36,19 @@ class LogImpression implements ShouldQueue
     {
         $today = Carbon::now()->toDateString();
 
-        $click = Click::where('listing_id', $this->listing->id)
-            ->where('date', $today)->first();
+        foreach ($this->listings as $listing) {
+            $impression = Impression::where('listing_id', $listing->id)
+                ->where('date', $today)->first();
 
-        if (count($click) > 0) {
-            $click->increment('counter');
-        } else {
-            Click::create([
-                'listing_id' => $this->listing->id,
-                'date'       => $today,
-                'counter'    => 1
-            ]);
+            if (count($impression) > 0) {
+                $impression->increment('counter');
+            } else {
+                Impression::create([
+                    'listing_id' => $listing->id,
+                    'date'       => $today,
+                    'counter'    => 1
+                ]);
+            }
         }
     }
 }
