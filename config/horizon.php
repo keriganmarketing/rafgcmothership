@@ -89,11 +89,19 @@ return [
         'production' => [
             'supervisor' => [
                 'connection' => 'redis',
-                'queue' => ['stats','updaters','default'],
+                'queue' => ['stats','default'],
                 'balance' => 'auto',
                 'processes' => 10,
                 'tries' => 3,
             ],
+            'updater-supervisor' => [
+                'connection' => 'redis',
+                'queue' => ['updaters'],
+                'balance' => 'auto',
+                'processes' => 1,
+                'tries' => 1,
+            ],
+            
         ],
 
         'local' => [

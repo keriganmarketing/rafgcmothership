@@ -77,7 +77,7 @@ return [
             'driver' => 'redis',
             'connection' => 'default',
             'queue' => 'updaters',
-            'retry_after' => 5040,
+            'retry_after' => 2700,
             'block_for' => null,
         ],
 
