@@ -69,7 +69,6 @@ class Navica extends Association implements RETS {
             $options = self::QUERY_OPTIONS;
             $options['Offset'] = $offset;
             $results = $this->rets->Search($this->retsResource, $this->retsClass, $query, self::QUERY_OPTIONS);
-            echo '---------------------------------------------------------' . PHP_EOL;
             echo 'Class: ' . $this->retsClass . PHP_EOL;
             echo 'Returned Results: ' . $results->getReturnedResultsCount() . PHP_EOL;
             echo 'Total Results: ' . $results->getTotalResultsCount() . PHP_EOL;
@@ -81,6 +80,8 @@ class Navica extends Association implements RETS {
             if ($offset >= $results->getTotalResultsCount()) {
                 $maxRowsReached = true;
             }
+            echo '---------------------------------------------------------' . PHP_EOL;
+
         }
     }
 

@@ -63,15 +63,16 @@ trait RetsResource {
 
     public function populateMasterTable()
     {
+        echo 'Populating master table' . PHP_EOL;
         $resource = new $this->local_resource;
-        $numListings = 0;
-        $resource->chunk(1500, function ($listings) use ($resource, &$numListings) {
+        $resource->chunk(1500, function ($listings) use ($resource) {
             foreach($listings as $listing) {
                 $columns = $resource::mapColumns($listing);
                 Listing::updateOrCreate(['mls_acct' => $columns['mls_acct']], $columns);
-                $numListings++;
+                echo '|';
             }
         });
-        echo $numListings . ' listings copied to master table.' . PHP_EOL;
+
+        echo PHP_EOL;
     }
 }
