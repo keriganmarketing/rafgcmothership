@@ -87,6 +87,13 @@ return [
 
     'environments' => [
         'production' => [
+            'default-supervisor' => [
+                'connection' => 'redis',
+                'queue' => ['default'],
+                'balance' => 'auto',
+                'processes' => 3,
+                'tries' => 3,
+            ],
             'stats-supervisor' => [
                 'connection' => 'redis',
                 'queue' => ['stats'],
@@ -96,7 +103,7 @@ return [
             ],
             'updater-supervisor' => [
                 'connection' => 'redis',
-                'queue' => ['updater'],
+                'queue' => ['updaters'],
                 'balance' => 'auto',
                 'processes' => 3,
                 'tries' => 3,
@@ -104,6 +111,13 @@ return [
         ],
 
         'local' => [
+            'default-supervisor' => [
+                'connection' => 'redis',
+                'queue' => ['default'],
+                'balance' => 'auto',
+                'processes' => 3,
+                'tries' => 3,
+            ],
             'stats-supervisor' => [
                 'connection' => 'redis',
                 'queue' => ['stats'],
