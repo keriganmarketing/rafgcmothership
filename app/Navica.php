@@ -112,7 +112,8 @@ class Navica extends Association implements RETS {
 
     public function patchMissingPhotos()
     {
-        Listing::chunk(200, function ($listings) {
+        echo 'Syncing photos ';
+        Listing::chunk(1500, function ($listings) {
             foreach ($listings as $listing) {
                 if(! MediaObject::where('mls_acct', '=', $listing->mls_acct)->exists()) {
                     $this->getPhotosForListing($listing);
@@ -173,7 +174,7 @@ class Navica extends Association implements RETS {
                     $preferredPhotos ++;
                 }
 
-                echo $photo->getObjectId() . ($uploaded ? ' uploaded' : '') . PHP_EOL;
+                //echo $photo->getObjectId() . ($uploaded ? ' uploaded' : '') . PHP_EOL;
             }
 
         }

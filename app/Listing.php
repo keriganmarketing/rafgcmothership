@@ -54,9 +54,10 @@ class Listing extends Model
         foreach ($this->childClasses as $child) {
             $resourceClass = new $child;
             $resourceClass->getUpdates(self::MODIFIED_COLUMN);
+            $resourceClass->populateMasterTable();
         }
-        echo 'Populating master table';
-        $this->populateMasterTable();
+        //echo 'Populating master table';
+        //$this->populateMasterTable();
     }
 
     public static function featuredList($mlsNumbers)
