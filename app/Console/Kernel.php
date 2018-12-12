@@ -7,6 +7,7 @@ use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 use App\Jobs\Update;
 use App\Jobs\SendNotification;
 use App\Jobs\LogImpression;
+use App\Listing;
 
 class Kernel extends ConsoleKernel
 {

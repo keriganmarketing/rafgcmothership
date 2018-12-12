@@ -12,7 +12,7 @@ class Listing extends Model
     use HasScopes;
 
     protected $guarded = [];
-    protected $childClasses = [
+    public $childClasses = [
         LandListing::class,
         RentalListing::class,
         CommercialListing::class,
@@ -59,6 +59,14 @@ class Listing extends Model
         }
         //echo 'Populating master table';
         //$this->populateMasterTable();
+    }
+
+    public function getClassUpdates($class)
+    {
+        $resourceClass = new $class;
+        $resourceClass->getUpdates(self::MODIFIED_COLUMN);
+        $resourceClass->populateMasterTable();
+        echo '---------------------------------------------------------' . PHP_EOL;
     }
 
     public static function featuredList($mlsNumbers)
