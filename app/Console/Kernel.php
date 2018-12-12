@@ -27,7 +27,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         $schedule->job(new Update, 'updaters')->hourly()->withOutOverlapping();
-        $schedule->job(new SendNotification, 'updaters')->everyMinute()->withoutOverlapping();
+        $schedule->job(SendNotification::dispatch(), 'updaters')->everyMinute()->withoutOverlapping();
         $schedule->command('horizon:snapshot')->everyFiveMinutes();
     }
 
