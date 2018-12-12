@@ -6,6 +6,7 @@ use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 use App\Jobs\Update;
 use App\Jobs\SendNotification;
+use App\Jobs\LogImpression;
 
 class Kernel extends ConsoleKernel
 {

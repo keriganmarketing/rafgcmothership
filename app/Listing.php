@@ -4,6 +4,8 @@ namespace App;
 use App\Traits\HasScopes;
 use Illuminate\Database\Eloquent\Model;
 use App\Transformers\ListingTransformer;
+use App\Jobs\LogImpression;
+
 
 class Listing extends Model
 {
@@ -62,8 +64,8 @@ class Listing extends Model
     public static function featuredList($mlsNumbers)
     {
         $listings = Listing::whereIn('mls_acct', $mlsNumbers)->orderBy('list_date', 'DESC')->get();
-
-        // ProcessImpression::dispatch($listings);
+        
+        LogImpression::dispatch($listings)->onQueue('stats');
 
         return fractal($listings, new ListingTransformer)->toJson();
     }

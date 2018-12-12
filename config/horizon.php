@@ -89,7 +89,7 @@ return [
         'production' => [
             'navica-supervisor' => [
                 'connection' => 'redis',
-                'queue' => ['default'],
+                'queue' => ['default', 'updater', 'stats'],
                 'balance' => 'auto',
                 'processes' => 3,
                 'tries' => 3,
