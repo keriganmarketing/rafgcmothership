@@ -5,7 +5,7 @@ class Updater
 {
     public static function init()
     {
-        echo 'Updating Listings';
+        echo 'Updating Listings' . PHP_EOL;
         echo '---------------------------------------------------------' . PHP_EOL;
 
         (new Listing)->getUpdates();

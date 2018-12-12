@@ -55,6 +55,7 @@ class Listing extends Model
             $resourceClass = new $child;
             $resourceClass->getUpdates(self::MODIFIED_COLUMN);
             $resourceClass->populateMasterTable();
+            echo '---------------------------------------------------------' . PHP_EOL;
         }
         //echo 'Populating master table';
         //$this->populateMasterTable();

@@ -80,7 +80,6 @@ class Navica extends Association implements RETS {
             if ($offset >= $results->getTotalResultsCount()) {
                 $maxRowsReached = true;
             }
-            echo '---------------------------------------------------------' . PHP_EOL;
 
         }
     }
