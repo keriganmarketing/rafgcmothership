@@ -27,12 +27,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        //Queue Updater
-        $schedule->call(function () {
-            Update::dispatch()->onQueue('updaters');
-        })->hourly()->name('Update2')->withOutOverlapping();
-
-        //Save metrics snapshot
+        $schedule->job(new Update,'updaters')->hourly()->withOutOverlapping();
         $schedule->command('horizon:snapshot')->everyFiveMinutes();
     }
 
