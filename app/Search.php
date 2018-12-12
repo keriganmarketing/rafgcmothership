@@ -4,6 +4,7 @@ namespace App;
 use DB;
 use App\Listing;
 use Carbon\Carbon;
+use App\Jobs\LogImpression;
 use Illuminate\Http\Request;
 use App\Jobs\ProcessImpression;
 use App\Transformers\ListingTransformer;
