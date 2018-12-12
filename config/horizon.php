@@ -87,14 +87,14 @@ return [
 
     'environments' => [
         'production' => [
-            'supervisor' => [
+            'default-supervisor' => [
                 'connection' => 'redis',
-                'queue' => ['stats','default'],
+                'queue' => ['default'],
                 'balance' => 'auto',
                 'processes' => 3,
                 'tries' => 3,
             ],
-            'supervisor' => [
+            'stats-supervisor' => [
                 'connection' => 'stats',
                 'queue' => ['stats'],
                 'balance' => 'auto',

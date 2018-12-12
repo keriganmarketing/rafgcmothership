@@ -7,7 +7,11 @@ use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 use App\Jobs\Update;
 use App\Jobs\SendNotification;
 use App\Jobs\LogImpression;
-use App\Listing;
+use App\Jobs\UpdateListings;
+use App\Jobs\UpdatePhotos;
+use App\Jobs\UpdateAgents;
+use App\Jobs\UpdateOffices;
+use App\Jobs\UpdateOpenHouses;
 
 class Kernel extends ConsoleKernel
 {
@@ -28,7 +32,11 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->job(new Update,'updaters')->hourly()->withOutOverlapping();
+        $schedule->job(new UpdateListings,'updaters')->hourly()->withOutOverlapping();
+        $schedule->job(new UpdateOffices,'updaters')->hourly()->withOutOverlapping();
+        $schedule->job(new UpdateOpenHouses,'updaters')->hourly()->withOutOverlapping();
+        $schedule->job(new UpdateAgents,'updaters')->hourly()->withOutOverlapping();
+        $schedule->job(new UpdatePhotos,'updaters')->hourly()->withOutOverlapping();
         $schedule->command('horizon:snapshot')->everyFiveMinutes();
     }
 
