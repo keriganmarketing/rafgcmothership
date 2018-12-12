@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Listing;
+use App\Jobs\LogListingClick;
 use Illuminate\Http\Request;
 use App\Transformers\ListingTransformer;
 
