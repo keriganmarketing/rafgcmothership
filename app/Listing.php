@@ -22,10 +22,7 @@ class Listing extends Model
 
     public static function boot() {
         parent::boot();
-
-        static::saved(function ($instance) {
-            echo '.';
-        });
+        static::saved();
     }
 
     public function mediaObjects()
@@ -64,16 +61,14 @@ class Listing extends Model
     public static function featuredList($mlsNumbers)
     {
         $listings = Listing::whereIn('mls_acct', $mlsNumbers)->orderBy('list_date', 'DESC')->get();
-        
         LogImpression::dispatch($listings)->onQueue('stats');
-
         return fractal($listings, new ListingTransformer)->toJson();
     }
 
     public static function forAgent($agentCode)
     {
         $listings = Listing::where('la_code', $agentCode)->orWhere('co_la_code', $agentCode)->orWhere('sa_code', $agentCode)->get();
-        // ProcessImpression::dispatch($listings);
+        LogImpression::dispatch($listings)->onQueue('stats');
         return fractal($listings, new ListingTransformer);
     }
 

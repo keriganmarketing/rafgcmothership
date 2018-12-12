@@ -114,12 +114,8 @@ class Navica extends Association implements RETS {
     {
         Listing::chunk(200, function ($listings) {
             foreach ($listings as $listing) {
-                echo '-- ' . $listing->mls_acct . ' ---------';
                 if(! MediaObject::where('mls_acct', '=', $listing->mls_acct)->exists()) {
-                    echo ' nope --' . PHP_EOL;
                     $this->getPhotosForListing($listing);
-                }else{
-                    echo ' ok ----' . PHP_EOL;
                 }
             }
         });
