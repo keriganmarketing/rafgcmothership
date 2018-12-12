@@ -61,7 +61,23 @@ return [
             'driver' => 'redis',
             'connection' => 'default',
             'queue' => 'default',
-            'retry_after' => 1200,
+            'retry_after' => 120,
+            'block_for' => null,
+        ],
+
+        'stats' => [
+            'driver' => 'redis',
+            'connection' => 'default',
+            'queue' => 'stats',
+            'retry_after' => 120,
+            'block_for' => null,
+        ],
+
+        'updaters' => [
+            'driver' => 'redis',
+            'connection' => 'default',
+            'queue' => 'updaters',
+            'retry_after' => 5040,
             'block_for' => null,
         ],
 
