@@ -69,7 +69,6 @@ trait RetsResource {
                 $columns = $resource::mapColumns($listing);
                 Listing::updateOrCreate(['mls_acct' => $columns['mls_acct']], $columns);
             }
-            echo '|';
         });
     }
 }
