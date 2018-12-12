@@ -87,23 +87,37 @@ return [
 
     'environments' => [
         'production' => [
-            'navica-supervisor' => [
+            'stats-supervisor' => [
                 'connection' => 'redis',
-                'queue' => ['default', 'updater', 'stats'],
+                'queue' => ['stats'],
                 'balance' => 'auto',
                 'processes' => 3,
                 'tries' => 3,
             ],
+            'updater-supervisor' => [
+                'connection' => 'redis',
+                'queue' => ['updater'],
+                'balance' => 'auto',
+                'processes' => 3,
+                'tries' => 3,
+            ]
         ],
 
         'local' => [
-            'navica-supervisor' => [
+            'stats-supervisor' => [
                 'connection' => 'redis',
-                'queue' => ['default'],
+                'queue' => ['stats'],
                 'balance' => 'auto',
-                'processes' => 3,
-                'tries' => 3,
+                'processes' => 1,
+                'tries' => 1,
             ],
+            'updater-supervisor' => [
+                'connection' => 'redis',
+                'queue' => ['updater'],
+                'balance' => 'auto',
+                'processes' => 1,
+                'tries' => 1,
+            ]
         ],
     ],
 ];
