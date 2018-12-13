@@ -3,6 +3,8 @@
 namespace App\Jobs;
 
 use App\Navica;
+use App\Listing;
+use App\Photo;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
@@ -13,14 +15,16 @@ class UpdatePhotos implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
+    protected $mlsNumbers;
+
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct($mlsNumbers)
     {
-        //
+        $this->mlsNumbers = $mlsNumbers;
     }
 
     /**
@@ -30,6 +34,15 @@ class UpdatePhotos implements ShouldQueue
      */
     public function handle()
     {
-        (new Navica('foo', 'foo', 'foo'))->connect()->patchMissingPhotos();
+        $mlsNumbers = [];
+
+        Listing::whereIn('mls_acct',$this->mlsNumbers)->chunk(2000, function ($listings) use (&$mlsNumbers) {
+            foreach ($listings as $listing) { 
+                $mlsNumbers[$listing->id] = $listing->mls_acct;
+            }
+        });
+
+        (new Photo)->fullUpdate($mlsNumbers);
+        
     }
 }

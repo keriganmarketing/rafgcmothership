@@ -3,6 +3,8 @@ namespace App\Traits;
 
 use App\Navica;
 use App\Listing;
+use App\Photo;
+use App\Jobs\UpdatePhotos;
 
 trait RetsResource {
 

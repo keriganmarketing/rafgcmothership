@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 use App\Transformers\ListingTransformer;
 use App\Jobs\LogImpression;
 
-
 class Listing extends Model
 {
     use HasScopes;

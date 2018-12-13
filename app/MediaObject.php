@@ -40,10 +40,11 @@ class MediaObject extends Model
     {
         Listing::with('mediaObjects')->chunk(200, function ($listings) {
             foreach($listings as $listing) {
-                echo $listing->mls_acct . PHP_EOL;
+                //echo $listing->mls_acct . PHP_EOL;
                 $listing->determinePreferredImage();
             }
         });
+        echo 'Preferred photos labeled' . PHP_EOL;
     }
 
     public static function savePhoto($listingIds, $photo)
