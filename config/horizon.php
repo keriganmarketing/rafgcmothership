@@ -55,8 +55,8 @@ return [
     */
 
     'trim' => [
-        'recent' => 5040,
-        'failed' => 10080,
+        'recent' => 1440,
+        'failed' => 1440,
     ],
 
     /*
@@ -91,21 +91,21 @@ return [
                 'connection' => 'redis',
                 'queue' => ['default'],
                 'balance' => 'auto',
-                'processes' => 3,
+                'processes' => 1,
                 'tries' => 3,
             ],
             'stats-supervisor' => [
                 'connection' => 'stats',
                 'queue' => ['stats'],
                 'balance' => 'auto',
-                'processes' => 5,
+                'processes' => 1,
                 'tries' => 3,
             ],
             'updater-supervisor' => [
                 'connection' => 'updaters',
                 'queue' => ['updaters'],
                 'balance' => 'auto',
-                'processes' => 2,
+                'processes' => 1,
                 'tries' => 1,
                 'timeout' => 600
             ],

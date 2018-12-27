@@ -70,8 +70,15 @@ class Listing extends Model
 
     public static function featuredList($mlsNumbers)
     {
-        $listings = Listing::whereIn('mls_acct', $mlsNumbers)->orderBy('list_date', 'DESC')->get();
-        LogImpression::dispatch($listings)->onQueue('stats');
+        $listings = Listing::whereIn('mls_acct', $mlsNumbers)
+            ->orderBy('list_date', 'DESC')
+            ->get();
+
+        //LogImpression::dispatch($listings)->onQueue('stats');
+
+        // returns paginated links (with GET variables intact!)
+        //$listings->appends('?mlsNumbers=' . implode('|',$mlsNumbers))->links();
+
         return fractal($listings, new ListingTransformer)->toJson();
     }
 

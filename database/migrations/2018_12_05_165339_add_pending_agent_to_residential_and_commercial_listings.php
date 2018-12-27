@@ -13,12 +13,16 @@ class AddPendingAgentToResidentialAndCommercialListings extends Migration
      */
     public function up()
     {
-        Schema::table('residential_listings', function (Blueprint $table) {
-            $table->string('PendingAgent')->nullable();
-        });
-        Schema::table('commercial_listings', function (Blueprint $table) {
-            $table->string('PendingAgent')->nullable();
-        });
+        if (! Schema::hasColumn('residential_listings', 'PendingAgent')){
+            Schema::table('residential_listings', function (Blueprint $table) {
+                $table->string('PendingAgent')->nullable();
+            });
+        }
+        if (! Schema::hasColumn('commercial_listings', 'PendingAgent')){
+            Schema::table('commercial_listings', function (Blueprint $table) {
+                $table->string('PendingAgent')->nullable();
+            });
+        }
     }
 
     /**

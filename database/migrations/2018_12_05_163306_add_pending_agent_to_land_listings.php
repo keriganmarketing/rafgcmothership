@@ -13,9 +13,11 @@ class AddPendingAgentToLandListings extends Migration
      */
     public function up()
     {
-        Schema::table('land_listings', function (Blueprint $table) {
-            $table->string('PendingAgent')->nullable();
-        });
+        if (! Schema::hasColumn('land_listings', 'PendingAgent')){
+            Schema::table('land_listings', function (Blueprint $table) {
+                $table->string('PendingAgent')->nullable();
+            });
+        }
     }
 
     /**
