@@ -77,7 +77,7 @@ class Listing extends Model
         //LogImpression::dispatch($listings)->onQueue('stats');
 
         // returns paginated links (with GET variables intact!)
-        $listings->appends('?mlsNumbers=' . implode('|',$mlsNumbers))->links();
+        //$listings->appends('?mlsNumbers=' . implode('|',$mlsNumbers))->links();
 
         return fractal($listings, new ListingTransformer)->toJson();
     }
