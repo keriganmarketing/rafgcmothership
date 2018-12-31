@@ -68,16 +68,20 @@ class Listing extends Model
         echo '---------------------------------------------------------' . PHP_EOL;
     }
 
-    public static function featuredList($mlsNumbers)
+    public static function featuredList($request)
     {
-        $listings = Listing::whereIn('mls_acct', $mlsNumbers)
-            ->orderBy('list_date', 'DESC')
+        $sortArray    = explode('|', (isset($request->sort) ? $request->sort : 'list_date|DESC'));
+        $sortBy       = $sortArray[0];
+        $orderBy      = $sortArray[1];
+
+        $listings = Listing::whereIn('mls_acct', explode('|', $request->mlsNumbers))
+            ->orderBy($sortBy, $orderBy)
             ->paginate(36);
 
         //LogImpression::dispatch($listings)->onQueue('stats');
 
         // returns paginated links (with GET variables intact!)
-        $listings->appends('?mlsNumbers=' . implode('|',$mlsNumbers))->links();
+        $listings->appends($request->all())->links();
 
         return fractal($listings, new ListingTransformer)->toJson();
     }

@@ -11,6 +11,6 @@ class FeaturedListingsController extends Controller
 {
     public function index(Request $request)
     {
-        return Listing::featuredList(explode('|', $request->mlsNumbers));
+        return Listing::featuredList($request);
     }
 }
