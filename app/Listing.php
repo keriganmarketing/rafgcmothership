@@ -72,12 +72,12 @@ class Listing extends Model
     {
         $listings = Listing::whereIn('mls_acct', $mlsNumbers)
             ->orderBy('list_date', 'DESC')
-            ->get();
+            ->paginate(36);
 
         //LogImpression::dispatch($listings)->onQueue('stats');
 
         // returns paginated links (with GET variables intact!)
-        //$listings->appends('?mlsNumbers=' . implode('|',$mlsNumbers))->links();
+        $listings->appends('?mlsNumbers=' . implode('|',$mlsNumbers))->links();
 
         return fractal($listings, new ListingTransformer)->toJson();
     }
