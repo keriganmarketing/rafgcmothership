@@ -19,7 +19,9 @@ class ListingsController extends Controller
     public function show($id)
     {
         $listing = Listing::where('mls_acct', $id)->first();
-        LogListingClick::dispatch($listing)->onQueue('stats');
+        if($listing){
+            LogListingClick::dispatch($listing)->onQueue('stats');
+        }
         return fractal($listing, new ListingTransformer);
     }
 }
