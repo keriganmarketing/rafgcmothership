@@ -109,4 +109,28 @@ class Navica extends Association implements RETS {
     {
         return $this->rets->GetObject('Property', 'Photo', $listing->mls_acct, '*', 1);
     }
+
+    public function clean($query)
+    {
+        $offset = 0;
+        $remoteArray = [];
+        $maxRowsReached = false;
+        while (!$maxRowsReached) {
+            $options = self::QUERY_OPTIONS;
+            $options['Offset'] = $offset;
+            $options['Select'] = 'MST_MLS_NUMBER';
+            $results = $this->rets->Search($this->retsResource, $this->retsClass, $query, $options);
+            foreach ($results as $result) {
+                $remoteArray[] = $result['MST_MLS_NUMBER'];
+            }
+
+            $offset += $results->getReturnedResultsCount();
+            if ($offset >= $results->getTotalResultsCount()) {
+                $maxRowsReached = true;
+            }
+        }
+
+        return $remoteArray;
+    }
+    
 }

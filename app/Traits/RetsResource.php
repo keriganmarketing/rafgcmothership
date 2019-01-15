@@ -53,6 +53,16 @@ trait RetsResource {
         $navica->connect()->build($lastModified);
     }
 
+    public function clean($query)
+    {
+        $navica = new Navica(
+            $this->local_resource,
+            $this->rets_resource,
+            $this->rets_class
+        );
+        return $navica->connect()->clean($query);
+    }
+
     public function getUpdates($modifiedColumn)
     {
         $navica = new Navica(
@@ -76,5 +86,17 @@ trait RetsResource {
         });
 
         echo 'done' . PHP_EOL;
+    }
+
+    public function getMasterList()
+    {
+        $outputArray = [];
+        $resource = new $this->local_resource;
+        $resource->chunk(1500, function ($listings) use ($resource,&$outputArray) {
+            foreach($listings as $listing) {
+                $outputArray[] = $listing->MST_MLS_NUMBER;
+            }
+        });
+        return $outputArray;
     }
 }

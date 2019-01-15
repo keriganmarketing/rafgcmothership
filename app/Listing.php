@@ -40,6 +40,65 @@ class Listing extends Model
         $this->populateMasterTable();
     }
 
+    public function repair($date, $output = false)
+    {
+        foreach ($this->childClasses as $child) {
+            echo ($output ? '-- Repairing ' . $child . ' ------' . PHP_EOL : null );
+            $resourceClass = new $child;
+            $resourceClass->build(self::MODIFIED_COLUMN . '='.$date.'+');
+        }
+        $this->populateMasterTable();
+    }
+
+    public function clean($output = false)
+    {
+        echo ($output ? '-- Querying Listings Table -----' . PHP_EOL : null);
+        $localTotal = 0;
+        $deletedTotal = 0;
+        $remoteTotal = 0;
+
+        $localListings = Listing::pluck('mls_acct');
+        echo ($output ? 'Local Listings: ' . $localListings->count() . PHP_EOL : null);
+
+        foreach ($this->childClasses as $child) {
+            echo ($output ? '-- Class: ' . $child . ' ----' . PHP_EOL : null);
+            $resourceClass = new $child;
+
+            $localListings = $resourceClass->getMasterList();
+            echo ($output ? 'Local: ' . count($localListings) . PHP_EOL : null);
+            $localTotal = $localTotal + count($localListings);
+
+            $remoteListings = $resourceClass->clean(self::MODIFIED_COLUMN . '=2010-01-01+');
+            echo ($output ? 'Remote: ' . count($remoteListings) . PHP_EOL : null);
+            $remoteTotal = $remoteTotal + count($remoteListings);
+
+            $deletedListings = array_diff($localListings, $remoteListings);
+            $listingCounter = 0;
+            foreach ($deletedListings as $listing) {
+
+                $fullListing = $resourceClass::where('MST_MLS_NUMBER', $listing)->first();
+                if($fullListing){
+                    $fullListing->delete();
+                    $deletedTotal++;
+                }
+
+                $normalizedListing = Listing::where('mls_acct', $listing)->first();
+                if($normalizedListing){
+                    $normalizedListing->delete();
+                    $listingCounter++;
+                }
+            }
+            echo ($output ? 'Removed: ' . $listingCounter . PHP_EOL : null);
+
+        }
+        echo ($output ? '------------------------------' . PHP_EOL : null);
+        echo ($output ? 'Total Local: ' . $localTotal . PHP_EOL : null);
+        echo ($output ? 'Total Remote: ' . $remoteTotal . PHP_EOL : null);
+        echo ($output ? 'Total Removed: ' . $deletedTotal . PHP_EOL : null);
+        echo ($output ? '------------------------------' . PHP_EOL : null);
+
+    }
+
     public function populateMasterTable()
     {
         foreach ($this->childClasses as $child) {
@@ -56,8 +115,6 @@ class Listing extends Model
             $resourceClass->populateMasterTable();
             echo '---------------------------------------------------------' . PHP_EOL;
         }
-        //echo 'Populating master table';
-        //$this->populateMasterTable();
     }
 
     public function getClassUpdates($class)
