@@ -5,6 +5,7 @@ namespace App\Console;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 use App\Jobs\Update;
+use App\Jobs\CleanListings;
 use App\Jobs\SendNotification;
 use App\Jobs\LogImpression;
 use App\Jobs\UpdateListings;
@@ -36,7 +37,7 @@ class Kernel extends ConsoleKernel
         $schedule->job(new UpdateOffices,'updaters')->hourly()->withOutOverlapping();
         $schedule->job(new UpdateOpenHouses,'updaters')->hourly()->withOutOverlapping();
         $schedule->job(new UpdateAgents,'updaters')->hourly()->withOutOverlapping();
-        //$schedule->job(new UpdatePhotos,'updaters')->hourlyAt(10)->withOutOverlapping();
+        $schedule->job(new CleanListings,'updaters')->hourlyAt(10)->withOutOverlapping();
         $schedule->command('horizon:snapshot')->everyFiveMinutes();
     }
 

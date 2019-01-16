@@ -73,19 +73,18 @@ trait RetsResource {
         $navica->connect()->getUpdates($modifiedColumn);
     }
 
-    public function populateMasterTable()
+    public function populateMasterTable( $output = false )
     {
-        echo 'Populating master table...' . PHP_EOL;
+        echo ($output ? 'Populating master table...' : null);
         $resource = new $this->local_resource;
         $resource->chunk(1500, function ($listings) use ($resource) {
             foreach($listings as $listing) {
                 $columns = $resource::mapColumns($listing);
                 Listing::updateOrCreate(['mls_acct' => $columns['mls_acct']], $columns);
-                // echo '|';
             }
         });
 
-        echo 'done' . PHP_EOL;
+        echo ($output ? ' done' . PHP_EOL : null );
     }
 
     public function getMasterList()

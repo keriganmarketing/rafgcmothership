@@ -46,8 +46,8 @@ class Listing extends Model
             echo ($output ? '-- Repairing ' . $child . ' ------' . PHP_EOL : null );
             $resourceClass = new $child;
             $resourceClass->build(self::MODIFIED_COLUMN . '='.$date.'+');
+            $resourceClass->populateMasterTable( $output );
         }
-        $this->populateMasterTable();
     }
 
     public function clean($output = false)
