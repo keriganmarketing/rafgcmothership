@@ -44,9 +44,13 @@ class AgentController extends Controller
      * @param  \App\Agent  $agent
      * @return \Illuminate\Http\Response
      */
-    public function show(Agent $agent)
+    public function show(Request $request)
     {
-        //
+        if ($request->email) {
+            $agent = Agent::buildAgentData($request->email);
+
+            return response()->json($agent);
+        }
     }
 
     /**
