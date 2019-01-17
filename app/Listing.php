@@ -2,6 +2,7 @@
 namespace App;
 
 use App\Traits\HasScopes;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use App\Transformers\ListingTransformer;
 use App\Jobs\LogImpression;
@@ -135,7 +136,7 @@ class Listing extends Model
             ->orderBy($sortBy, $orderBy)
             ->paginate(36);
 
-        //LogImpression::dispatch($listings)->onQueue('stats');
+        LogImpression::dispatch($listings)->onQueue('stats');
 
         // returns paginated links (with GET variables intact!)
         $listings->appends($request->all())->links();
@@ -145,8 +146,33 @@ class Listing extends Model
 
     public static function forAgent($agentCode)
     {
-        $listings = Listing::where('la_code', $agentCode)->orWhere('co_la_code', $agentCode)->orWhere('sa_code', $agentCode)->get();
+        $listings = Listing::where(function ($query) use ($agentCode) {
+            $query->where('la_code', $agentCode)
+                ->orWhere('co_la_code', $agentCode);
+            })
+            ->where('status','!=','Sold/Closed')
+            ->groupBy('full_address')
+            ->get();
+
         LogImpression::dispatch($listings)->onQueue('stats');
+
+        return fractal($listings, new ListingTransformer);
+    }
+
+    public static function forAgentSold($agentCode)
+    {
+        $sixmonthsago = (Carbon::now())->modify('-6 months');
+
+        $listings = Listing::where(function ($query) use ($agentCode) {
+            $query->where('la_code', $agentCode)
+                ->orWhere('co_la_code', $agentCode)
+                ->orWhere('sa_code', $agentCode);
+            })
+            ->where('status','Sold/Closed')
+            ->where('sold_date','>',$sixmonthsago)
+            ->groupBy('full_address')
+            ->get();
+
         return fractal($listings, new ListingTransformer);
     }
 

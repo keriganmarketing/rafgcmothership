@@ -11,4 +11,9 @@ class AgentListingsController extends Controller
     {
         return Listing::forAgent($agent);
     }
+
+    public function sold(Request $request, $agent)
+    {
+        return Listing::forAgentSold($agent);
+    }
 }
