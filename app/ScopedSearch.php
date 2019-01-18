@@ -52,7 +52,9 @@ class ScopedSearch
                     ->orderBy($filters->sortBy, $filters->orderBy)
                     ->paginate(36);
 
-        ProcessImpression::dispatch($listings);
+        if($listings->count() > 0){
+            ProcessImpression::dispatch($listings);
+        }
 
         return fractal($listings, new ListingTransformer);
     }
