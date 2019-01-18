@@ -4,7 +4,7 @@ namespace App;
 use App\Listing;
 use App\SearchFilters;
 use Illuminate\Http\Request;
-use App\Jobs\ProcessImpression;
+use App\Jobs\LogImpression;
 use App\Transformers\ListingTransformer;
 
 class ScopedSearch
@@ -53,7 +53,7 @@ class ScopedSearch
                     ->paginate(36);
 
         if($listings->count() > 0){
-            ProcessImpression::dispatch($listings);
+            LogImpression::dispatch($listings)->onQueue('stats');
         }
 
         return fractal($listings, new ListingTransformer);
