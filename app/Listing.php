@@ -43,7 +43,7 @@ class Listing extends Model
 
     public function repair($date = 'now', $output = false)
     {
-        if($date = 'now'){
+        if($date == 'now'){
             $date = Carbon::now()->copy()->subDays(180)->format('Y-m-d');
         }
 
