@@ -41,12 +41,16 @@ class Listing extends Model
         $this->populateMasterTable();
     }
 
-    public function repair($date, $output = false)
+    public function repair($date = 'now', $output = false)
     {
+        if($date = 'now'){
+            $date = Carbon::now()->copy()->subDays(180)->format('Y-m-d');
+        }
+
         foreach ($this->childClasses as $child) {
             echo ($output ? '-- Repairing ' . $child . ' ------' . PHP_EOL : null );
             $resourceClass = new $child;
-            $resourceClass->build(self::MODIFIED_COLUMN . '='.$date.'+');
+            $resourceClass->build('(' . self::MODIFIED_COLUMN . '='.$date.'+),(Property_Status=|A,U)');
             $resourceClass->populateMasterTable( $output );
         }
     }
@@ -57,6 +61,7 @@ class Listing extends Model
         $localTotal = 0;
         $deletedTotal = 0;
         $remoteTotal = 0;
+        $sixMonthsAgo = Carbon::now()->copy()->subDays(180)->format('Y-m-d');
 
         $localListings = Listing::pluck('mls_acct');
         echo ($output ? 'Local Listings: ' . $localListings->count() . PHP_EOL : null);
@@ -69,27 +74,23 @@ class Listing extends Model
             echo ($output ? 'Local: ' . count($localListings) . PHP_EOL : null);
             $localTotal = $localTotal + count($localListings);
 
-            $remoteListings = $resourceClass->clean(self::MODIFIED_COLUMN . '=2010-01-01+');
+            $remoteListings = $resourceClass->clean(
+                '(' . self::MODIFIED_COLUMN . '='.$sixMonthsAgo.'+),
+                 (Property_Status=|A,U)');
             echo ($output ? 'Remote: ' . count($remoteListings) . PHP_EOL : null);
             $remoteTotal = $remoteTotal + count($remoteListings);
 
             $deletedListings = array_diff($localListings, $remoteListings);
             $listingCounter = 0;
-            foreach ($deletedListings as $listing) {
 
-                $fullListing = $resourceClass::where('MST_MLS_NUMBER', $listing)->first();
-                if($fullListing){
-                    $fullListing->delete();
-                    $deletedTotal++;
-                }
+            $toDelete = $resourceClass::whereIn('MST_MLS_NUMBER',$deletedListings)->get();
+            $deletedTotal = $deletedTotal + $toDelete->count();
+            $resourceClass::whereIn('MST_MLS_NUMBER',$deletedListings)->delete();
 
-                $normalizedListing = Listing::where('mls_acct', $listing)->first();
-                if($normalizedListing){
-                    $normalizedListing->delete();
-                    $listingCounter++;
-                }
-            }
-            echo ($output ? 'Removed: ' . $listingCounter . PHP_EOL : null);
+            $normalizedCount = Listing::whereIn('mls_acct', $deletedListings)->count();
+            Listing::whereIn('mls_acct', $deletedListings)->delete();
+
+            echo ($output ? 'Removed: ' . $normalizedCount . PHP_EOL : null);
 
         }
         echo ($output ? '------------------------------' . PHP_EOL : null);

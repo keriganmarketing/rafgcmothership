@@ -2,6 +2,7 @@
 namespace App;
 
 use App\Listing;
+use Carbon\Carbon;
 use App\SearchFilters;
 use Illuminate\Http\Request;
 use App\Jobs\LogImpression;
@@ -30,6 +31,7 @@ class ScopedSearch
 
     public function get()
     {
+        $sixMonthsAgo = Carbon::now()->copy()->subDays(180)->format('Y-m-d');
         $excludes = isset($this->request->excludes) ? explode('|', $this->request->excludes) : [];
         $listing  = new Listing();
         $filters  = $this->filters;
