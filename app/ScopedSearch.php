@@ -31,7 +31,6 @@ class ScopedSearch
 
     public function get()
     {
-        $sixMonthsAgo = Carbon::now()->copy()->subDays(180)->format('Y-m-d');
         $excludes = isset($this->request->excludes) ? explode('|', $this->request->excludes) : [];
         $listing  = new Listing();
         $filters  = $this->filters;
@@ -46,9 +45,6 @@ class ScopedSearch
                                      ->orWhere('city', $filters->area)
                                      ->orWhere('subdivision', $filters->area);
                         });
-                    })
-                    ->whereHas('mediaObjects', function ($query) {
-                        return $query->where('media_type', 'image/jpeg');
                     })
                     ->excludeAreas($excludes)
                     ->orderBy($filters->sortBy, $filters->orderBy)
