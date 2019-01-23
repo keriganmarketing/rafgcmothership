@@ -111,10 +111,26 @@ class Photo extends RetsModel
 
     public function fixPhotoIds()
     {
-        echo 'Syncing photos ';
-        Listing::chunk(1500, function ($listings) {
+        echo 'Fixing Sold Photos ' . PHP_EOL;
+        Listing::where('status','!=','Active')->chunk(1500, function ($listings) {
             foreach ($listings as $listing) {
-                $this->listingPhotos($listing);
+                if(MediaObject::where('mls_acct', '=', $listing->mls_acct)->exists()) {
+                    $photos = MediaObject::where('mls_acct', '=', $listing->mls_acct)->get();
+                    foreach($photos as $photo){
+                        MediaObject::updateOrCreate([
+                            'media_remarks' => $photo->media_remarks,
+                            'media_type'    => $photo->media_type,
+                            'media_order'   => $photo->media_order,
+                            'mls_acct'      => $photo->mls_acct,
+                            'url'           => $photo->url,
+                            'is_preferred'  => $photo->is_preferred,
+                        ],
+                        [
+                            'listing_id'    => $listing->id,
+                        ]);
+                        echo '|';
+                    }
+                }
             }
         });
     }

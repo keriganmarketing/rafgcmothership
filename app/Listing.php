@@ -88,7 +88,14 @@ class Listing extends Model
             $normalizedCount = Listing::whereIn('mls_acct', $deletedListings)->count();
             Listing::whereIn('mls_acct', $deletedListings)->delete();
 
-            echo ($output ? 'Removed: ' . $normalizedCount . PHP_EOL : null);
+            $localPhotos = MediaObject::pluck('mls_acct');
+            $deletedPhotos = array_diff($localPhotos->toArray(), $remoteListings);
+
+            $photoCount = MediaObject::whereIn('mls_acct', $deletedPhotos)->count();
+            MediaObject::whereIn('mls_acct', $deletedPhotos)->delete();
+
+            echo ($output ? 'Listings Removed: ' . $normalizedCount . PHP_EOL : null);
+            echo ($output ? 'Photos Removed: ' . $photoCount . PHP_EOL : null);
 
         }
         echo ($output ? '------------------------------' . PHP_EOL : null);
