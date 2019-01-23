@@ -132,7 +132,9 @@ class Search
         ->orderBy($sortBy, $orderBy)
         ->paginate(36);
 
-        LogImpression::dispatch($listings)->onQueue('stats');
+        if($listings->count() > 0){
+            LogImpression::dispatch($listings)->onQueue('stats');
+        }
 
         // returns paginated links (with GET variables intact!)
         $listings->appends($this->request->all())->links();
@@ -243,8 +245,10 @@ class Search
             })
             ->get();
 
-        LogImpression::dispatch($listings)->onQueue('stats');
-
+        if($listings->count() > 0){
+            LogImpression::dispatch($listings)->onQueue('stats');
+        }
+        
         return fractal($listings, new MapSearchTransformer)->toJson();
     }
 }
