@@ -50,7 +50,7 @@ class Listing extends Model
         foreach ($this->childClasses as $child) {
             echo ($output ? '-- Repairing ' . $child . ' ------' . PHP_EOL : null );
             $resourceClass = new $child;
-            $resourceClass->build(self::MODIFIED_COLUMN . '='.$date.'+');
+            $resourceClass->build('(' . self::MODIFIED_COLUMN . '='.$date.'+)');
             $resourceClass->populateMasterTable( $output );
         }
     }
@@ -74,7 +74,7 @@ class Listing extends Model
             echo ($output ? 'Local: ' . count($localListings) . PHP_EOL : null);
             $localTotal = $localTotal + count($localListings);
 
-            $remoteListings = $resourceClass->clean(self::MODIFIED_COLUMN . '='.$sixMonthsAgo.'+');
+            $remoteListings = $resourceClass->clean('(' . self::MODIFIED_COLUMN . '=2010-01-01+)');
             echo ($output ? 'Remote: ' . count($remoteListings) . PHP_EOL : null);
             $remoteTotal = $remoteTotal + count($remoteListings);
 
