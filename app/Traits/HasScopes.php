@@ -33,8 +33,8 @@ trait HasScopes {
         return $query->where('lo_code', $officeCode)
                      ->orWhere('co_lo_code', $officeCode)
                      ->orWhere('so_code', $officeCode)
-                     ->where('sold_date', '>=', $oneYearAgo)
-                     ->whereNotNull('sold_date');
+            ->where('sold_date', '>=', $oneYearAgo)
+            ->whereNotNull('sold_date');
     }
 
     public function scopeWaterFront($query)
@@ -44,7 +44,6 @@ trait HasScopes {
 
     public function scopeForclosures($query)
     {
-        $sixMonthsAgo = \Carbon\Carbon::now()->copy()->subDays(180)->format('Y-m-d');
         return $query->where('ftr_ownership', 'like', '%Bankruptcy%')
             ->orWhere('ftr_ownership', 'like', '%Foreclosure%')
             ->orWhere('ftr_ownership', 'like', '%Short Sale%')
