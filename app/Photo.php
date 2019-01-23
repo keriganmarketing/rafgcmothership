@@ -109,6 +109,16 @@ class Photo extends RetsModel
         });
     }
 
+    public function fixPhotoIds()
+    {
+        echo 'Syncing photos ';
+        Listing::chunk(1500, function ($listings) {
+            foreach ($listings as $listing) {
+                $this->listingPhotos($listing);
+            }
+        });
+    }
+
     public function patchMissingPhotosByMls($mls)
     {
         Listing::where('mls_acct',$mls)->chunk(200, function ($listings) {

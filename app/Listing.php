@@ -74,7 +74,7 @@ class Listing extends Model
             echo ($output ? 'Local: ' . count($localListings) . PHP_EOL : null);
             $localTotal = $localTotal + count($localListings);
 
-            $remoteListings = $resourceClass->clean('(' . self::MODIFIED_COLUMN . '=2010-01-01+)');
+            $remoteListings = $resourceClass->clean('(' . self::MODIFIED_COLUMN . '='.$sixMonthsAgo.'+)');
             echo ($output ? 'Remote: ' . count($remoteListings) . PHP_EOL : null);
             $remoteTotal = $remoteTotal + count($remoteListings);
 
