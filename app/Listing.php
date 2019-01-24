@@ -92,9 +92,10 @@ class Listing extends Model
             $deletedPhotos = array_diff($localPhotos->toArray(), $remoteListings);
 
             $photoCount = MediaObject::whereIn('mls_acct', $deletedPhotos)->count();
-            MediaObject::whereIn('mls_acct', $deletedPhotos)->chunk(200, function ($photos) {
+            MediaObject::whereIn('mls_acct', $deletedPhotos)->chunk(100, function ($photos) {
                 foreach($photos as $photo){
                     $photo->delete();
+                    echo '|';
                 }
             });
 
