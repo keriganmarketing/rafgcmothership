@@ -102,7 +102,7 @@ class Photo extends RetsModel
         echo 'Syncing photos ';
         Listing::chunk(1500, function ($listings) {
             foreach ($listings as $listing) {
-                if(! MediaObject::where('mls_acct', '=', $listing->mls_acct)->exists()) {
+                if(! MediaObject::where('listing_id', '=', $listing->id)->exists()) {
                     $this->listingPhotos($listing);
                 }
             }
