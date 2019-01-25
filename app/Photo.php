@@ -97,16 +97,42 @@ class Photo extends RetsModel
         }
     }
 
-    public function patchMissingPhotos()
+    public function patchMissingPhotos($output = false)
     {
-        echo 'Syncing photos ';
-        Listing::chunk(1500, function ($listings) {
-            foreach ($listings as $listing) {
-                if(! MediaObject::where('listing_id', '=', $listing->id)->exists()) {
-                    $this->listingPhotos($listing);
-                }
+        // echo 'Syncing photos ';
+        // Listing::chunk(1500, function ($listings) {
+        //     foreach ($listings as $listing) {
+        //         if(! MediaObject::where('listing_id', '=', $listing->id)->exists()) {
+        //             $this->listingPhotos($listing);
+        //         }
+        //     }
+        // });
+
+        $mlsNumbers = [];
+
+        echo ($output ? '-- Patching Missing Photos -----' . PHP_EOL : null);
+        Listing::chunk(2000, function ($listings) use (&$mlsNumbers) {
+            foreach ($listings as $listing) { 
+                $mlsNumbers[] = $listing->mls_acct;
             }
         });
+
+        echo ($output ? 'Listings: ' . count($mlsNumbers) . PHP_EOL : null);
+
+        $currentPhotos = MediaObject::groupBy('mls_acct')->pluck('mls_acct');
+        echo ($output ? 'Listings With Photos: ' . $currentPhotos->count() . PHP_EOL : null);
+
+        $missingPhotos = array_diff($mlsNumbers, $currentPhotos->toArray());
+        echo ($output ? 'Listings Without Photos: ' . count($missingPhotos) . PHP_EOL : null);
+        
+        Listing::whereIn('mls_acct', $missingPhotos)->chunk(1500, function ($listings) use (&$output) {
+            foreach ($listings as $listing) {
+                $this->listingPhotos($listing);
+                echo ($output ? '|' : null);
+            }
+        });
+        //echo ($output ? PHP_EOL . 'done' . PHP_EOL : null);
+
     }
 
     public function fixPhotoIds()
