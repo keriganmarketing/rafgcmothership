@@ -105,7 +105,7 @@ class Listing extends Model
             // });
 
             $photoCount = 0;
-            MediaObject::chunk(100, function ($localPhotos) use(&$photoCount, &$remoteListings) {
+            MediaObject::chunk(100, function ($localPhotos) use(&$photoCount, &$remoteListings, &$output) {
 
                 $localPhotoArray = [];
                 foreach($localPhotos as $localPhoto){
@@ -113,7 +113,7 @@ class Listing extends Model
                 }
 
                 $deletedPhotos = array_diff($localPhotoArray, $remoteListings);
-                MediaObject::whereIn('mls_acct', $deletedPhotos)->chunk(100, function ($photos) use (&$photoCount) {
+                MediaObject::whereIn('mls_acct', $deletedPhotos)->chunk(100, function ($photos) use (&$photoCount, &$output) {
                     foreach($photos as $photo){
 
                         $photo->delete();
