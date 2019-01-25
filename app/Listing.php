@@ -118,14 +118,13 @@ class Listing extends Model
 
                         $photo->delete();
                         echo ($output ? '|' : null);
-                        echo ($output ? PHP_EOL : null);
-
                         $photoCount++;
                     }
                 });
 
             });
 
+            echo ($output ? PHP_EOL : null);
             echo ($output ? 'Photos Removed: ' . $photoCount . PHP_EOL : null);
 
         }
