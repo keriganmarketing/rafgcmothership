@@ -104,28 +104,29 @@ class Listing extends Model
             //     }
             // });
 
-            // $photoCount = 0;
-            // MediaObject::chunk(100, function ($localPhotos) use(&$photoCount, &$remoteListings) {
+            $photoCount = 0;
+            MediaObject::chunk(100, function ($localPhotos) use(&$photoCount, &$remoteListings) {
 
-            //     $localPhotoArray = [];
-            //     foreach($localPhotos as $localPhoto){
+                $localPhotoArray = [];
+                foreach($localPhotos as $localPhoto){
+                    $localPhotoArray[] = $localPhoto->mls_acct;
+                }
 
-            //         $localPhotoArray[] = $localPhoto->mls_acct;
-            //         $deletedPhotos = array_diff($localPhotoArray, $remoteListings);
-            //         MediaObject::whereIn('mls_acct', $deletedPhotos)->chunk(100, function ($photos) {
-            //             foreach($photos as $photo){
+                dd($localPhotoArray);
 
-            //                 $photo->delete();
-            //                 echo ($output ? '|' : null);
-            //                 echo ($output ? PHP_EOL : null);
+                $deletedPhotos = array_diff($localPhotoArray, $remoteListings);
+                MediaObject::whereIn('mls_acct', $deletedPhotos)->chunk(100, function ($photos) use (&$photoCount) {
+                    foreach($photos as $photo){
 
-            //                 $photoCount++;
-            //             }
-            //         });
+                        $photo->delete();
+                        echo ($output ? '|' : null);
+                        echo ($output ? PHP_EOL : null);
 
-            //     }
+                        $photoCount++;
+                    }
+                });
 
-            // });
+            });
 
             echo ($output ? 'Photos Removed: ' . $photoCount . PHP_EOL : null);
 
@@ -199,9 +200,9 @@ class Listing extends Model
 
     public static function forAgentSold($agentCode)
     {
-        $sixmonthsago = (Carbon::now())->modify('-6 months');
+        $sixmonthsago = Carbon::now()->copy()->subDays(180)->format('Y-m-d');
 
-        $listings = Listing::where(function ($query) use ($agentCode) {
+        $listings = Listing::where(function ($query) use (&$agentCode, &$sixmonthsago) {
             $query->where('la_code', $agentCode)
                 ->orWhere('co_la_code', $agentCode)
                 ->orWhere('sa_code', $agentCode);
