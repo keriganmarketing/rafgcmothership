@@ -94,29 +94,44 @@ class Listing extends Model
             Listing::whereIn('mls_acct', $deletedListings)->delete();
 
             echo ($output ? 'Listings Removed: ' . $normalizedCount . PHP_EOL : null);
-
+            echo ($output ? 'Master Count: ' . count($masterList) . PHP_EOL : null);
         }
 
-        $photoCount = 0;
-        MediaObject::chunk(100, function ($localPhotos) use (&$photoCount, &$masterList, &$output, &$remoteListings) {
+        
+        echo ($output ? '-- Media Objects --------------------' . PHP_EOL : null);
 
-            $localPhotoArray = [];
+        $localPhotoArray = [];
+        MediaObject::chunk(1500, function ($localPhotos) use (&$localPhotoArray) {
             foreach($localPhotos as $localPhoto){
                 $localPhotoArray[] = $localPhoto->mls_acct;
             }
-
-            $deletedPhotos = array_diff($localPhotoArray, $remoteListings);
-            MediaObject::whereIn('mls_acct', $deletedPhotos)->chunk(100, function ($photos) use (&$photoCount, &$output) {
-                foreach($photos as $photo){
-
-                    //$photo->delete();
-                    echo ($output ? '|' : null);
-                    $photoCount++;
-                }
-            });
-            echo ($output ? PHP_EOL : null);
-
         });
+
+        $localPhotoMLS = [];
+        MediaObject::distinct()->select('mls_acct')->groupBy('mls_acct')->chunk(1500, function ($localPhotos) use (&$localPhotoMLS) {
+            foreach($localPhotos as $localPhoto){
+                $localPhotoMLS[] = $localPhoto->mls_acct;
+            }
+        });
+
+        echo ($output ? 'Local Photos: ' . count($localPhotoArray) . PHP_EOL : null);
+        echo ($output ? 'Remote Listings: ' . count($masterList) . PHP_EOL : null);
+        echo ($output ? 'Local Photo MLSs: ' . count($localPhotoMLS) . PHP_EOL : null);
+
+        $photoCount = 0;
+        $deletedPhotos = array_diff($masterList, $localPhotoMLS);
+
+        echo ($output ? 'Local Photos Cleaned: ' . count($deletedPhotos) . PHP_EOL : null);
+
+        MediaObject::whereIn('mls_acct', $deletedPhotos)->chunk(100, function ($photos) use (&$photoCount, &$output) {
+            foreach($photos as $photo){
+
+                //$photo->delete();
+                //echo ($output ? '|' : null);
+                $photoCount++;
+            }
+        });
+        echo ($output ? PHP_EOL : null);
         
         echo ($output ? '------------------------------' . PHP_EOL : null);
         echo ($output ? 'Total Local Listings: ' . $localTotal . PHP_EOL : null);
@@ -232,7 +247,7 @@ class Listing extends Model
         $this->delete();
     }
 
-    public function determinePreferredImage()
+    public function determinePreferredImage($output = false)
     {
         $photos = $this->mediaObjects;
         if (! $photos->isEmpty()) {
@@ -243,9 +258,9 @@ class Listing extends Model
                     $preferredPhoto->update([
                         'is_preferred' => 1
                     ]);
-                    echo 'preferred set';
+                    echo ($output ? 'preferred set' : null);
                 } catch (Illuminate\Database\Eloquent\ModelNotFoundException $e) {
-                    echo $e->getMessage();
+                    echo ($output ? $e->getMessage() : null);
                     return;
                 }
             }
