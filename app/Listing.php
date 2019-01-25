@@ -61,6 +61,7 @@ class Listing extends Model
         $localTotal = 0;
         $deletedTotal = 0;
         $remoteTotal = 0;
+        $masterList = [];
 
         if($sixMonthsAgo == 'now'){
             $sixMonthsAgo = Carbon::now()->copy()->subDays(180)->format('Y-m-d');
@@ -82,6 +83,7 @@ class Listing extends Model
             $remoteTotal = $remoteTotal + count($remoteListings);
 
             $deletedListings = array_diff($localListings, $remoteListings);
+            $masterList = array_merge($masterList, $remoteListings);
             $listingCounter = 0;
 
             $toDelete = $resourceClass::whereIn('MST_MLS_NUMBER',$deletedListings)->get();
@@ -103,35 +105,37 @@ class Listing extends Model
             //         echo '|';
             //     }
             // });
-
-            $photoCount = 0;
-            MediaObject::chunk(100, function ($localPhotos) use(&$photoCount, &$remoteListings, &$output) {
-
-                $localPhotoArray = [];
-                foreach($localPhotos as $localPhoto){
-                    $localPhotoArray[] = $localPhoto->mls_acct;
-                }
-
-                $deletedPhotos = array_diff($localPhotoArray, $remoteListings);
-                MediaObject::whereIn('mls_acct', $deletedPhotos)->chunk(100, function ($photos) use (&$photoCount, &$output) {
-                    foreach($photos as $photo){
-
-                        $photo->delete();
-                        echo ($output ? '|' : null);
-                        $photoCount++;
-                    }
-                });
-
-            });
-
-            echo ($output ? PHP_EOL : null);
-            echo ($output ? 'Photos Removed: ' . $photoCount . PHP_EOL : null);
-
+            //echo ($output ? 'Master Count: ' . count($masterList) . PHP_EOL : null);
         }
+
+        //dd($masterList);
+
+        $photoCount = 0;
+        MediaObject::chunk(100, function ($localPhotos) use(&$photoCount, &$masterList, &$output) {
+
+            $localPhotoArray = [];
+            foreach($localPhotos as $localPhoto){
+                $localPhotoArray[] = $localPhoto->mls_acct;
+            }
+
+            $deletedPhotos = array_diff($localPhotoArray, $remoteListings);
+            MediaObject::whereIn('mls_acct', $deletedPhotos)->chunk(100, function ($photos) use (&$photoCount, &$output) {
+                foreach($photos as $photo){
+
+                    $photo->delete();
+                    echo ($output ? '|' : null);
+                    $photoCount++;
+                }
+            });
+            echo ($output ? PHP_EOL : null);
+
+        });
+        
         echo ($output ? '------------------------------' . PHP_EOL : null);
-        echo ($output ? 'Total Local: ' . $localTotal . PHP_EOL : null);
-        echo ($output ? 'Total Remote: ' . $remoteTotal . PHP_EOL : null);
-        echo ($output ? 'Total Removed: ' . $deletedTotal . PHP_EOL : null);
+        echo ($output ? 'Total Local Listings: ' . $localTotal . PHP_EOL : null);
+        echo ($output ? 'Total Remote Listings: ' . $remoteTotal . PHP_EOL : null);
+        echo ($output ? 'Total Removed Listings: ' . $deletedTotal . PHP_EOL : null);
+        echo ($output ? 'Total Photos Removed: ' . $photoCount . PHP_EOL : null);
         echo ($output ? '------------------------------' . PHP_EOL : null);
 
     }
