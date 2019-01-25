@@ -86,10 +86,11 @@ class Photo extends RetsModel
                         'is_preferred'  => $photo->isPreferred(),
                     ]);
                     echo '0';
-                }else{
+                }else{ //already uploaded but not in database
                     MediaObject::updateOrCreate([
                         'listing_id'    => $listing->id,
                         'mls_acct'      => $photo->getContentId(),
+                        'media_order'   => $photo->getObjectId(),
                     ],
                     [
                         'listing_id'    => $listing->id,
@@ -139,9 +140,10 @@ class Photo extends RetsModel
         Listing::whereIn('mls_acct', $missingPhotos)->chunk(1500, function ($listings) use (&$output, &$fixed) {
             foreach ($listings as $listing) {
                 $this->listingPhotos($listing);
+                $fixed++;
             }
         });
-        echo ($output ? PHP_EOL . 'Listings Added: ' . count($fixed) . PHP_EOL : null);
+        echo ($output ? PHP_EOL . 'Photos Added: ' . $fixed . PHP_EOL : null);
 
     }
 

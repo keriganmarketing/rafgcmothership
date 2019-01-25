@@ -111,7 +111,7 @@ class Listing extends Model
         //dd($masterList);
 
         $photoCount = 0;
-        MediaObject::chunk(100, function ($localPhotos) use(&$photoCount, &$masterList, &$output) {
+        MediaObject::chunk(100, function ($localPhotos) use (&$photoCount, &$masterList, &$output, &$remoteListings) {
 
             $localPhotoArray = [];
             foreach($localPhotos as $localPhoto){
