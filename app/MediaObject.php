@@ -28,11 +28,8 @@ class MediaObject extends Model
     public static function uploadIfNotUploaded($path, $photo)
     {
         if(MediaObject::remotePhotoExists('https://navicaphotos.kerigan.com/' . $path)){
-            echo 'X';
             return Storage::disk('s3')->put($path, $photo->getContent());
         }
-
-        echo '|';
         return false;
     }
 
