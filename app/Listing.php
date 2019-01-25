@@ -104,28 +104,28 @@ class Listing extends Model
             //     }
             // });
 
-            $photoCount = 0;
-            MediaObject::chunk(100, function ($localPhotos) use(&$photoCount, &$remoteListings) {
+            // $photoCount = 0;
+            // MediaObject::chunk(100, function ($localPhotos) use(&$photoCount, &$remoteListings) {
 
-                $localPhotoArray = [];
-                foreach($localPhotos as $localPhoto){
+            //     $localPhotoArray = [];
+            //     foreach($localPhotos as $localPhoto){
 
-                    $localPhotoArray[] = $localPhoto->mls_acct;
-                    $deletedPhotos = array_diff($localPhotos->toArray(), $remoteListings);
-                    MediaObject::whereIn('mls_acct', $deletedPhotos)->chunk(100, function ($photos) {
-                        foreach($photos as $photo){
+            //         $localPhotoArray[] = $localPhoto->mls_acct;
+            //         $deletedPhotos = array_diff($localPhotoArray, $remoteListings);
+            //         MediaObject::whereIn('mls_acct', $deletedPhotos)->chunk(100, function ($photos) {
+            //             foreach($photos as $photo){
 
-                            $photo->delete();
-                            echo ($output ? '|' : null);
-                            echo ($output ? PHP_EOL : null);
+            //                 $photo->delete();
+            //                 echo ($output ? '|' : null);
+            //                 echo ($output ? PHP_EOL : null);
 
-                            $photoCount++;
-                        }
-                    });
+            //                 $photoCount++;
+            //             }
+            //         });
 
-                }
+            //     }
 
-            });
+            // });
 
             echo ($output ? 'Photos Removed: ' . $photoCount . PHP_EOL : null);
 
