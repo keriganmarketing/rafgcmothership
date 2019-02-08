@@ -73,6 +73,16 @@ trait RetsResource {
         $navica->connect()->getUpdates($modifiedColumn);
     }
 
+    public function force($mlsNumber)
+    {
+        $navica = new Navica(
+            $this->local_resource,
+            $this->rets_resource,
+            $this->rets_class
+        );
+        $navica->connect()->force($mlsNumber);
+    }
+
     public function populateMasterTable( $output = false )
     {
         echo ($output ? 'Populating master table...' : null);

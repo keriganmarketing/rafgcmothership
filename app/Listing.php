@@ -50,14 +50,16 @@ class Listing extends Model
         foreach ($this->childClasses as $child) {
             echo ($output ? '-- Repairing ' . $child . ' ------' . PHP_EOL : null );
             $resourceClass = new $child;
-            $resourceClass->build('(' . self::MODIFIED_COLUMN . '='.$date.'+)');
+            $resourceClass->build('(' . self::MODIFIED_COLUMN . '='.$date.'+),(Property_Status=|S)');
+            $resourceClass->build('(Property_Status=|A,U,R)');
+
             $resourceClass->populateMasterTable( $output );
         }
     }
 
     public function clean($output = false, $sixMonthsAgo = 'now')
     {
-        echo ($output ? '-- Querying Listings Table -----' . PHP_EOL : null);
+        echo ($output ? PHP_EOL . '-- Querying Listings Table -----' . PHP_EOL : null);
         $localTotal = 0;
         $deletedTotal = 0;
         $remoteTotal = 0;
@@ -71,14 +73,16 @@ class Listing extends Model
         echo ($output ? 'Local Listings: ' . $localListings->count() . PHP_EOL : null);
 
         foreach ($this->childClasses as $child) {
-            echo ($output ? '-- Class: ' . $child . ' ----' . PHP_EOL : null);
+            echo ($output ? PHP_EOL . '-- Class: ' . $child . ' ----' . PHP_EOL : null);
             $resourceClass = new $child;
 
             $localListings = $resourceClass->getMasterList();
             echo ($output ? 'Local: ' . count($localListings) . PHP_EOL : null);
             $localTotal = $localTotal + count($localListings);
 
-            $remoteListings = $resourceClass->clean('(' . self::MODIFIED_COLUMN . '='.$sixMonthsAgo.'+)');
+            $remoteSolds = $resourceClass->clean('(' . self::MODIFIED_COLUMN . '='.$sixMonthsAgo.'+),(Property_Status=|S)');
+            $remoteActive = $resourceClass->clean('(Property_Status=|A,U,R)');
+            $remoteListings = array_merge($remoteSolds,$remoteActive);
             echo ($output ? 'Remote: ' . count($remoteListings) . PHP_EOL : null);
             $remoteTotal = $remoteTotal + count($remoteListings);
 
@@ -98,7 +102,7 @@ class Listing extends Model
         }
 
         
-        echo ($output ? '-- Media Objects --------------------' . PHP_EOL : null);
+        echo ($output ? PHP_EOL . '-- Media Objects --------------------' . PHP_EOL : null);
 
         $localPhotoArray = [];
         MediaObject::chunk(1500, function ($localPhotos) use (&$localPhotoArray) {
@@ -160,6 +164,16 @@ class Listing extends Model
         }
     }
 
+    public function force($mlsNumber)
+    {
+        foreach ($this->childClasses as $child) {
+            $resourceClass = new $child;
+            $resourceClass->force($mlsNumber);
+            $resourceClass->populateMasterTable();
+            echo '---------------------------------------------------------' . PHP_EOL;
+        }
+    }
+
     public function getClassUpdates($class)
     {
         $resourceClass = new $class;
@@ -178,7 +192,9 @@ class Listing extends Model
             ->orderBy($sortBy, $orderBy)
             ->paginate(36);
 
-        LogImpression::dispatch($listings)->onQueue('stats');
+        if(!$request->nostats){
+            LogImpression::dispatch($listings)->onQueue('stats');
+        }
 
         // returns paginated links (with GET variables intact!)
         $listings->appends($request->all())->links();
@@ -186,7 +202,7 @@ class Listing extends Model
         return fractal($listings, new ListingTransformer)->toJson();
     }
 
-    public static function forAgent($agentCode)
+    public static function forAgent($agentCode, $request)
     {
         $listings = Listing::where(function ($query) use ($agentCode) {
             $query->where('la_code', $agentCode)
@@ -196,7 +212,16 @@ class Listing extends Model
             ->groupBy('full_address')
             ->get();
 
-        LogImpression::dispatch($listings)->onQueue('stats');
+        if(!$request->nostats){
+            LogImpression::dispatch($listings)->onQueue('stats');
+        }
+
+        if ($request->analytics) {
+            foreach ($listings as $listing) {
+                $listing->impressions = Impression::where('listing_id', $listing->id)->pluck('counter')->sum();
+                $listing->clicks = Click::where('listing_id', $listing->id)->pluck('counter')->sum();
+            }
+        }
 
         return fractal($listings, new ListingTransformer);
     }
@@ -210,7 +235,6 @@ class Listing extends Model
                 ->orWhere('co_la_code', $agentCode)
                 ->orWhere('sa_code', $agentCode);
             })
-            ->where('status','Sold/Closed')
             ->where('sold_date','>',$sixmonthsago)
             ->groupBy('full_address')
             ->get();

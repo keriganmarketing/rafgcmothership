@@ -9,11 +9,11 @@ class AgentListingsController extends Controller
 {
     public function index(Request $request, $agent)
     {
-        return Listing::forAgent($agent);
+        return Listing::forAgent($agent, $request);
     }
 
     public function sold(Request $request, $agent)
     {
-        return Listing::forAgentSold($agent);
+        return Listing::forAgentSold($agent, $request);
     }
 }
