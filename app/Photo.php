@@ -25,7 +25,7 @@ class Photo extends RetsModel
         );
     }
 
-    public function fullBuild($output = false)
+    public function fullBuild($status = 'all', $output = false)
     {
         $navica = $this->connect();
 
@@ -34,11 +34,19 @@ class Photo extends RetsModel
         // Required for backward lookup of listing_id in savePhoto()
         $mlsNumbers = [];
 
-        Listing::chunk(2000, function ($listings) use (&$mlsNumbers) {
-            foreach ($listings as $listing) { 
-                $mlsNumbers[$listing->id] = $listing->mls_acct;
-            }
-        });
+        if($status == 'all'){
+            Listing::chunk(2000, function ($listings) use (&$mlsNumbers) {
+                foreach ($listings as $listing) { 
+                    $mlsNumbers[$listing->id] = $listing->mls_acct;
+                }
+            });
+        }else{
+            Listing::where('status', $status)->chunk(2000, function ($listings) use (&$mlsNumbers) {
+                foreach ($listings as $listing) { 
+                    $mlsNumbers[$listing->id] = $listing->mls_acct;
+                }
+            });
+        }
 
         $navica->connect()->buildPhotos($mlsNumbers, $output);
     }
