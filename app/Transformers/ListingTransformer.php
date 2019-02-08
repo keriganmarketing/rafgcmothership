@@ -99,7 +99,9 @@ class ListingTransformer extends TransformerAbstract
                 'listing_id'    => $listing->id,
                 'lat'           => $listing->latitude,
                 'long'          => $listing->longitude,
-            ]
+            ],
+            'impressions'       => $listing->impressions,
+            'clicks'            => $listing->clicks
         ];
     }
 
