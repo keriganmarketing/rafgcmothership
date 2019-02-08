@@ -189,7 +189,7 @@ class Photo extends RetsModel
 
     public function fixPhotosByMls($mls, $output = false)
     {
-        Listing::where('mls_acct',$mls)->chunk(200, function ($listings) {
+        Listing::where('mls_acct',$mls)->chunk(200, function ($listings) use (&$output) {
             foreach ($listings as $listing) {
                 echo '-- ' . $listing->mls_acct . ' ---------';
                 $this->listingPhotos($listing, $output);
