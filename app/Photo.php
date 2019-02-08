@@ -191,7 +191,7 @@ class Photo extends RetsModel
     {
         Listing::where('mls_acct',$mls)->chunk(200, function ($listings) use (&$output) {
             foreach ($listings as $listing) {
-                echo '-- ' . $listing->mls_acct . ' ---------';
+                echo ($output ? '-- ' . $listing->mls_acct . ' ---------' . PHP_EOL : null );
                 $this->listingPhotos($listing, $output);
             }
         });
