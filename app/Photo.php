@@ -114,6 +114,8 @@ class Photo extends RetsModel
         if($preferredPhotos == 0 && $skipPreferred){
             $listing->setMissingPreferredPhoto();
         }
+
+        echo ($output ? PHP_EOL : null );
     }
 
     public function patchMissingPhotos($output = false)
@@ -190,6 +192,16 @@ class Photo extends RetsModel
     public function fixPhotosByMls($mls, $output = false)
     {
         Listing::where('mls_acct',$mls)->chunk(200, function ($listings) use (&$output) {
+            foreach ($listings as $listing) {
+                echo ($output ? '-- ' . $listing->mls_acct . ' ---------' . PHP_EOL : null );
+                $this->listingPhotos($listing, $output);
+            }
+        });
+    }
+
+    public function fixPhotosByOffice($office, $output = false)
+    {
+        Listing::where('so_code',$office)->chunk(200, function ($listings) use (&$output) {
             foreach ($listings as $listing) {
                 echo ($output ? '-- ' . $listing->mls_acct . ' ---------' . PHP_EOL : null );
                 $this->listingPhotos($listing, $output);
