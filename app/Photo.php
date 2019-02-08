@@ -40,7 +40,7 @@ class Photo extends RetsModel
             }
         });
 
-        $navica->connect()->buildPhotos($mlsNumbers, $output = false);
+        $navica->connect()->buildPhotos($mlsNumbers, $output);
         
     }
 
