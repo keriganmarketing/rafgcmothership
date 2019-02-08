@@ -25,11 +25,11 @@ class Photo extends RetsModel
         );
     }
 
-    public function fullBuild()
+    public function fullBuild($output = false)
     {
         $navica = $this->connect();
 
-        echo 'Building Photo Database' . PHP_EOL;
+        echo ($output ? 'Building Photo Database' . PHP_EOL : null);
 
         // Required for backward lookup of listing_id in savePhoto()
         $mlsNumbers = [];
@@ -40,7 +40,7 @@ class Photo extends RetsModel
             }
         });
 
-        $navica->connect()->buildPhotos($mlsNumbers);
+        $navica->connect()->buildPhotos($mlsNumbers, $output = false);
         
     }
 

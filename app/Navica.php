@@ -117,7 +117,7 @@ class Navica extends Association implements RETS {
         }
     }
 
-    public function buildPhotos($mlsNumbers)
+    public function buildPhotos($mlsNumbers, $output = false)
     {
         $pass = 1;
         // Retrieve all photos for group of listings
@@ -126,9 +126,10 @@ class Navica extends Association implements RETS {
             foreach($photos as $photo){
                 if (! $photo->isError()) {
                     MediaObject::savePhoto($mlsNumbers, $photo);
+                    echo ($output ? '|' . PHP_EOL : null);
                 }
             }
-            echo PHP_EOL . $photos->count() . ' photos received in pass ' . $pass++ . '.' . PHP_EOL;
+            echo ($output ? PHP_EOL . $photos->count() . ' photos received in pass ' . $pass++ . '.' . PHP_EOL : null);
         }
     }
 
