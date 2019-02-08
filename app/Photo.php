@@ -41,7 +41,6 @@ class Photo extends RetsModel
         });
 
         $navica->connect()->buildPhotos($mlsNumbers, $output);
-        
     }
 
     public function fullUpdate($mlsNumbers)
@@ -51,11 +50,11 @@ class Photo extends RetsModel
         MediaObject::labelPreferredImages();
     }
 
-    public function listingPhotos($listing){
+    public function listingPhotos($listing, $output = false){
         $skipPreferred = false;
 
         if(!$listing){
-            echo 'X';
+            echo ($output ? 'X' : null );
             return;
         }
 
@@ -63,7 +62,7 @@ class Photo extends RetsModel
 
         $photos = $navica->connect()->getPhotos($listing);
         if (collect($photos)->isEmpty()) {
-            echo 'No photos being returned for listing ' . $listing->mls_acct . PHP_EOL;
+            echo ($output ? 'No photos being returned for listing ' . $listing->mls_acct . PHP_EOL : null );
             $skipPreferred = true;
             return;
         }
@@ -85,7 +84,7 @@ class Photo extends RetsModel
                         'url'           => $path,
                         'is_preferred'  => $photo->isPreferred(),
                     ]);
-                    echo '0';
+                    echo ($output ? '0' : null );
                 }else{ //already uploaded but not in database
                     MediaObject::updateOrCreate([
                         'listing_id'    => $listing->id,
@@ -101,14 +100,14 @@ class Photo extends RetsModel
                         'media_order'   => $photo->getObjectId(),
                         'mls_acct'      => $photo->getContentId(),
                     ]);
-                    echo '1';
+                    echo ($output ? '1' : null );
                 }
 
                 if($photo->isPreferred()){
                     $preferredPhotos ++;
                 }
             }else{
-                echo 'X';
+                echo ($output ? 'X' : null );
             }
         }
 
@@ -184,6 +183,16 @@ class Photo extends RetsModel
                 }else{
                     echo ' ok ----' . PHP_EOL;
                 }
+            }
+        });
+    }
+
+    public function fixPhotosByMls($mls, $output = false)
+    {
+        Listing::where('mls_acct',$mls)->chunk(200, function ($listings) {
+            foreach ($listings as $listing) {
+                echo '-- ' . $listing->mls_acct . ' ---------';
+                $this->listingPhotos($listing, $output);
             }
         });
     }

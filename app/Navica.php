@@ -121,7 +121,7 @@ class Navica extends Association implements RETS {
     {
         $pass = 1;
         // Retrieve all photos for group of listings
-        foreach(array_chunk($mlsNumbers, 100) as $chunk){
+        foreach(array_chunk($mlsNumbers, 70) as $chunk){
             $photos = $this->rets->GetObject('Property', 'Photo', implode(',',$chunk), '*', 1);
             foreach($photos as $photo){
                 if (! $photo->isError()) {
