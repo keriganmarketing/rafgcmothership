@@ -5,6 +5,7 @@ namespace App\Console;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 use App\Jobs\Update;
+use App\Jobs\UpdateOmni;
 use App\Jobs\CleanListings;
 use App\Jobs\SendNotification;
 use App\Jobs\LogImpression;
