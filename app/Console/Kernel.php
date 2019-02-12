@@ -34,6 +34,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         $schedule->job(new UpdateListings,'updaters')->hourly()->withOutOverlapping();
+        $schedule->job(new UpdateOmni,'updaters')->hourly()->withOutOverlapping();
         $schedule->job(new UpdateOffices,'updaters')->hourly()->withOutOverlapping();
         $schedule->job(new UpdateOpenHouses,'updaters')->hourly()->withOutOverlapping();
         $schedule->job(new UpdateAgents,'updaters')->hourly()->withOutOverlapping();
