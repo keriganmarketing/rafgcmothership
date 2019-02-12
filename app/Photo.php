@@ -216,4 +216,31 @@ class Photo extends RetsModel
             }
         });
     }
+
+    public function fixPhotos($output = false, $dryrun = true)
+    {
+        echo ($output ? '-- Fixing Photos ------------' . PHP_EOL : null);
+        $updateList = [];
+        Listing::chunk(2000, function($listings) use (&$updateList, &$output){
+            foreach ($listings as $listing) {
+                $numPhotos = MediaObject::where('mls_acct', '=', $listing->mls_acct)->count();
+                if($numPhotos < 3) {
+                    $updateList[] = $listing;
+                    echo ($output ? 'X' : null);
+                }else{
+                    echo ($output ? '|' : null);
+                }
+            }
+        });
+
+        echo ($output ? PHP_EOL . count($updateList) . ' listings need updating.' . PHP_EOL : null);
+
+        if(!$dryrun){
+            foreach ($updateList as $listing) {
+                echo ($output ? '-- ' . $listing->mls_acct . ' ---------' . PHP_EOL : null );
+                $this->listingPhotos($listing, $output);
+            }
+            echo ($output ? PHP_EOL : null);
+        }
+    }
 }
