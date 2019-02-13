@@ -43,20 +43,26 @@ class Navica extends Association implements RETS {
     {
         $offset = 0;
         $maxRowsReached = false;
+        $listings = [];
+
         while (!$maxRowsReached) {
             $options = self::QUERY_OPTIONS;
             $options['Offset'] = $offset;
-            $results = $this->rets->Search($this->retsResource, $this->retsClass, $query, $options);
+            $results = $this->rets->Search($this->retsResource, $this->retsClass, $query, self::QUERY_OPTIONS);
+            
             foreach ($results as $result) {
-                echo '|';
-                $this->localResource::updateOrCreate([$this->localResource::MASTER_COLUMN => $result[$this->localResource::MASTER_COLUMN]], $result->toArray());
+                $listings[] = $result->toArray();
+                // $this->localResource::updateOrCreate([$this->localResource::MASTER_COLUMN => $result[$this->localResource::MASTER_COLUMN]], $result->toArray());
             }
+
             $offset += $results->getReturnedResultsCount();
             if ($offset >= $results->getTotalResultsCount()) {
                 $maxRowsReached = true;
-                echo PHP_EOL;
             }
         }
+        echo 'Total Results: ' . $results->getTotalResultsCount() . PHP_EOL;
+
+        return $listings;
     }
 
     public function getUpdates($column)

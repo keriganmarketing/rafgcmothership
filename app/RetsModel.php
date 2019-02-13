@@ -13,4 +13,11 @@ abstract class RetsModel extends Model
     protected $guarded = [];
     protected $rets_resource;
     protected $local_resource;
+
+    protected $casts = [
+        'Latitude'  => 'float',
+        'Longitude' => 'float',
+        'latitude'  => 'float',
+        'longitude' => 'float'
+    ];
 }

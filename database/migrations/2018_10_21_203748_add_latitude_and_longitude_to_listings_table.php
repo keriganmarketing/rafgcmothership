@@ -14,8 +14,8 @@ class AddLatitudeAndLongitudeToListingsTable extends Migration
     public function up()
     {
         Schema::table('listings', function (Blueprint $table) {
-            $table->decimal('latitude', 6)->nullable();
-            $table->decimal('longitude', 6)->nullable();
+            $table->decimal('latitude', 11,8)->nullable();
+            $table->decimal('longitude', 11,8)->nullable();
         });
     }
 

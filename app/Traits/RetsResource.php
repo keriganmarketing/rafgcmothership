@@ -50,7 +50,13 @@ trait RetsResource {
             $this->rets_resource,
             $this->rets_class
         );
-        $navica->connect()->build($lastModified);
+        $listings = $navica->connect()->build($lastModified);
+        
+        foreach($listings as $listing){
+            $this->local_resource::updateOrCreate([$this->local_resource::MASTER_COLUMN => $listing[$this->local_resource::MASTER_COLUMN]], $listing);
+            echo '|';
+        }
+        echo PHP_EOL;
     }
 
     public function clean($query)
@@ -85,16 +91,16 @@ trait RetsResource {
 
     public function populateMasterTable( $output = false )
     {
-        echo ($output ? 'Populating master table...' : null);
+        echo ($output ? 'Populating master table...' . PHP_EOL : null);
         $resource = new $this->local_resource;
-        $resource->chunk(1500, function ($listings) use ($resource) {
+        $resource->chunk(1500, function ($listings) use (&$resource, &$output) {
             foreach($listings as $listing) {
                 $columns = $resource::mapColumns($listing);
                 Listing::updateOrCreate(['mls_acct' => $columns['mls_acct']], $columns);
+                echo ($output ? '|' : null );
             }
         });
-
-        echo ($output ? ' done' . PHP_EOL : null );
+        echo ($output ? PHP_EOL : null );
     }
 
     public function getMasterList()

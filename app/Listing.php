@@ -39,6 +39,8 @@ class Listing extends Model
             $resourceClass->build(self::MODIFIED_COLUMN . '=2010-01-01+');
         }
         $this->populateMasterTable();
+        echo '---------------------------------------------------------' . PHP_EOL;
+
     }
 
     public function repair($date = 'now', $output = false)
@@ -48,12 +50,21 @@ class Listing extends Model
         }
 
         foreach ($this->childClasses as $child) {
+
             echo ($output ? '-- Repairing ' . $child . ' ------' . PHP_EOL : null );
             $resourceClass = new $child;
-            $resourceClass->build('(' . self::MODIFIED_COLUMN . '='.$date.'+),(Property_Status=|S)');
-            $resourceClass->build('(Property_Status=|A,U,R)');
+
+            echo ($output ? 'Querying Sold back to ' . $date . PHP_EOL : null );
+            $sold = $resourceClass->build('(' . self::MODIFIED_COLUMN . '='.$date.'+),(Property_Status=|S)');
+            echo ($output ? '---------' . PHP_EOL : null );
+
+            echo ($output ? 'Querying Active & Contingent' . PHP_EOL : null );
+            $active = $resourceClass->build('(Property_Status=|A,U,R)');
+            echo ($output ? '---------' . PHP_EOL : null );
 
             $resourceClass->populateMasterTable( $output );
+            echo ($output ? '---------------------------------------------------------' . PHP_EOL : null);
+
         }
     }
 
@@ -164,12 +175,12 @@ class Listing extends Model
         }
     }
 
-    public function force($mlsNumber)
+    public function force($mlsNumber, $output = false)
     {
         foreach ($this->childClasses as $child) {
             $resourceClass = new $child;
             $resourceClass->force($mlsNumber);
-            $resourceClass->populateMasterTable();
+            $resourceClass->populateMasterTable($output);
             echo '---------------------------------------------------------' . PHP_EOL;
         }
     }
@@ -304,5 +315,10 @@ class Listing extends Model
             echo $e->getMessage();
             return;
         }
+    }
+
+    public function unique()
+    {
+        echo Listing::distinct()->select('mls_acct')->count(); 
     }
 }
