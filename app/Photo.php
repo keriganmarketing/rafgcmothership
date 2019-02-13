@@ -221,10 +221,10 @@ class Photo extends RetsModel
     {
         echo ($output ? '-- Fixing Photos ------------' . PHP_EOL : null);
         $updateList = [];
-        Listing::chunk(2000, function($listings) use (&$updateList, &$output){
+        Listing::chunk(10000, function($listings) use (&$updateList, &$output){
             foreach ($listings as $listing) {
                 $numPhotos = MediaObject::where('mls_acct', '=', $listing->mls_acct)->count();
-                if($numPhotos < 3) {
+                if($numPhotos < $listing->photo_count) {
                     $updateList[] = $listing;
                     echo ($output ? 'X' : null);
                 }else{
