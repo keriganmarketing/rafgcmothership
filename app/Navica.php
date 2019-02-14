@@ -96,6 +96,63 @@ class Navica extends Association implements RETS {
         UpdatePhotos::dispatch($mlsNumbers)->onQueue('updaters');
     }
 
+    public function getPhotoUpdates($column, $dateTime = 'now', $output = false)
+    {
+        $query = '';
+        if($dateTime == 'now'){
+            $lastModified = $this->localResource::pluck($column)->max();
+            $dateTime = Carbon::parse($lastModified)->toDateString();
+        }
+        $query = $column . '=' . $dateTime . '+';
+        $offset = 0;
+        $maxRowsReached = false;
+        $mlsNumbers = [];
+
+        echo ($output ? 'Getting photos since ' . $dateTime . PHP_EOL : null);
+
+        while (!$maxRowsReached) {
+            $options = self::QUERY_OPTIONS;
+            $options['Offset'] = $offset;
+            $results = $this->rets->Search($this->retsResource, $this->retsClass, $query, self::QUERY_OPTIONS);
+            echo 'Class: ' . $this->retsClass . PHP_EOL;
+            echo 'Returned Results: ' . $results->getReturnedResultsCount() . PHP_EOL;
+            foreach ($results as $result) {
+                $mlsNumbers[] = $result['MST_MLS_NUMBER'];
+                echo '|';
+            }
+
+            $offset += $results->getReturnedResultsCount();
+            if ($offset >= $results->getTotalResultsCount()) {
+                $maxRowsReached = true;
+            }
+        }
+
+
+        $newMlsNumbers = [];
+        Listing::whereIn('mls_acct',$mlsNumbers)->chunk(500, function ($listings) use (&$newMlsNumbers) {
+            foreach ($listings as $listing) { 
+                $newMlsNumbers[$listing->id] = $listing->mls_acct;
+            }
+        });
+
+        echo ($output ? PHP_EOL . 'Preparing photo retrieval for ' . count($newMlsNumbers) . ' listings' . PHP_EOL : null);
+        
+        $pass = 1;
+        // Retrieve all photos for group of listings
+        foreach(array_chunk($mlsNumbers, 10) as $chunk){
+            $photos = $this->rets->GetObject('Property', 'Photo', implode(',',$chunk), '*', 1);
+            foreach($photos as $photo){
+                if (! $photo->isError()) {
+                    MediaObject::savePhoto($mlsNumbers, $photo, true);
+                    echo ($output ? '|' : null);
+                }
+            }
+            echo ($output ? PHP_EOL . $photos->count() . ' photos received in pass ' . $pass++ . '.' . PHP_EOL : null);
+        }
+
+        //UpdatePhotos::dispatch($mlsNumbers)->onQueue('updaters');
+    }
+
     public function force($mlsNumber)
     {
         $query = '(MST_MLS_NUMBER='.$mlsNumber.')';

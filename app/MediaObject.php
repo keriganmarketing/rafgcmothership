@@ -33,6 +33,11 @@ class MediaObject extends Model
         return false;
     }
 
+    public static function forceUpload($path, $photo)
+    {
+        return Storage::disk('s3')->put($path, $photo->getContent());
+    }
+
     public static function labelPreferredImages()
     {
         Listing::with('mediaObjects')->chunk(200, function ($listings) {
@@ -44,10 +49,16 @@ class MediaObject extends Model
         echo 'Preferred photos labeled' . PHP_EOL;
     }
 
-    public static function savePhoto($listingIds, $photo)
+    public static function savePhoto($listingIds, $photo, $forceReplace = false)
     {
         $path = 'images/' . $photo->getContentId() . '/' . $photo->getObjectId() . '.jpg';
-        $uploaded = MediaObject::uploadIfNotUploaded($path, $photo);
+
+        if($forceReplace){
+            $uploaded = MediaObject::forceUpload($path, $photo);
+        } else {
+            $uploaded = MediaObject::uploadIfNotUploaded($path, $photo);
+        }
+
         if ($uploaded && $photo->getContentType() == 'image/jpeg') {
             MediaObject::create([
                 'listing_id'    => array_search($photo->getContentID(), $listingIds),

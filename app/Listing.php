@@ -19,6 +19,7 @@ class Listing extends Model
         ResidentialListing::class
     ];
     const MODIFIED_COLUMN = 'sys_Last_Modified';
+    const PHOTO_MODIFIED_COLUMN = 'rets_photo_timestamp';
 
     public static function boot() {
         parent::boot();
@@ -171,6 +172,15 @@ class Listing extends Model
             $resourceClass = new $child;
             $resourceClass->getUpdates(self::MODIFIED_COLUMN);
             $resourceClass->populateMasterTable();
+            echo '---------------------------------------------------------' . PHP_EOL;
+        }
+    }
+
+    public function getPhotoUpdates( $date = 'now', $output = false)
+    {
+        foreach ($this->childClasses as $child) {
+            $resourceClass = new $child;
+            $resourceClass->getPhotoUpdates(self::PHOTO_MODIFIED_COLUMN, $date, $output);
             echo '---------------------------------------------------------' . PHP_EOL;
         }
     }
