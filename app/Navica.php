@@ -101,7 +101,8 @@ class Navica extends Association implements RETS {
         $query = '';
         if($dateTime == 'now'){
             $lastModified = $this->localResource::pluck($column)->max();
-            $dateTime = Carbon::parse($lastModified)->toDateString();
+            $dateTime = Carbon::parse($lastModified)->format('Y-m-d\\TH:i:s');
+            // dd($dateTime);
         }
         $query = $column . '=' . $dateTime . '+';
         $offset = 0;
@@ -114,11 +115,11 @@ class Navica extends Association implements RETS {
             $options = self::QUERY_OPTIONS;
             $options['Offset'] = $offset;
             $results = $this->rets->Search($this->retsResource, $this->retsClass, $query, self::QUERY_OPTIONS);
-            echo 'Class: ' . $this->retsClass . PHP_EOL;
-            echo 'Returned Results: ' . $results->getReturnedResultsCount() . PHP_EOL;
+            echo ($output ? 'Class: ' . $this->retsClass . PHP_EOL : null);
+            echo ($output ? 'Returned Results: ' . $results->getReturnedResultsCount() . PHP_EOL : null);
             foreach ($results as $result) {
                 $mlsNumbers[] = $result['MST_MLS_NUMBER'];
-                echo '|';
+                echo ($output ? '|' : null );
             }
 
             $offset += $results->getReturnedResultsCount();

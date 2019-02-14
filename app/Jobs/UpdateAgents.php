@@ -32,4 +32,14 @@ class UpdateAgents implements ShouldQueue
     {
         (new Agent)->fullUpdate();
     }
+
+    /**
+     * Get the tags that should be assigned to the job.
+     *
+     * @return array
+     */
+    public function tags()
+    {
+        return ['updaters', 'agents'];
+    }
 }

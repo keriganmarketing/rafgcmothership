@@ -32,4 +32,14 @@ class CleanListings implements ShouldQueue
     {
         (new Listing)->clean();
     }
+
+    /**
+     * Get the tags that should be assigned to the job.
+     *
+     * @return array
+     */
+    public function tags()
+    {
+        return ['cleaners'];
+    }
 }

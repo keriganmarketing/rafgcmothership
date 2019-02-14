@@ -34,4 +34,14 @@ class CheckPhotoConsistency implements ShouldQueue
         (new Photo)->fixPhotos(false,false);
         MediaObject::labelPreferredImages();
     }
+
+    /**
+     * Get the tags that should be assigned to the job.
+     *
+     * @return array
+     */
+    public function tags()
+    {
+        return ['cleaners', 'photos'];
+    }
 }

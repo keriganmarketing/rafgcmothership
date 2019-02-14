@@ -181,7 +181,7 @@ class Listing extends Model
         foreach ($this->childClasses as $child) {
             $resourceClass = new $child;
             $resourceClass->getPhotoUpdates(self::PHOTO_MODIFIED_COLUMN, $date, $output);
-            echo '---------------------------------------------------------' . PHP_EOL;
+            echo ($output ? '---------------------------------------------------------' . PHP_EOL : null);
         }
     }
 

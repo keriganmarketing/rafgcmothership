@@ -45,4 +45,14 @@ class UpdatePhotos implements ShouldQueue
         (new Photo)->fullUpdate($mlsNumbers);
         
     }
+
+    /**
+     * Get the tags that should be assigned to the job.
+     *
+     * @return array
+     */
+    public function tags()
+    {
+        return ['updaters', 'photos'];
+    }
 }

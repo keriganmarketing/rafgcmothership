@@ -32,4 +32,14 @@ class UpdateOffices implements ShouldQueue
     {
         (new Office)->fullUpdate();
     }
+
+    /**
+     * Get the tags that should be assigned to the job.
+     *
+     * @return array
+     */
+    public function tags()
+    {
+        return ['updaters', 'offices'];
+    }
 }
