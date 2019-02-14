@@ -14,6 +14,7 @@ use App\Jobs\UpdatePhotos;
 use App\Jobs\UpdateAgents;
 use App\Jobs\UpdateOffices;
 use App\Jobs\UpdateOpenHouses;
+use App\Jobs\CheckPhotoConsistency;
 
 class Kernel extends ConsoleKernel
 {
@@ -40,6 +41,7 @@ class Kernel extends ConsoleKernel
         $schedule->job(new UpdateOpenHouses,'updaters')->hourly()->withOutOverlapping();
         $schedule->job(new UpdateAgents,'updaters')->hourly()->withOutOverlapping();
         $schedule->job(new CleanListings,'updaters')->hourlyAt(10)->withOutOverlapping();
+        $schedule->job(new CheckPhotoConsistency,'updaters')->hourlyAt(15)->withOutOverlapping();
         $schedule->command('horizon:snapshot')->everyFiveMinutes();
     }
 
