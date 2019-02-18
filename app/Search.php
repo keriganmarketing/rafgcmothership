@@ -67,7 +67,8 @@ class Search
                     'Residential Lots/Land',
                     'Commercial Land',
                     'Vacant Land',
-                    'Farm/Timberland'
+                    'Farm/Timberland',
+                    'Improved RV Site'
                 ]);
             }
             if($propertyType == 'MultiUnit'){
@@ -82,6 +83,18 @@ class Search
                 return $query->whereIn('prop_type', [
                     'Business Only',
                     'Commercial Land',
+                    'Improved Commercial',
+                    'Vacant Land',
+                    'Real Estate & Business',
+                    'Unimproved Land',
+                    'Industrial',
+                    'Apartments/Multi-Family'
+                ]);
+            }
+            if($propertyType == 'Rental'){
+                return $query->whereIn('prop_type', [
+                    'Detached Single Family Rental',
+                    'Condominium Rental'
                 ]);
             }
             return $query->where('prop_type', 'like', $propertyType);

@@ -2,14 +2,15 @@
 
 namespace App\Jobs;
 
-use App\Listing;
+use App\Photo;
+use App\MediaObject;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 
-class CleanListings implements ShouldQueue
+class CheckPhotoConsistency implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -30,7 +31,8 @@ class CleanListings implements ShouldQueue
      */
     public function handle()
     {
-        (new Listing)->clean();
+        (new Photo)->fixPhotos(false,false);
+        MediaObject::labelPreferredImages();
     }
 
     /**
@@ -40,6 +42,6 @@ class CleanListings implements ShouldQueue
      */
     public function tags()
     {
-        return ['cleaners'];
+        return ['cleaners', 'photos'];
     }
 }

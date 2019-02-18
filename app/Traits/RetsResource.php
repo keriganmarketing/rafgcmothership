@@ -79,6 +79,16 @@ trait RetsResource {
         $navica->connect()->getUpdates($modifiedColumn);
     }
 
+    public function getPhotoUpdates($modifiedColumn, $date = 'now', $output = false)
+    {
+        $navica = new Navica(
+            $this->local_resource,
+            $this->rets_resource,
+            $this->rets_class
+        );
+        $navica->connect()->getPhotoUpdates($modifiedColumn, $date, $output);
+    }
+
     public function force($mlsNumber)
     {
         $navica = new Navica(

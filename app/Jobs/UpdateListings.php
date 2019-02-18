@@ -32,4 +32,14 @@ class UpdateListings implements ShouldQueue
     {
         (new Listing)->getUpdates();
     }
+
+    /**
+     * Get the tags that should be assigned to the job.
+     *
+     * @return array
+     */
+    public function tags()
+    {
+        return ['updaters', 'listings'];
+    }
 }

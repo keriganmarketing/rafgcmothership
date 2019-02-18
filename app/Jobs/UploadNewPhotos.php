@@ -9,7 +9,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 
-class CleanListings implements ShouldQueue
+class UploadNewPhotos implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -30,7 +30,7 @@ class CleanListings implements ShouldQueue
      */
     public function handle()
     {
-        (new Listing)->clean();
+        (new Listing)->getPhotoUpdates();
     }
 
     /**
@@ -40,6 +40,6 @@ class CleanListings implements ShouldQueue
      */
     public function tags()
     {
-        return ['cleaners'];
+        return ['updaters', 'photos'];
     }
 }

@@ -34,4 +34,14 @@ class UpdateOmni implements ShouldQueue
         AddressBuilder::populateEmpty();
         (new OmniBar)->buildTable();
     }
+
+    /**
+     * Get the tags that should be assigned to the job.
+     *
+     * @return array
+     */
+    public function tags()
+    {
+        return ['updaters', 'omni'];
+    }
 }
