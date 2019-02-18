@@ -198,8 +198,16 @@ class Listing extends Model
         $sortArray    = explode('|', (isset($request->sort) ? $request->sort : 'list_date|DESC'));
         $sortBy       = $sortArray[0];
         $orderBy      = $sortArray[1];
+        $status       = $request->status ?? '';
+
+        if ($status) {
+            $status = explode('|', $status);
+        }
 
         $listings = Listing::whereIn('mls_acct', explode('|', $request->mlsNumbers))
+            ->when($status, function ($query) use ($status) {
+                return $query->whereIn('status', $status);
+            })
             ->orderBy($sortBy, $orderBy)
             ->paginate(36);
 
