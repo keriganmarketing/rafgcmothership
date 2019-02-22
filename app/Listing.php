@@ -233,12 +233,18 @@ class Listing extends Model
 
     public static function forAgent($agentCode, $request)
     {
+        $sorting   = $request->sort ?? 'list_date|desc';
+        $sortArray = explode('|', $sorting);
+        $sortBy    = $sortArray[0];
+        $orderBy   = $sortArray[1];
+
         $listings = Listing::where(function ($query) use ($agentCode) {
             $query->where('la_code', $agentCode)
                 ->orWhere('co_la_code', $agentCode);
             })
             ->where('status','!=','Sold/Closed')
             ->groupBy('full_address')
+            ->orderBy($sortBy, $orderBy)
             ->get();
 
         if(!$request->nostats){
