@@ -145,14 +145,17 @@ class Photo extends RetsModel
         $missingPhotos = array_diff($mlsNumbers, $currentPhotos->toArray());
         echo ($output ? 'Listings Without Photos: ' . count($missingPhotos) . PHP_EOL : null);
         
-        $fixed = 0;
-        Listing::whereIn('mls_acct', $missingPhotos)->chunk(1500, function ($listings) use (&$output, &$fixed) {
-            foreach ($listings as $listing) {
-                $this->listingPhotos($listing);
-                $fixed++;
-            }
-        });
-        echo ($output ? PHP_EOL . 'Photos Added: ' . $fixed . PHP_EOL : null);
+        foreach($missingPhotos as $missing){
+            $this->fixPhotosByMls($missing, $output);
+        }
+        // $fixed = 0;
+        // Listing::whereIn('mls_acct', $missingPhotos)->chunk(1500, function ($listings) use (&$output, &$fixed) {
+        //     foreach ($listings as $listing) {
+        //         $this->listingPhotos($listing);
+        //         $fixed++;
+        //     }
+        // });
+        // echo ($output ? PHP_EOL . 'Photos Added: ' . $fixed . PHP_EOL : null);
 
     }
 
