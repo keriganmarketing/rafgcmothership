@@ -148,20 +148,14 @@ class Photo extends RetsModel
         foreach($missingPhotos as $missing){
             $this->fixPhotosByMls($missing, $output);
         }
-        // $fixed = 0;
-        // Listing::whereIn('mls_acct', $missingPhotos)->chunk(1500, function ($listings) use (&$output, &$fixed) {
-        //     foreach ($listings as $listing) {
-        //         $this->listingPhotos($listing);
-        //         $fixed++;
-        //     }
-        // });
-        // echo ($output ? PHP_EOL . 'Photos Added: ' . $fixed . PHP_EOL : null);
+        
+        MediaObject::labelPreferredImages();
 
     }
 
     public function fixPhotoIds()
     {
-        echo 'Fixing Sold Photos ' . PHP_EOL;
+        echo 'Fixing Photo IDs ' . PHP_EOL;
         Listing::chunk(1500, function ($listings) {
             foreach ($listings as $listing) {
                 if(MediaObject::where('mls_acct', '=', $listing->mls_acct)->exists()) {
