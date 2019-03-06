@@ -61,6 +61,7 @@ class ListingTransformer extends TransformerAbstract
             'lot_dimensions'      => $listing->lot_dimensions,
             'listing_office'      => $listing->lo_code,
             'mls_account'         => $listing->mls_acct,
+            'monthly_rent'        => $listing->monthly_rent,
             'num_units'           => $listing->num_units,
             'occupancy'           => $listing->occupancy_yn,
             'original_list_price' => $listing->original_list_price,              

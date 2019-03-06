@@ -233,6 +233,7 @@ class ColumnMapper
             'list_price'          => $listing->List_Price,
             'lot_dimensions'      => $listing->LotDimensions,
             'mls_acct'            => $listing->MST_MLS_NUMBER,
+            'monthly_rent'        => $listing->MonthlyRentAmount,
             'occupancy_yn'        => $listing->ImmediateOccupancyYN,
             'original_list_price' => $listing->Org_LP,
             'parcel_id'           => $listing->ParcelID,
