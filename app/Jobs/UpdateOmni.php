@@ -3,6 +3,7 @@
 namespace App\Jobs;
 
 use App\OmniBar;
+use App\OmniTerm;
 use App\AddressBuilder;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;
@@ -32,6 +33,7 @@ class UpdateOmni implements ShouldQueue
     public function handle()
     {
         AddressBuilder::populateEmpty();
+        OmniTerm::truncate();
         (new OmniBar)->buildTable();
     }
 
