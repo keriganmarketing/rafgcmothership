@@ -131,18 +131,14 @@ class Photo extends RetsModel
         $mlsNumbers = [];
 
         echo ($output ? '-- Patching Missing Photos -----' . PHP_EOL : null);
-        Listing::chunk(2000, function ($listings) use (&$mlsNumbers) {
-            foreach ($listings as $listing) { 
-                $mlsNumbers[] = $listing->mls_acct;
-            }
-        });
 
-        echo ($output ? 'Listings: ' . count($mlsNumbers) . PHP_EOL : null);
+        $currentListings = Listing::groupBy('mls_acct')->pluck('mls_acct');
+        echo ($output ? 'Listings: ' . $currentListings->count() . PHP_EOL : null);
 
         $currentPhotos = MediaObject::groupBy('mls_acct')->pluck('mls_acct');
         echo ($output ? 'Listings With Photos: ' . $currentPhotos->count() . PHP_EOL : null);
 
-        $missingPhotos = array_diff($mlsNumbers, $currentPhotos->toArray());
+        $missingPhotos = array_diff($currentListings->toArray(), $currentPhotos->toArray());
         echo ($output ? 'Listings Without Photos: ' . count($missingPhotos) . PHP_EOL : null);
         
         foreach($missingPhotos as $missing){
