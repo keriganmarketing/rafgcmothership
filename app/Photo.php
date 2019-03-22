@@ -180,7 +180,7 @@ class Photo extends RetsModel
         Listing::where('mls_acct',$mls)->chunk(200, function ($listings) {
             foreach ($listings as $listing) {
                 echo '-- ' . $listing->mls_acct . ' ---------';
-                if(! MediaObject::where('mls_acct', '=', $listing->mls_acct)->exists()) {
+                if(! MediaObject::where('listing_id', '=', $listing->id)->exists()) {
                     echo ' nope --' . PHP_EOL;
                     $this->listingPhotos($listing);
                 }else{
