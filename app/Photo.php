@@ -132,7 +132,7 @@ class Photo extends RetsModel
 
         echo ($output ? '-- Patching Missing Photos -----' . PHP_EOL : null);
 
-        $currentListings = Listing::groupBy('listing_id')->pluck('listing_id');
+        $currentListings = Listing::groupBy('id')->pluck('id');
         echo ($output ? 'Listings: ' . $currentListings->count() . PHP_EOL : null);
 
         $currentPhotos = MediaObject::groupBy('listing_id')->pluck('listing_id');
