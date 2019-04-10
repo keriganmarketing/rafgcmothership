@@ -32,7 +32,7 @@ class CheckPhotoConsistency implements ShouldQueue
     public function handle()
     {
         (new Photo)->fixPhotos(false,false);
-        MediaObject::labelPreferredImages();
+        (new Photo)->patchMissingPhotos();
     }
 
     /**
