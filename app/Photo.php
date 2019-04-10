@@ -142,7 +142,7 @@ class Photo extends RetsModel
         echo ($output ? 'Listings Without Photos: ' . count($missingPhotos) . PHP_EOL : null);
         
         foreach($missingPhotos as $missing){
-            $this->fixPhotosByMls($missing, $output);
+            $this->fixPhotosById($missing, $output);
         }
         
         MediaObject::labelPreferredImages();
@@ -193,6 +193,16 @@ class Photo extends RetsModel
     public function fixPhotosByMls($mls, $output = false)
     {
         Listing::where('mls_acct',$mls)->chunk(200, function ($listings) use (&$output) {
+            foreach ($listings as $listing) {
+                echo ($output ? '-- ' . $listing->mls_acct . ' ---------' . PHP_EOL : null );
+                $this->listingPhotos($listing, $output);
+            }
+        });
+    }
+
+    public function fixPhotosById($id, $output = false)
+    {
+        Listing::where('id',$id)->chunk(200, function ($listings) use (&$output) {
             foreach ($listings as $listing) {
                 echo ($output ? '-- ' . $listing->mls_acct . ' ---------' . PHP_EOL : null );
                 $this->listingPhotos($listing, $output);
