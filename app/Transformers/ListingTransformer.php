@@ -90,7 +90,7 @@ class ListingTransformer extends TransformerAbstract
             'subdivision'         => $listing->subdivision,
             'sub_area'            => $listing->sub_area,
             'total_hc_sqft'       => $listing->tot_heat_sqft,
-            'unit_num'            => (int) $listing->unit_num,
+            'unit_num'            => $listing->unit_num,
             'virtual_tour'        => $listing->virtual_tour,
             'virtual_tour2'       => $listing->virtual_tour2,
             'waterfront_feet'     => $listing->wf_feet,
