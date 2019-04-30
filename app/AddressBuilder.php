@@ -12,8 +12,8 @@ class AddressBuilder
                 if ($listing->full_address == null) {
                     $streetNumber = $listing->street_num ?? '';
                     $streetName   = $listing->street_name ?? 'No Street Name Provided';
-                    $unit         = isset($listing->unit_num) && $listing->unit_num != '' ? ' ' . (int) $listing->unit_num : '';
-                    $address      = (int) $streetNumber . ' ' . $streetName . ' ' . $unit;
+                    // $unit         = isset($listing->unit_num) && $listing->unit_num != '' ? ' ' . (int) $listing->unit_num : '';
+                    $address      = (int) $streetNumber . ' ' . $streetName . ' ' . $listing->unit_num;
 
                     $listing->update([
                         'full_address' => $address
