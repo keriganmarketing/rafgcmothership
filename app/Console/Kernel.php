@@ -43,7 +43,7 @@ class Kernel extends ConsoleKernel
         $schedule->job(new UpdateAgents,'updaters')->hourly()->withOutOverlapping();
         $schedule->job(new CleanListings,'updaters')->hourlyAt(10)->withOutOverlapping();
         $schedule->job(new UploadNewPhotos,'updaters')->hourlyAt(15)->withOutOverlapping();
-        // $schedule->job(new CheckPhotoConsistency,'updaters')->hourlyAt(18)->withOutOverlapping();
+        $schedule->job(new CheckPhotoConsistency,'updaters')->dailyAt('2:00')->withOutOverlapping()->timezone('America/New_York');
         $schedule->command('horizon:snapshot')->everyFiveMinutes();
     }
 
