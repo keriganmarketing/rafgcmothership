@@ -36,6 +36,51 @@ class ScopedSearch
         $filters  = $this->filters;
         $listings = $listing->__call($this->customScope, $this->args)
                     ->when($filters->propertyType, function ($query) use ($filters) {
+                        if($filters->propertyType == 'AllHomes'){
+                            return $query->whereIn('prop_type', [
+                                'Detached Single Family',
+                                'Condominium',
+                                'ASF (Attached Single Family)',
+                                'Dup/Tri/Quad (Multi-Unit)',
+                                'Mobile/Manufactured',
+                                'Pre-Construction'
+                            ]);
+                        }
+                        if($filters->propertyType == 'AllLand'){
+                            return $query->whereIn('prop_type', [
+                                'Residential Lots/Land',
+                                'Commercial Land',
+                                'Vacant Land',
+                                'Farm/Timberland',
+                                'Improved RV Site'
+                            ]);
+                        }
+                        if($filters->propertyType == 'MultiUnit'){
+                            return $query->whereIn('prop_type', [
+                                'Condominium',
+                                'ASF (Attached Single Family)',
+                                'Dup/Tri/Quad (Multi-Unit)',
+                                'Apartments/Multi-Family'
+                            ]);
+                        }
+                        if($filters->propertyType == 'Commercial'){
+                            return $query->whereIn('prop_type', [
+                                'Business Only',
+                                'Commercial Land',
+                                'Improved Commercial',
+                                'Vacant Land',
+                                'Real Estate & Business',
+                                'Unimproved Land',
+                                'Industrial',
+                                'Apartments/Multi-Family'
+                            ]);
+                        }
+                        if($filters->propertyType == 'Rental'){
+                            return $query->whereIn('prop_type', [
+                                'Detached Single Family Rental',
+                                'Condominium Rental'
+                            ]);
+                        }
                         return $query->where('prop_type', 'like', $filters->propertyType);
                     })
                     ->when($filters->area, function ($query) use ($filters) {
