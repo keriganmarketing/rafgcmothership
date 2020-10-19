@@ -83,6 +83,9 @@ class ScopedSearch
                         }
                         return $query->where('prop_type', 'like', $filters->propertyType);
                     })
+                    ->when($filters->status, function ($query) use ($filters) {
+                        return $query->whereIn('status', $filters->status);
+                    })
                     ->when($filters->area, function ($query) use ($filters) {
                         return $query->where(function ($q) use ($filters) {
                             return $q->where('area', $filters->area)
