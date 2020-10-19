@@ -27,12 +27,24 @@ trait HasScopes {
             ->orWhere('so_code', $officeCode);
     }
 
+    // public function scopeRecentlySoldBy($query, $officeCode)
+    // {
+    //     $oneYearAgo = \Carbon\Carbon::now()->copy()->subYearNoOverflow();
+    //     return $query->where('lo_code', $officeCode)
+    //                  ->orWhere('co_lo_code', $officeCode)
+    //                  ->orWhere('so_code', $officeCode)
+    //         ->where('sold_date', '>=', $oneYearAgo)
+    //         ->whereNotNull('sold_date');
+    // }
+
     public function scopeRecentlySoldBy($query, $officeCode)
     {
         $oneYearAgo = \Carbon\Carbon::now()->copy()->subYearNoOverflow();
-        return $query->where('lo_code', $officeCode)
-                     ->orWhere('co_lo_code', $officeCode)
-                     ->orWhere('so_code', $officeCode)
+        return $query->where(function ($q) use ($officeCode) {
+            return $q->where('lo_code', $officeCode)
+                ->orWhere('co_lo_code', $officeCode)
+                ->orWhere('so_code', $officeCode);
+            })
             ->where('sold_date', '>=', $oneYearAgo)
             ->whereNotNull('sold_date');
     }
