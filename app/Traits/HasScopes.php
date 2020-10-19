@@ -22,9 +22,11 @@ trait HasScopes {
 
     public function scopeBy($query, $officeCode)
     {
-        return $query->where('lo_code', $officeCode)
-            ->orWhere('co_lo_code', $officeCode)
-            ->orWhere('so_code', $officeCode);
+        return $query->where(function ($q) use ($officeCode) {
+            return $q->where('lo_code', $officeCode)
+                ->orWhere('co_lo_code', $officeCode)
+                ->orWhere('so_code', $officeCode);
+            });
     }
 
     // public function scopeRecentlySoldBy($query, $officeCode)
