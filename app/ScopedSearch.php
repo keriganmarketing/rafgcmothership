@@ -91,6 +91,9 @@ class ScopedSearch
                                      ->orWhere('subdivision', $filters->area);
                         });
                     })
+                    ->when($filters->status, function ($query) use ($filters) {
+                        return $query->whereIn('status', $filters->status);
+                    })
                     ->excludeAreas($excludes)
                     ->orderBy($filters->sortBy, $filters->orderBy)
                     ->paginate(36);

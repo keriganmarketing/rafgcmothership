@@ -16,6 +16,7 @@ class SearchFilters
     {
         $this->request = $request;
         $this->status = $this->request->status ?? null;
+        $this->status = isset($this->request->status) && !is_array($this->request->status) ? explode('|', $this->request->status) : $this->request->status;
         $this->sort = isset($this->request->sort) && $this->request->sort !== '' ? explode('|', $this->request->sort) : [];
         $this->propertyType = $this->request->propertyType ?? null;
         $this->area = $this->request->area ?? null;
