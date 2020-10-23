@@ -143,7 +143,7 @@ class Listing extends Model
             foreach($photos as $photo){
 
                 //$photo->delete();
-                //echo ($output ? '|' : null);
+                echo ($output ? '|' : null);
                 $photoCount++;
             }
         });
