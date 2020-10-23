@@ -117,7 +117,7 @@ class Listing extends Model
         echo ($output ? PHP_EOL . '-- Media Objects --------------------' . PHP_EOL : null);
 
         $localPhotoArray = [];
-        MediaObject::chunk(1500, function ($localPhotos) use (&$localPhotoArray) {
+        MediaObject::chunk(1000, function ($localPhotos) use (&$localPhotoArray) {
             foreach($localPhotos as $localPhoto){
                 $localPhotoArray[] = $localPhoto->mls_acct;
             }
