@@ -117,16 +117,18 @@ class Listing extends Model
         echo ($output ? PHP_EOL . '-- Media Objects --------------------' . PHP_EOL : null);
 
         $localPhotoArray = [];
-        MediaObject::select('mls_acct')->chunk(1000, function ($localPhotos) use (&$localPhotoArray) {
+        MediaObject::select('mls_acct')->chunk(1000, function ($localPhotos) use (&$localPhotoArray, &$output) {
             foreach($localPhotos as $localPhoto){
                 $localPhotoArray[] = $localPhoto->mls_acct;
+                echo ($output ? '|' : null);
             }
         });
 
         $localPhotoMLS = [];
-        MediaObject::distinct()->select('mls_acct')->groupBy('mls_acct')->chunk(1500, function ($localPhotos) use (&$localPhotoMLS) {
+        MediaObject::distinct()->select('mls_acct')->groupBy('mls_acct')->chunk(1500, function ($localPhotos) use (&$localPhotoMLS, &$output) {
             foreach($localPhotos as $localPhoto){
                 $localPhotoMLS[] = $localPhoto->mls_acct;
+                echo ($output ? '|' : null);
             }
         });
 
