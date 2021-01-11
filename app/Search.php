@@ -47,6 +47,7 @@ class Search
             $query->where(function ($query) use ($omni) {
                 $query->whereRaw("city LIKE '%{$omni}%'")
                     ->orWhereRaw("area LIKE '%{$omni}%'")
+                    ->orWhereRaw("sub_area LIKE '%{$omni}%'")
                     ->orWhereRaw("zip LIKE '%{$omni}%'")
                     ->orWhereRaw("subdivision LIKE '%{$omni}%'")
                     ->orWhereRaw("full_address LIKE '%{$omni}%'")->orWhereRaw("mls_acct LIKE '%{$omni}%'");
