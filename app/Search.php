@@ -46,6 +46,7 @@ class Search
         $listings = Listing::when($omni, function ($query) use ($omni) {
             $query->where(function ($query) use ($omni) {
                 $query->whereRaw("city LIKE '%{$omni}%'")
+                    ->orWhereRaw("area LIKE '%{$omni}%'")
                     ->orWhereRaw("zip LIKE '%{$omni}%'")
                     ->orWhereRaw("subdivision LIKE '%{$omni}%'")
                     ->orWhereRaw("full_address LIKE '%{$omni}%'")->orWhereRaw("mls_acct LIKE '%{$omni}%'");
