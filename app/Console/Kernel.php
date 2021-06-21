@@ -44,9 +44,9 @@ class Kernel extends ConsoleKernel
 
         $schedule->job(new UpdateOffices,'updaters')->hourly()->withOutOverlapping();
         $schedule->job(new UpdateAgents,'updaters')->hourly()->withOutOverlapping();
-        
-        $schedule->job(new CleanListings,'updaters')->hourlyAt(10)->withOutOverlapping();
-        
+
+        $schedule->job(new CleanListings,'updaters')->dailyAt('01:00')->withOutOverlapping();
+
         $schedule->command('horizon:snapshot')->everyFiveMinutes();
     }
 
