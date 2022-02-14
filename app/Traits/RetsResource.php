@@ -101,7 +101,7 @@ trait RetsResource {
 
     public function getCurrentColumns()
     {
-        die($this->getConnection()->getSchemaBuilder()->getColumnListing($this->local_table));
+        print_r($this->getConnection()->getSchemaBuilder()->getColumnListing($this->local_table));
     }
 
     public function populateMasterTable( $output = false )
