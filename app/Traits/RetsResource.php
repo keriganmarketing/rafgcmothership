@@ -101,7 +101,7 @@ trait RetsResource {
 
     public function getCurrentColumns()
     {
-        $table = $databaseName = \DB::connection()->getSchemaBuilder()->getColumnListing($this->local_table);
+        $table = \DB::connection()->getSchemaBuilder()->getColumnListing($this->local_table);
         dd($table);
     }
 
