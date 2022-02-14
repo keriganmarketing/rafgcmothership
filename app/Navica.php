@@ -88,6 +88,9 @@ class Navica extends Association implements RETS {
                 $resultData = array_map(function ($column) use ($currentColumns) {
                     if(isset($currentColumns[$column])) { return $column; }
                 }, $result->toArray());
+
+                dd($resultData);
+
                 $this->localResource::updateOrCreate([$this->localResource::MASTER_COLUMN => $result[$this->localResource::MASTER_COLUMN]], $resultData);
                 $mlsNumbers[] = $result['MST_MLS_NUMBER'];
             }
