@@ -97,7 +97,7 @@ class Navica extends Association implements RETS {
                 array_walk(
                     $result,
                     function (&$value, $key) use ($currentColumns, $resultData) {
-                        if(!is_array($value) && key($key, $currentColumns)) {
+                        if(!is_array($value) && in_array($key, $currentColumns)) {
                             $resultData[$key] = $value;
                         }
                     }
