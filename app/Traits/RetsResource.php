@@ -101,7 +101,7 @@ trait RetsResource {
 
     public function getCurrentColumns()
     {
-        $columns = \DB::raw("select COLUMN_NAME from INFORMATION_SCHEMA.COLUMNS where TABLE_NAME=" . $this->local_table);
+        $columns = \DB::table('INFORMATION_SCHEMA.COLUMNS')->select('COLUMN_NAME')->where('TABLE_NAME',$this->local_table)->get;
         dd($columns);
     }
 
