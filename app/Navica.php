@@ -87,7 +87,7 @@ class Navica extends Association implements RETS {
             echo 'Total Results: ' . $results->getTotalResultsCount() . PHP_EOL;
 
             foreach ($results as $result) {
-                // $resultArray = $result->toArray();
+                $resultArray = $result->toArray();
 
                 // $resultData = array_map(function ($column, $data) use ($currentColumns) {
                 //     if(!is_array($data) && in_array($column, $currentColumns)) {
@@ -97,11 +97,11 @@ class Navica extends Association implements RETS {
 
                 foreach($result->toArray() as $key => $var){
                     if(!in_array($key, $currentColumns)) {
-                        unset($result->{$key});
+                        unset($resultArray[$key]);
                     }
                 }
 
-                print_r($result);
+                print_r($resultArray);
                 dd();
 
                 $this->localResource::updateOrCreate([$this->localResource::MASTER_COLUMN => $result[$this->localResource::MASTER_COLUMN]], $resultData);
