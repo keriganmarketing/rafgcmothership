@@ -101,8 +101,8 @@ trait RetsResource {
 
     public function getCurrentColumns()
     {
-        $table = \DB::connection()->getSchemaBuilder()->getColumnListing($this->local_table);
-        dd($table);
+        $columns = \DB::raw("select COLUMN_NAME from INFORMATION_SCHEMA.COLUMNS where TABLE_NAME=" . $this->local_table);
+        dd($columns);
     }
 
     public function populateMasterTable( $output = false )
