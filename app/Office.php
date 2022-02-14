@@ -12,6 +12,7 @@ class Office extends RetsModel
         $this->rets_class = 'Office';
         $this->rets_resource = 'Office';
         $this->local_resource = get_class();
+        $this->local_table = 'offices';
     }
 
     public function fullBuild()

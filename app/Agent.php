@@ -12,6 +12,7 @@ class Agent extends RetsModel
         $this->rets_class = 'Agent';
         $this->rets_resource = 'Agent';
         $this->local_resource = get_class();
+        $this->local_table = 'agents';
     }
 
     public function fullBuild()

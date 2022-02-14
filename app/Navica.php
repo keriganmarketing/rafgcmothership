@@ -76,8 +76,6 @@ class Navica extends Association implements RETS {
         $mlsNumbers = [];
         $currentColumns = (new $this->localResource)->getCurrentColumns();
 
-        print_r($currentColumns);
-
         while (!$maxRowsReached) {
             $options = self::QUERY_OPTIONS;
             $options['Offset'] = $offset;
@@ -87,14 +85,8 @@ class Navica extends Association implements RETS {
             echo 'Total Results: ' . $results->getTotalResultsCount() . PHP_EOL;
 
             foreach ($results as $result) {
+
                 $resultArray = $result->toArray();
-
-                // $resultData = array_map(function ($column, $data) use ($currentColumns) {
-                //     if(!is_array($data) && in_array($column, $currentColumns)) {
-                //         return [$column => $data];
-                //     }
-                // }, array_keys($resultArray), $resultArray);
-
                 foreach($result->toArray() as $key => $var){
                     if(!in_array($key, $currentColumns)) {
                         unset($resultArray[$key]);
@@ -104,7 +96,7 @@ class Navica extends Association implements RETS {
                 print_r($resultArray);
                 dd();
 
-                $this->localResource::updateOrCreate([$this->localResource::MASTER_COLUMN => $result[$this->localResource::MASTER_COLUMN]], $resultData);
+                $this->localResource::updateOrCreate([$this->localResource::MASTER_COLUMN => $result[$this->localResource::MASTER_COLUMN]], $resultArray);
                 $mlsNumbers[] = $result['MST_MLS_NUMBER'];
             }
 

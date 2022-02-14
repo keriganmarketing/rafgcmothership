@@ -14,6 +14,7 @@ class Photo extends RetsModel
         $this->rets_class = 'Property';
         $this->rets_resource = 'Photo';
         $this->local_resource = get_class();
+        $this->local_table = 'media_objects';
     }
 
     protected function connect()
@@ -36,13 +37,13 @@ class Photo extends RetsModel
 
         if($status == 'all'){
             Listing::chunk(2000, function ($listings) use (&$mlsNumbers) {
-                foreach ($listings as $listing) { 
+                foreach ($listings as $listing) {
                     $mlsNumbers[$listing->id] = $listing->mls_acct;
                 }
             });
         }else{
             Listing::where('status', $status)->chunk(2000, function ($listings) use (&$mlsNumbers) {
-                foreach ($listings as $listing) { 
+                foreach ($listings as $listing) {
                     $mlsNumbers[$listing->id] = $listing->mls_acct;
                 }
             });
@@ -79,7 +80,7 @@ class Photo extends RetsModel
 
         foreach($photos as $photo) {
             if (! $photo->isError()) {
-                
+
                 $path = 'images/' . $photo->getContentId() . '/' . $photo->getObjectId() . '.jpg';
                 $uploaded = MediaObject::uploadIfNotUploaded($path, $photo);
                 if ($uploaded && $photo->getContentType() == 'image/jpeg') {
@@ -140,11 +141,11 @@ class Photo extends RetsModel
 
         $missingPhotos = array_diff($currentListings->toArray(), $currentPhotos->toArray());
         echo ($output ? 'Listings Without Photos: ' . count($missingPhotos) . PHP_EOL : null);
-        
+
         foreach($missingPhotos as $missing){
             $this->fixPhotosById($missing, $output);
         }
-        
+
         MediaObject::labelPreferredImages();
 
     }

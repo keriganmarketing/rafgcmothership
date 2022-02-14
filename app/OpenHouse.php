@@ -14,6 +14,7 @@ class OpenHouse extends RetsModel
         $this->rets_class = 'OpenHouse';
         $this->rets_resource = 'OpenHouse';
         $this->local_resource = get_class();
+        $this->local_table = 'open_houses';
     }
 
     public function fullBuild()
