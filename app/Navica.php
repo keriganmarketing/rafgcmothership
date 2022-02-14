@@ -93,9 +93,6 @@ class Navica extends Association implements RETS {
                     }
                 }
 
-                print_r($resultArray);
-                dd();
-
                 $this->localResource::updateOrCreate([$this->localResource::MASTER_COLUMN => $result[$this->localResource::MASTER_COLUMN]], $resultArray);
                 $mlsNumbers[] = $result['MST_MLS_NUMBER'];
             }
