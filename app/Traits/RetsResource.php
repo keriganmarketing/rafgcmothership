@@ -5,6 +5,7 @@ use App\Navica;
 use App\Listing;
 use App\Photo;
 use App\Jobs\UpdatePhotos;
+use Illuminate\Support\Facades\DB;
 
 trait RetsResource {
 
@@ -101,7 +102,7 @@ trait RetsResource {
 
     public function getCurrentColumns()
     {
-        $columns = \DB::table('INFORMATION_SCHEMA.COLUMNS')->select('COLUMN_NAME')->where('TABLE_NAME',$this->local_table)->get();
+        $columns =  DB::getSchemaBuilder()->getColumnListing($this->local_table);
         dd($columns);
     }
 
