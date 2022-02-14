@@ -88,7 +88,7 @@ class Navica extends Association implements RETS {
                 $resultData = array_map(function ($column) use ($currentColumns, $result) {
                     dd($column);
                     if(isset($currentColumns[$column])) { return $result->$column; }
-                }, $result->toArray());
+                }, array_keys($result->toArray()));
 
                 dd($resultData);
 
