@@ -5,7 +5,6 @@ use App\Navica;
 use App\Listing;
 use App\Photo;
 use App\Jobs\UpdatePhotos;
-use App\Traits\DB;
 
 trait RetsResource {
 
@@ -102,7 +101,8 @@ trait RetsResource {
 
     public function getCurrentColumns()
     {
-        dd(DB::getSchemaBuilder()->getColumnListing($this->local_table));
+        $table = $databaseName = \DB::connection()->getSchemaBuilder()->getColumnListing($this->local_table);
+        dd($table);
     }
 
     public function populateMasterTable( $output = false )
