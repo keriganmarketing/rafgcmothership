@@ -101,7 +101,10 @@ trait RetsResource {
 
     public function getCurrentColumns()
     {
-        die($this->local_resource::getColumnListing());
+        echo $this->local_resource . 'PHP_EOL';
+        echo $this->rets_resource . 'PHP_EOL';
+        echo $this->rets_class . 'PHP_EOL';
+        die($this->getConnection()->getSchemaBuilder()->getColumnListing($this->local_resource));
     }
 
     public function populateMasterTable( $output = false )
