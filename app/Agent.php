@@ -6,13 +6,13 @@ class Agent extends RetsModel
 {
     const MASTER_COLUMN = 'rets_agt_id';
     const MODIFIED_COLUMN = 'DA_MODIFIED';
+    const LOCAL_TABLE = 'agents';
 
     public function __construct()
     {
         $this->rets_class = 'Agent';
         $this->rets_resource = 'Agent';
         $this->local_resource = get_class();
-        $this->local_table = 'agents';
     }
 
     public function fullBuild()

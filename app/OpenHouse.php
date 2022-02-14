@@ -8,13 +8,13 @@ class OpenHouse extends RetsModel
 {
     const MASTER_COLUMN = 'rets_oh_id';
     const MODIFIED_COLUMN = 'rets_oh_start';
+    const LOCAL_TABLE = 'open_houses';
 
     public function __construct()
     {
         $this->rets_class = 'OpenHouse';
         $this->rets_resource = 'OpenHouse';
         $this->local_resource = get_class();
-        $this->local_table = 'open_houses';
     }
 
     public function fullBuild()

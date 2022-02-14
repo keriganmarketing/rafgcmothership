@@ -6,13 +6,13 @@ use App\Contracts\MapsColumns;
 class RentalListing extends RetsModel implements MapsColumns
 {
     const MASTER_COLUMN = 'MST_MLS_NUMBER';
+    const LOCAL_TABLE = 'rental_listings';
 
     public function __construct()
     {
         $this->rets_class = 'Rental';
         $this->rets_resource = 'Property';
         $this->local_resource = get_class();
-        $this->local_table = 'rental_listings';
     }
 
     public static function mapColumns($listing)

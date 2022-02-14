@@ -8,13 +8,13 @@ use App\MediaObject;
 
 class Photo extends RetsModel
 {
+    const LOCAL_TABLE = 'media_objects';
 
     public function __construct()
     {
         $this->rets_class = 'Property';
         $this->rets_resource = 'Photo';
         $this->local_resource = get_class();
-        $this->local_table = 'media_objects';
     }
 
     protected function connect()
