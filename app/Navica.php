@@ -82,7 +82,7 @@ class Navica extends Association implements RETS {
             echo 'Class: ' . $this->retsClass . PHP_EOL;
             echo 'Returned Results: ' . $results->getReturnedResultsCount() . PHP_EOL;
             echo 'Total Results: ' . $results->getTotalResultsCount() . PHP_EOL;
-            $currentColumns = (new $this->retsResource)->getCurrentColumns();
+            $currentColumns = $this->localResource->getCurrentColumns();
             foreach ($results as $result) {
                 $resultData = array_map(function ($column) use ($currentColumns) {
                     if(isset($currentColumns[$column])) { return $column; }
