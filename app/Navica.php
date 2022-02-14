@@ -85,13 +85,23 @@ class Navica extends Association implements RETS {
             echo 'Total Results: ' . $results->getTotalResultsCount() . PHP_EOL;
 
             foreach ($results as $result) {
-                $resultArray = $result->toArray();
+                // $resultArray = $result->toArray();
 
-                $resultData = array_map(function ($column, $data) use ($currentColumns, $resultArray) {
-                    if(!is_array($data) && in_array($column, $currentColumns)) {
-                        return [$column => $data];
+                // $resultData = array_map(function ($column, $data) use ($currentColumns) {
+                //     if(!is_array($data) && in_array($column, $currentColumns)) {
+                //         return [$column => $data];
+                //     }
+                // }, array_keys($resultArray), $resultArray);
+
+                $resultData = [];
+                array_walk(
+                    $result,
+                    function (&$value, $key) use ($currentColumns, $resultData) {
+                        if(!is_array($value) && key($key, $currentColumns)) {
+                            $resultData[$key] = $value;
+                        }
                     }
-                }, array_keys($resultArray), $resultArray);
+                );
 
                 print_r($resultData);
                 dd();
