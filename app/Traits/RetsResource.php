@@ -100,7 +100,7 @@ trait RetsResource {
         $navica->connect()->force($mlsNumber);
     }
 
-    public function getCurrentColumns()
+    public static function getCurrentColumns()
     {
         return DB::getSchemaBuilder()->getColumnListing($this->local_table);
     }
