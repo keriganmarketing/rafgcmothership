@@ -74,6 +74,7 @@ class Navica extends Association implements RETS {
         $offset = 0;
         $maxRowsReached = false;
         $mlsNumbers = [];
+        $currentColumns = $this->localResource::getCurrentColumns();
 
         while (!$maxRowsReached) {
             $options = self::QUERY_OPTIONS;
@@ -82,7 +83,7 @@ class Navica extends Association implements RETS {
             echo 'Class: ' . $this->retsClass . PHP_EOL;
             echo 'Returned Results: ' . $results->getReturnedResultsCount() . PHP_EOL;
             echo 'Total Results: ' . $results->getTotalResultsCount() . PHP_EOL;
-            $currentColumns = $this->localResource->getCurrentColumns();
+
             foreach ($results as $result) {
                 $resultData = array_map(function ($column) use ($currentColumns) {
                     if(isset($currentColumns[$column])) { return $column; }
