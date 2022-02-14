@@ -96,9 +96,9 @@ class Navica extends Association implements RETS {
                 // }, array_keys($resultArray), $resultArray);
 
                 $resultData = [];
-                foreach($result as $key => $var){
+                foreach($result->toArray() as $key => $var){
                     if(in_array($key, $currentColumns)) {
-                        $resultData[$key] = $value;
+                        $resultData[$key] = $var;
                     }
                 }
 
