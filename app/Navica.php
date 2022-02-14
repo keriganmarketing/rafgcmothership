@@ -95,14 +95,13 @@ class Navica extends Association implements RETS {
                 //     }
                 // }, array_keys($resultArray), $resultArray);
 
-                $resultData = [];
                 foreach($result->toArray() as $key => $var){
-                    if(in_array($key, $currentColumns)) {
-                        $resultData[$key] = $var;
+                    if(!in_array($key, $currentColumns)) {
+                        unset($result->{$key});
                     }
                 }
 
-                print_r($resultData);
+                print_r($result);
                 dd();
 
                 $this->localResource::updateOrCreate([$this->localResource::MASTER_COLUMN => $result[$this->localResource::MASTER_COLUMN]], $resultData);
