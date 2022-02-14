@@ -51,7 +51,7 @@ trait RetsResource {
             $this->rets_class
         );
         $listings = $navica->connect()->build($lastModified);
-        
+
         foreach($listings as $listing){
             $this->local_resource::updateOrCreate([$this->local_resource::MASTER_COLUMN => $listing[$this->local_resource::MASTER_COLUMN]], $listing);
             echo '|';
@@ -97,6 +97,11 @@ trait RetsResource {
             $this->rets_class
         );
         $navica->connect()->force($mlsNumber);
+    }
+
+    public function getCurrentColumns()
+    {
+        die($this->local_resource::getColumnListing());
     }
 
     public function populateMasterTable( $output = false )
