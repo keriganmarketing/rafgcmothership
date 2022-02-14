@@ -49,7 +49,7 @@ class Navica extends Association implements RETS {
             $options = self::QUERY_OPTIONS;
             $options['Offset'] = $offset;
             $results = $this->rets->Search($this->retsResource, $this->retsClass, $query, self::QUERY_OPTIONS);
-            
+
             foreach ($results as $result) {
                 $listings[] = $result->toArray();
                 // $this->localResource::updateOrCreate([$this->localResource::MASTER_COLUMN => $result[$this->localResource::MASTER_COLUMN]], $result->toArray());
@@ -82,8 +82,15 @@ class Navica extends Association implements RETS {
             echo 'Class: ' . $this->retsClass . PHP_EOL;
             echo 'Returned Results: ' . $results->getReturnedResultsCount() . PHP_EOL;
             echo 'Total Results: ' . $results->getTotalResultsCount() . PHP_EOL;
+            $currentColumns = $this->retsResource->getCurrentColumns();
             foreach ($results as $result) {
-                $this->localResource::updateOrCreate([$this->localResource::MASTER_COLUMN => $result[$this->localResource::MASTER_COLUMN]], $result->toArray());
+                $resultData = array_map(function ($column) use ($currentColumns) {
+                    if(isset($currentColumns[$column])) { return $column; }
+                }, $result->toArray());
+
+                dd($resultData);
+
+                $this->localResource::updateOrCreate([$this->localResource::MASTER_COLUMN => $result[$this->localResource::MASTER_COLUMN]], $resultData);
                 $mlsNumbers[] = $result['MST_MLS_NUMBER'];
             }
 
@@ -131,13 +138,13 @@ class Navica extends Association implements RETS {
 
         $newMlsNumbers = [];
         Listing::whereIn('mls_acct',$mlsNumbers)->chunk(500, function ($listings) use (&$newMlsNumbers) {
-            foreach ($listings as $listing) { 
+            foreach ($listings as $listing) {
                 $newMlsNumbers[$listing->id] = $listing->mls_acct;
             }
         });
 
         echo ($output ? PHP_EOL . 'Preparing photo retrieval for ' . count($newMlsNumbers) . ' listings' . PHP_EOL : null);
-        
+
         $pass = 1;
         // Retrieve all photos for group of listings
         foreach(array_chunk($mlsNumbers, 10) as $chunk){
@@ -224,5 +231,5 @@ class Navica extends Association implements RETS {
 
         return $remoteArray;
     }
-    
+
 }

@@ -102,8 +102,7 @@ trait RetsResource {
 
     public function getCurrentColumns()
     {
-        $columns =  DB::getSchemaBuilder()->getColumnListing($this->local_table);
-        dd($columns);
+        return DB::getSchemaBuilder()->getColumnListing($this->local_table);
     }
 
     public function populateMasterTable( $output = false )
