@@ -24,6 +24,8 @@ class Search
         $omni         = $this->request->omni ?? '';
         $status       = $this->request->status ?? '';
         $area         = $this->request->area ?? '';
+        $sub_area     = $this->request->sub_area ?? '';
+        $subdivision  = $this->request->subdivision ?? '';
         $propertyType = isset($this->request->propertyType) && $this->request->propertyType !== 'Rental' ? $this->request->propertyType : '';
         $forclosure   = $this->request->forclosure ?? '';
         $minPrice     = $this->request->minPrice ?? '';
@@ -110,6 +112,12 @@ class Search
             });
             /* return $query->where('area', 'like', $area)->orWhere('sub_area', 'like', $area); */
         })
+        ->when($sub_area, function ($query) use ($sub_area) {
+            return $query->where('sub_area', $sub_area);
+        })
+        ->when($subdivision, function ($query) use ($subdivision) {
+            return $query->whereRaw("subdivision LIKE '%{$subdivision}%'");
+        })
         ->when($minPrice, function ($query) use ($minPrice) {
             return $query->where('list_price', '>=', $minPrice);
         })
@@ -170,6 +178,8 @@ class Search
         $omni         = $this->request->omni ?? '';
         $status       = $this->request->status ?? '';
         $area         = $this->request->area ?? '';
+        $sub_area     = $this->request->sub_area ?? '';
+        $subdivision  = $this->request->subdivision ?? '';
         $propertyType = isset($this->request->propertyType) && $this->request->propertyType !== 'Rental' ? $this->request->propertyType : '';
         $forclosure   = $this->request->forclosure ?? '';
         $minPrice     = $this->request->minPrice ?? '';
@@ -228,6 +238,12 @@ class Search
             ->when($area, function ($query) use ($area) {
                 return $query->where('listings.area', 'like', $area)->orWhere('sub_area', 'like', $area);
             })
+            ->when($sub_area, function ($query) use ($sub_area) {
+                return $query->where('sub_area', $sub_area);
+            })
+            ->when($subdivision, function ($query) use ($subdivision) {
+                return $query->whereRaw("subdivision LIKE '%{$subdivision}%'");
+            })
             ->when($minPrice, function ($query) use ($minPrice) {
                 return $query->where('listings.list_price', '>=', $minPrice);
             })
@@ -263,7 +279,7 @@ class Search
         if($listings->count() > 0){
             LogImpression::dispatch($listings)->onQueue('stats');
         }
-        
+
         return fractal($listings, new MapSearchTransformer)->toJson();
     }
 }
