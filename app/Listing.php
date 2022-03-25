@@ -113,7 +113,7 @@ class Listing extends Model
             echo ($output ? 'Master Count: ' . count($masterList) . PHP_EOL : null);
         }
 
-        
+
         echo ($output ? PHP_EOL . '-- Media Objects --------------------' . PHP_EOL : null);
 
         $localPhotoArray = [];
@@ -150,7 +150,7 @@ class Listing extends Model
             }
         });
         echo ($output ? PHP_EOL : null);
-        
+
         echo ($output ? '------------------------------' . PHP_EOL : null);
         echo ($output ? 'Total Local Listings: ' . $localTotal . PHP_EOL : null);
         echo ($output ? 'Total Remote Listings: ' . $remoteTotal . PHP_EOL : null);
@@ -245,7 +245,6 @@ class Listing extends Model
                 ->orWhere('co_la_code', $agentCode);
             })
             ->where('status','!=','Sold/Closed')
-            ->groupBy('full_address')
             ->orderBy($sortBy, $orderBy)
             ->get();
 
@@ -273,7 +272,6 @@ class Listing extends Model
                 ->orWhere('sa_code', $agentCode);
             })
             ->where('sold_date','>',$sixmonthsago)
-            ->groupBy('full_address')
             ->get();
 
         return fractal($listings, new ListingTransformer);
@@ -345,6 +343,6 @@ class Listing extends Model
 
     public function unique()
     {
-        echo Listing::distinct()->select('mls_acct')->count(); 
+        echo Listing::distinct()->select('mls_acct')->count();
     }
 }
