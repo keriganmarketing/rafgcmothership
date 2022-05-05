@@ -15,4 +15,5 @@ Route::prefix('/api/v1')->group(function () {
     Route::get('forclosures', 'ForclosedPropertiesController@index')->name('forclosures.index');
     Route::get('contingent-pending', 'ContingentPropertiesController@index')->name('contingent-pending.index');
     Route::get('new-listings', 'NewListingsController@index')->name('new-listings.index');
+    Route::get('updated-listings', 'UpdatedListingsController@index')->name('updated-listings.index');
 });
