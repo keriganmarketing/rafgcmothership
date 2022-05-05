@@ -12,7 +12,7 @@ class UpdatedListingsController extends Controller
     public function index()
     {
         $today = Carbon::now()->toDateString();
-        $listings = Listing::where('date_modified', $today)->get();
+        $listings = Listing::whereDate('date_modified', $today)->get();
 
         return fractal($listings, new ListingTransformer);
     }
