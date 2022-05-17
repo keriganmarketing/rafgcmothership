@@ -246,7 +246,7 @@ class Listing extends Model
             })
             ->where('status','!=','Sold/Closed')
             ->orderBy($sortBy, $orderBy)
-            ->get();
+            ->paginate(36);
 
         if(!$request->nostats){
             LogImpression::dispatch($listings)->onQueue('stats');
