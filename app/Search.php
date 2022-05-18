@@ -39,6 +39,8 @@ class Search
         $sortArray    = $this->applySort();
         $sortBy       = $sortArray[0];
         $orderBy      = $sortArray[1];
+        $office       = isset($this->request->office) ? explode('|', $this->request->office) : [];
+        $agent        = isset($this->request->agent) ? explode('|', $this->request->agent) : [];
         $excludes     = isset($this->request->excludes) ? explode('|', $this->request->excludes) : [];
 
         if ($status) {
@@ -105,6 +107,12 @@ class Search
         })
         ->when($status, function ($query) use ($status) {
             return $query->whereIn('status', $status);
+        })
+        ->when($office, function ($query) use ($office) {
+            return $query->whereIn('lo_code', $office);
+        })
+        ->when($agent, function ($query) use ($agent) {
+            return $query->whereIn('la_code', $agent);
         })
         ->when($area, function ($query) use ($area) {
             $query->where(function ($query) use ($area) {
