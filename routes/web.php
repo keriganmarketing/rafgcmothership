@@ -2,6 +2,7 @@
 Route::prefix('/api/v1')->group(function () {
     Route::get('search', 'ListingsSearchController@index')->name('listings.search');
     Route::get('map-search', 'MapSearchController@index')->name('listings.map-search');
+    Route::get('geojson', 'MapSearchController@geojson')->name('listings.map-json-search');
     Route::get('listings', 'FeaturedListingsController@index')->name('listings.featured');
     Route::get('listing/{id}', 'ListingsController@show')->name('listing.show');
     Route::get('agent-listings/{agent}', 'AgentListingsController@index')->name('agent.listings');

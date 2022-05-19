@@ -18,4 +18,16 @@ class MapSearchController extends Controller
 
         return $search->noPaginate();
     }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function geojson(Request $request)
+    {
+        $search = new Search($request);
+
+        return $search->geojson();
+    }
 }

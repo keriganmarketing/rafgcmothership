@@ -9,6 +9,8 @@ use Illuminate\Http\Request;
 use App\Jobs\ProcessImpression;
 use App\Transformers\ListingTransformer;
 use App\Transformers\MapSearchTransformer;
+use stdClass;
+
 
 class Search
 {
@@ -289,5 +291,133 @@ class Search
         }
 
         return fractal($listings, new MapSearchTransformer)->toJson();
+    }
+
+    public function geojson()
+    {
+        $data = new stdClass;
+        $data->type = "FeatureCollection";
+        $data->features = [];
+
+        $sixMonthsAgo = Carbon::now()->copy()->subDays(180)->format('Y-m-d');
+        $omni         = $this->request->omni ?? '';
+        $status       = $this->request->status ?? '';
+        $area         = $this->request->area ?? '';
+        $sub_area     = $this->request->sub_area ?? '';
+        $subdivision  = $this->request->subdivision ?? '';
+        $propertyType = isset($this->request->propertyType) && $this->request->propertyType !== 'Rental' ? $this->request->propertyType : '';
+        $forclosure   = $this->request->forclosure ?? '';
+        $minPrice     = $this->request->minPrice ?? '';
+        $maxPrice     = $this->request->maxPrice ?? '';
+        $beds         = $this->request->beds ?? '';
+        $baths        = $this->request->baths ?? '';
+        $sqft         = $this->request->sqft ?? '';
+        $acreage      = $this->request->acreage ?? '';
+        $waterfront   = $this->request->waterfront ?? '';
+        $waterview    = $this->request->waterview ?? '';
+        if ($status) {
+            $status = explode('|', $status);
+        }
+        $listings = DB::table('listings')
+            ->select(
+                'listings.id',
+                'listings.city',
+                'listings.state',
+                'listings.street_num',
+                'listings.street_name',
+                'listings.unit_num',
+                'listings.prop_type',
+                'listings.list_price',
+                'listings.bedrooms',
+                'listings.baths',
+                'listings.lot_dimensions',
+                'listings.acreage',
+                'listings.mls_acct',
+                'listings.status',
+                'listings.latitude',
+                'listings.longitude',
+                'media_objects.url'
+            )
+            ->join('media_objects', function ($join) {
+                $join->on('listings.id', '=', 'media_objects.listing_id')
+                     ->where('media_objects.is_preferred', 1);
+            })
+            ->when($omni, function ($query) use ($omni) {
+                $query->where(function ($query) use ($omni) {
+                    $query->whereRaw("listings.city LIKE '%{$omni}%'")
+                        ->orWhereRaw("listings.zip LIKE '%{$omni}%'")
+                        ->orWhereRaw("listings.subdivision LIKE '%{$omni}%'")
+                        ->orWhereRaw("listings.full_address LIKE '%{$omni}%'")
+                        ->orWhereRaw("listings.mls_acct LIKE '%{$omni}%'");
+                });
+            })
+            ->when($propertyType, function ($query) use ($propertyType) {
+                return $query->where('listings.prop_type', 'like', $propertyType);
+            })
+            ->when($status, function ($query) use ($status) {
+                return $query->whereIn('listings.status', $status);
+            })
+            ->when($area, function ($query) use ($area) {
+                return $query->where('listings.area', 'like', $area)->orWhere('sub_area', 'like', $area);
+            })
+            ->when($sub_area, function ($query) use ($sub_area) {
+                return $query->where('sub_area', $sub_area);
+            })
+            ->when($subdivision, function ($query) use ($subdivision) {
+                return $query->whereRaw("subdivision LIKE '%{$subdivision}%'");
+            })
+            ->when($minPrice, function ($query) use ($minPrice) {
+                return $query->where('listings.list_price', '>=', $minPrice);
+            })
+            ->when($maxPrice, function ($query) use ($maxPrice) {
+                return $query->where('listings.list_price', '<=', $maxPrice);
+            })
+            ->when($beds, function ($query) use ($beds) {
+                return $query->where('listings.bedrooms', '>=', $beds);
+            })
+            ->when($baths, function ($query) use ($baths) {
+                return $query->where('listings.baths', '>=', $baths);
+            })
+            ->when($sqft, function ($query) use ($sqft) {
+                return $query->where('listings.tot_heat_sqft', '>=', $sqft);
+            })
+            ->when($acreage, function ($query) use ($acreage) {
+                return $query->where('listings.acreage', '>=', $acreage);
+            })
+            ->when($waterfront, function ($query) use ($waterfront) {
+                return $query->where('ftr_waterfront', '!=', '');
+            })
+            ->when($waterview, function ($query) use ($waterview) {
+                return $query->where('ftr_waterview', '!=', '');
+            })
+            ->when($forclosure, function ($query) use ($forclosure) {
+                return $query->where('listings.ftr_ownership', 'like', '%Bankruptcy%')
+                    ->orWhere('ftr_ownership', 'like', '%Foreclosure%')
+                    ->orWhere('ftr_ownership', 'like', '%Short Sale%')
+                    ->orWhere('ftr_ownership', 'like', '%Real Estate Owned%');
+            })
+            ->get();
+
+        foreach($listings as $listing){
+            $data->features[] = [
+                "geometry" => [
+                    "type" => "Point",
+                    "coordinates" => [
+                        $listing->longitude,
+                        $listing->latitude,
+                    ]
+                ],
+                "type" => "Feature",
+                "properties" => [
+                    "title"  => $listing->full_address,
+                    "mls"    => $listing->mls_acct,
+                    "price"  => '$' . number_format($listing->list_price),
+                    "status" => $listing->status
+                ]
+            ];
+        }
+
+
+        return $data;
     }
 }
