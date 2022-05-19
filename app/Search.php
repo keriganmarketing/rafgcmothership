@@ -398,23 +398,30 @@ class Search
             })
             ->get();
 
+            // topleft: 30.165258486974857, -85.46492062293166
+            // bottom left: 29.59573798728863, -85.48682166875159
+            // top right: 30.233106258983756, -84.55332212763554
+            // bottom right: 29.577546640745005, -84.50283175057893
+
         foreach($listings as $listing){
-            $data->features[] = [
-                "geometry" => [
-                    "type" => "Point",
-                    "coordinates" => [
-                        $listing->longitude,
-                        $listing->latitude,
+            if($listing->longitude > -85.48682166875159 && $listing->longitude < -84.50283175057893 && $listing->latitude > 29.577546640745005 && $listing->latitude < 30.233106258983756 ){
+                $data->features[] = [
+                    "geometry" => [
+                        "type" => "Point",
+                        "coordinates" => [
+                            $listing->longitude,
+                            $listing->latitude,
+                        ]
+                    ],
+                    "type" => "Feature",
+                    "properties" => [
+                        "title"  => (int) $listing->street_num . ' ' . $listing->street_name . ' ' . $listing->unit_num,
+                        "mls"    => $listing->mls_acct,
+                        "price"  => '$' . number_format($listing->list_price),
+                        "status" => $listing->status
                     ]
-                ],
-                "type" => "Feature",
-                "properties" => [
-                    "title"  => (int) $listing->street_num . ' ' . $listing->street_name . ' ' . $listing->unit_num,
-                    "mls"    => $listing->mls_acct,
-                    "price"  => '$' . number_format($listing->list_price),
-                    "status" => $listing->status
-                ]
-            ];
+                ];
+            }
         }
 
 
