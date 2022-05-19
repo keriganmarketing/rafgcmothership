@@ -361,10 +361,10 @@ class Search
                 return $query->where('listings.area', 'like', $area)->orWhere('sub_area', 'like', $area);
             })
             ->when($sub_area, function ($query) use ($sub_area) {
-                return $query->where('sub_area', $sub_area);
+                return $query->where('listings.sub_area', $sub_area);
             })
             ->when($subdivision, function ($query) use ($subdivision) {
-                return $query->whereRaw("subdivision LIKE '%{$subdivision}%'");
+                return $query->whereRaw("listings.subdivision LIKE '%{$subdivision}%'");
             })
             ->when($minPrice, function ($query) use ($minPrice) {
                 return $query->where('listings.list_price', '>=', $minPrice);
@@ -385,16 +385,16 @@ class Search
                 return $query->where('listings.acreage', '>=', $acreage);
             })
             ->when($waterfront, function ($query) use ($waterfront) {
-                return $query->where('ftr_waterfront', '!=', '');
+                return $query->where('listings.ftr_waterfront', '!=', '');
             })
             ->when($waterview, function ($query) use ($waterview) {
-                return $query->where('ftr_waterview', '!=', '');
+                return $query->where('listings.ftr_waterview', '!=', '');
             })
             ->when($forclosure, function ($query) use ($forclosure) {
                 return $query->where('listings.ftr_ownership', 'like', '%Bankruptcy%')
-                    ->orWhere('ftr_ownership', 'like', '%Foreclosure%')
-                    ->orWhere('ftr_ownership', 'like', '%Short Sale%')
-                    ->orWhere('ftr_ownership', 'like', '%Real Estate Owned%');
+                    ->orWhere('listings.ftr_ownership', 'like', '%Foreclosure%')
+                    ->orWhere('listings.ftr_ownership', 'like', '%Short Sale%')
+                    ->orWhere('listings.ftr_ownership', 'like', '%Real Estate Owned%');
             })
             ->get();
 
