@@ -418,6 +418,6 @@ class Search
         }
 
 
-        return $data;
+        return response()->json($data);
     }
 }
