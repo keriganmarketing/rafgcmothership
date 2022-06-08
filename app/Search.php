@@ -318,48 +318,32 @@ class Search
         $agent        = isset($this->request->agent) ? explode('|', $this->request->agent) : [];
         $excludes     = isset($this->request->excludes) ? explode('|', $this->request->excludes) : [];
 
-        // if ($status) {
-        //     $status = explode('|', $status);
-        // }
-
         $listings = DB::table('listings')
             ->select(
-                'listings.id',
-                'listings.city',
-                'listings.state',
-                'listings.street_num',
-                'listings.street_name',
-                'listings.unit_num',
-                'listings.prop_type',
-                'listings.list_price',
-                'listings.bedrooms',
-                'listings.baths',
-                'listings.lot_dimensions',
-                'listings.acreage',
-                'listings.mls_acct',
-                'listings.status',
-                'listings.latitude',
-                'listings.longitude',
-                'media_objects.url'
+                'id',
+                'street_num',
+                'street_name',
+                'unit_num',
+                'list_price',
+                'mls_acct',
+                'latitude',
+                'longitude',
+                'status',
             )
-            ->join('media_objects', function ($join) {
-                $join->on('listings.id', '=', 'media_objects.listing_id')
-                     ->where('media_objects.is_preferred', 1);
-            })
             ->when($omni, function ($query) use ($omni) {
                 $query->where(function ($query) use ($omni) {
-                    $query->whereRaw("listings.city LIKE '%{$omni}%'")
-                        ->orWhereRaw("listings.area LIKE '%{$omni}%'")
-                        ->orWhereRaw("listings.sub_area LIKE '%{$omni}%'")
-                        ->orWhereRaw("listings.zip LIKE '%{$omni}%'")
-                        ->orWhereRaw("listings.subdivision LIKE '%{$omni}%'")
-                        ->orWhereRaw("listings.full_address LIKE '%{$omni}%'")
-                        ->orWhereRaw("listings.mls_acct LIKE '%{$omni}%'");
+                    $query->whereRaw("city LIKE '%{$omni}%'")
+                        ->orWhereRaw("area LIKE '%{$omni}%'")
+                        ->orWhereRaw("sub_area LIKE '%{$omni}%'")
+                        ->orWhereRaw("zip LIKE '%{$omni}%'")
+                        ->orWhereRaw("subdivision LIKE '%{$omni}%'")
+                        ->orWhereRaw("full_address LIKE '%{$omni}%'")
+                        ->orWhereRaw("mls_acct LIKE '%{$omni}%'");
                 });
             })
             ->when($propertyType, function ($query) use ($propertyType) {
                 if($propertyType == 'AllHomes'){
-                    return $query->whereIn('listings.prop_type', [
+                    return $query->whereIn('prop_type', [
                         'Detached Single Family',
                         'Condominium',
                         'ASF (Attached Single Family)',
@@ -369,7 +353,7 @@ class Search
                     ]);
                 }
                 if($propertyType == 'AllLand'){
-                    return $query->whereIn('listings.prop_type', [
+                    return $query->whereIn('prop_type', [
                         'Residential Lots/Land',
                         'Commercial Land',
                         'Vacant Land',
@@ -378,7 +362,7 @@ class Search
                     ]);
                 }
                 if($propertyType == 'MultiUnit'){
-                    return $query->whereIn('listings.prop_type', [
+                    return $query->whereIn('prop_type', [
                         'Condominium',
                         'ASF (Attached Single Family)',
                         'Dup/Tri/Quad (Multi-Unit)',
@@ -386,7 +370,7 @@ class Search
                     ]);
                 }
                 if($propertyType == 'Commercial'){
-                    return $query->whereIn('listings.prop_type', [
+                    return $query->whereIn('prop_type', [
                         'Business Only',
                         'Commercial Land',
                         'Improved Commercial',
@@ -398,61 +382,61 @@ class Search
                     ]);
                 }
                 if($propertyType == 'Rental'){
-                    return $query->whereIn('listings.prop_type', [
+                    return $query->whereIn('prop_type', [
                         'Detached Single Family Rental',
                         'Condominium Rental'
                     ]);
                 }
-                return $query->where('listings.prop_type', 'like', $propertyType);
+                return $query->where('prop_type', 'like', $propertyType);
             })
             ->when($status, function ($query) use ($status) {
-                return $query->whereIn('listings.status', $status);
+                return $query->whereIn('status', $status);
             })
             ->when($office, function ($query) use ($office) {
-                return $query->whereIn('listings.lo_code', $office);
+                return $query->whereIn('lo_code', $office);
             })
             ->when($agent, function ($query) use ($agent) {
-                return $query->whereIn('listings.la_code', $agent);
+                return $query->whereIn('la_code', $agent);
             })
             ->when($area, function ($query) use ($area) {
-                return $query->where('listings.area', 'like', $area)
-                        ->orWhere('listings.sub_area', 'like', $area);
+                return $query->where('area', 'like', $area)
+                        ->orWhere('sub_area', 'like', $area);
             })
             ->when($sub_area, function ($query) use ($sub_area) {
-                return $query->where('listings.sub_area', $sub_area);
+                return $query->where('sub_area', $sub_area);
             })
             ->when($subdivision, function ($query) use ($subdivision) {
-                return $query->whereRaw("listings.subdivision LIKE '%{$subdivision}%'");
+                return $query->whereRaw("subdivision LIKE '%{$subdivision}%'");
             })
             ->when($minPrice, function ($query) use ($minPrice) {
-                return $query->where('listings.list_price', '>=', $minPrice);
+                return $query->where('list_price', '>=', $minPrice);
             })
             ->when($maxPrice, function ($query) use ($maxPrice) {
-                return $query->where('listings.list_price', '<=', $maxPrice);
+                return $query->where('list_price', '<=', $maxPrice);
             })
             ->when($beds, function ($query) use ($beds) {
-                return $query->where('listings.bedrooms', '>=', $beds);
+                return $query->where('bedrooms', '>=', $beds);
             })
             ->when($baths, function ($query) use ($baths) {
-                return $query->where('listings.baths', '>=', $baths);
+                return $query->where('baths', '>=', $baths);
             })
             ->when($sqft, function ($query) use ($sqft) {
-                return $query->where('listings.tot_heat_sqft', '>=', $sqft);
+                return $query->where('tot_heat_sqft', '>=', $sqft);
             })
             ->when($acreage, function ($query) use ($acreage) {
-                return $query->where('listings.acreage', '>=', $acreage);
+                return $query->where('acreage', '>=', $acreage);
             })
             ->when($waterfront, function ($query) use ($waterfront) {
-                return $query->where('listings.ftr_waterfront', '!=', '');
+                return $query->where('ftr_waterfront', '!=', '');
             })
             ->when($waterview, function ($query) use ($waterview) {
-                return $query->where('listings.ftr_waterview', '!=', '');
+                return $query->where('ftr_waterview', '!=', '');
             })
             ->when($forclosure, function ($query) use ($forclosure) {
-                return $query->where('listings.ftr_ownership', 'like', '%Bankruptcy%')
-                    ->orWhere('listings.ftr_ownership', 'like', '%Foreclosure%')
-                    ->orWhere('listings.ftr_ownership', 'like', '%Short Sale%')
-                    ->orWhere('listings.ftr_ownership', 'like', '%Real Estate Owned%');
+                return $query->where('ftr_ownership', 'like', '%Bankruptcy%')
+                    ->orWhere('ftr_ownership', 'like', '%Foreclosure%')
+                    ->orWhere('ftr_ownership', 'like', '%Short Sale%')
+                    ->orWhere('ftr_ownership', 'like', '%Real Estate Owned%');
             })
             ->get();
 
