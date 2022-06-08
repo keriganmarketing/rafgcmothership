@@ -300,7 +300,7 @@ class Search
 
         $sixMonthsAgo = Carbon::now()->copy()->subDays(180)->format('Y-m-d');
         $omni         = $this->request->omni ?? '';
-        $status       = $this->request->status ?? '';
+        $status       = isset($this->request->status) ? explode('|', $this->request->status) : [];
         $area         = $this->request->area ?? '';
         $sub_area     = $this->request->sub_area ?? '';
         $subdivision  = $this->request->subdivision ?? '';
@@ -318,9 +318,9 @@ class Search
         $agent        = isset($this->request->agent) ? explode('|', $this->request->agent) : [];
         $excludes     = isset($this->request->excludes) ? explode('|', $this->request->excludes) : [];
 
-        if ($status) {
-            $status = explode('|', $status);
-        }
+        // if ($status) {
+        //     $status = explode('|', $status);
+        // }
 
         $listings = DB::table('listings')
             ->select(
