@@ -118,9 +118,9 @@ class Search
         })
         ->when($area, function ($query) use ($area) {
             $query->where(function ($query) use ($area) {
-                $query->where('area', 'like', $area)->orWhere('sub_area', 'like', $area);
+                $query->where('area', 'like', $area)
+                    ->orWhere('sub_area', 'like', $area);
             });
-            /* return $query->where('area', 'like', $area)->orWhere('sub_area', 'like', $area); */
         })
         ->when($sub_area, function ($query) use ($sub_area) {
             return $query->where('sub_area', $sub_area);
@@ -153,10 +153,12 @@ class Search
             return $query->where('ftr_waterview', '!=', '');
         })
         ->when($forclosure, function ($query) use ($forclosure) {
-            return $query->where('ftr_ownership', 'like', '%Bankruptcy%')
-                            ->orWhere('ftr_ownership', 'like', '%Foreclosure%')
-                            ->orWhere('ftr_ownership', 'like', '%Short Sale%')
-                            ->orWhere('ftr_ownership', 'like', '%Real Estate Owned%');
+            $query->where(function ($query) use ($forclosure) {
+                $query->where('ftr_ownership', 'like', '%Bankruptcy%')
+                    ->orWhere('ftr_ownership', 'like', '%Foreclosure%')
+                    ->orWhere('ftr_ownership', 'like', '%Short Sale%')
+                    ->orWhere('ftr_ownership', 'like', '%Real Estate Owned%');
+            });
         })
         ->whereHas('mediaObjects', function ($query) {
             return $query->where('media_type', 'image/jpeg');
