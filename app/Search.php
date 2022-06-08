@@ -300,7 +300,7 @@ class Search
 
         $sixMonthsAgo = Carbon::now()->copy()->subDays(180)->format('Y-m-d');
         $omni         = $this->request->omni ?? '';
-        $status       = isset($this->request->status) ? explode('|', $this->request->status) : [];
+        $status       = isset($this->request->status) ? explode('|', $this->request->status) : ['Active','Contingent'];
         $area         = $this->request->area ?? '';
         $sub_area     = $this->request->sub_area ?? '';
         $subdivision  = $this->request->subdivision ?? '';
