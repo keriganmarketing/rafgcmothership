@@ -318,132 +318,120 @@ class Search
         $agent        = isset($this->request->agent) ? explode('|', $this->request->agent) : [];
         $excludes     = isset($this->request->excludes) ? explode('|', $this->request->excludes) : [];
 
-        $listings = DB::table('listings')
-            ->select(
-                'id',
-                'street_num',
-                'street_name',
-                'unit_num',
-                'list_price',
-                'mls_acct',
-                'latitude',
-                'longitude',
-                'status'
-            )
-            ->when($omni, function ($query) use ($omni) {
-                $query->where(function ($query) use ($omni) {
-                    $query->whereRaw("city LIKE '%{$omni}%'")
-                        ->orWhereRaw("area LIKE '%{$omni}%'")
-                        ->orWhereRaw("sub_area LIKE '%{$omni}%'")
-                        ->orWhereRaw("zip LIKE '%{$omni}%'")
-                        ->orWhereRaw("subdivision LIKE '%{$omni}%'")
-                        ->orWhereRaw("full_address LIKE '%{$omni}%'")
-                        ->orWhereRaw("mls_acct LIKE '%{$omni}%'");
-                });
-            })
-            ->when($propertyType, function ($query) use ($propertyType) {
-                if($propertyType == 'AllHomes'){
-                    return $query->whereIn('prop_type', [
-                        'Detached Single Family',
-                        'Condominium',
-                        'ASF (Attached Single Family)',
-                        'Dup/Tri/Quad (Multi-Unit)',
-                        'Mobile/Manufactured',
-                        'Pre-Construction'
-                    ]);
-                }
-                if($propertyType == 'AllLand'){
-                    return $query->whereIn('prop_type', [
-                        'Residential Lots/Land',
-                        'Commercial Land',
-                        'Vacant Land',
-                        'Farm/Timberland',
-                        'Improved RV Site'
-                    ]);
-                }
-                if($propertyType == 'MultiUnit'){
-                    return $query->whereIn('prop_type', [
-                        'Condominium',
-                        'ASF (Attached Single Family)',
-                        'Dup/Tri/Quad (Multi-Unit)',
-                        'Apartments/Multi-Family'
-                    ]);
-                }
-                if($propertyType == 'Commercial'){
-                    return $query->whereIn('prop_type', [
-                        'Business Only',
-                        'Commercial Land',
-                        'Improved Commercial',
-                        'Vacant Land',
-                        'Real Estate & Business',
-                        'Unimproved Land',
-                        'Industrial',
-                        'Apartments/Multi-Family'
-                    ]);
-                }
-                if($propertyType == 'Rental'){
-                    return $query->whereIn('prop_type', [
-                        'Detached Single Family Rental',
-                        'Condominium Rental'
-                    ]);
-                }
-                return $query->where('prop_type', 'like', $propertyType);
-            })
-            ->when($status, function ($query) use ($status) {
-                return $query->whereIn('status', $status);
-            })
-            ->when($office, function ($query) use ($office) {
-                return $query->whereIn('lo_code', $office);
-            })
-            ->when($agent, function ($query) use ($agent) {
-                return $query->whereIn('la_code', $agent);
-            })
-            ->when($area, function ($query) use ($area) {
-                return $query->where('area', 'like', $area)
-                        ->orWhere('sub_area', 'like', $area);
-            })
-            ->when($sub_area, function ($query) use ($sub_area) {
-                return $query->where('sub_area', $sub_area);
-            })
-            ->when($subdivision, function ($query) use ($subdivision) {
-                return $query->whereRaw("subdivision LIKE '%{$subdivision}%'");
-            })
-            ->when($minPrice, function ($query) use ($minPrice) {
-                return $query->where('list_price', '>=', $minPrice);
-            })
-            ->when($maxPrice, function ($query) use ($maxPrice) {
-                return $query->where('list_price', '<=', $maxPrice);
-            })
-            ->when($beds, function ($query) use ($beds) {
-                return $query->where('bedrooms', '>=', $beds);
-            })
-            ->when($baths, function ($query) use ($baths) {
-                return $query->where('baths', '>=', $baths);
-            })
-            ->when($sqft, function ($query) use ($sqft) {
-                return $query->where('tot_heat_sqft', '>=', $sqft);
-            })
-            ->when($acreage, function ($query) use ($acreage) {
-                return $query->where('acreage', '>=', $acreage);
-            })
-            ->when($waterfront, function ($query) use ($waterfront) {
-                return $query->where('ftr_waterfront', '!=', '');
-            })
-            ->when($waterview, function ($query) use ($waterview) {
-                return $query->where('ftr_waterview', '!=', '');
-            })
-            ->when($forclosure, function ($query) use ($forclosure) {
-                return $query->where('ftr_ownership', 'like', '%Bankruptcy%')
-                    ->orWhere('ftr_ownership', 'like', '%Foreclosure%')
-                    ->orWhere('ftr_ownership', 'like', '%Short Sale%')
-                    ->orWhere('ftr_ownership', 'like', '%Real Estate Owned%');
-            })
-            ->get();
+        $listings = Listing::when($omni, function ($query) use ($omni) {
+            $query->where(function ($query) use ($omni) {
+                $query->whereRaw("city LIKE '%{$omni}%'")
+                    ->orWhereRaw("area LIKE '%{$omni}%'")
+                    ->orWhereRaw("sub_area LIKE '%{$omni}%'")
+                    ->orWhereRaw("zip LIKE '%{$omni}%'")
+                    ->orWhereRaw("subdivision LIKE '%{$omni}%'")
+                    ->orWhereRaw("full_address LIKE '%{$omni}%'")
+                    ->orWhereRaw("mls_acct LIKE '%{$omni}%'");
+            });
+        })
+        ->when($propertyType, function ($query) use ($propertyType) {
+            if($propertyType == 'AllHomes'){
+                return $query->whereIn('prop_type', [
+                    'Detached Single Family',
+                    'Condominium',
+                    'ASF (Attached Single Family)',
+                    'Dup/Tri/Quad (Multi-Unit)',
+                    'Mobile/Manufactured',
+                    'Pre-Construction'
+                ]);
+            }
+            if($propertyType == 'AllLand'){
+                return $query->whereIn('prop_type', [
+                    'Residential Lots/Land',
+                    'Commercial Land',
+                    'Vacant Land',
+                    'Farm/Timberland',
+                    'Improved RV Site'
+                ]);
+            }
+            if($propertyType == 'MultiUnit'){
+                return $query->whereIn('prop_type', [
+                    'Condominium',
+                    'ASF (Attached Single Family)',
+                    'Dup/Tri/Quad (Multi-Unit)',
+                    'Apartments/Multi-Family'
+                ]);
+            }
+            if($propertyType == 'Commercial'){
+                return $query->whereIn('prop_type', [
+                    'Business Only',
+                    'Commercial Land',
+                    'Improved Commercial',
+                    'Vacant Land',
+                    'Real Estate & Business',
+                    'Unimproved Land',
+                    'Industrial',
+                    'Apartments/Multi-Family'
+                ]);
+            }
+            if($propertyType == 'Rental'){
+                return $query->whereIn('prop_type', [
+                    'Detached Single Family Rental',
+                    'Condominium Rental'
+                ]);
+            }
+            return $query->where('prop_type', 'like', $propertyType);
+        })
+        ->when($status, function ($query) use ($status) {
+            return $query->whereIn('status', $status);
+        })
+        ->when($office, function ($query) use ($office) {
+            return $query->whereIn('lo_code', $office);
+        })
+        ->when($agent, function ($query) use ($agent) {
+            return $query->whereIn('la_code', $agent);
+        })
+        ->when($area, function ($query) use ($area) {
+            return $query->where('area', 'like', $area)
+                    ->orWhere('sub_area', 'like', $area);
+        })
+        ->when($sub_area, function ($query) use ($sub_area) {
+            return $query->where('sub_area', $sub_area);
+        })
+        ->when($subdivision, function ($query) use ($subdivision) {
+            return $query->whereRaw("subdivision LIKE '%{$subdivision}%'");
+        })
+        ->when($minPrice, function ($query) use ($minPrice) {
+            return $query->where('list_price', '>=', $minPrice);
+        })
+        ->when($maxPrice, function ($query) use ($maxPrice) {
+            return $query->where('list_price', '<=', $maxPrice);
+        })
+        ->when($beds, function ($query) use ($beds) {
+            return $query->where('bedrooms', '>=', $beds);
+        })
+        ->when($baths, function ($query) use ($baths) {
+            return $query->where('baths', '>=', $baths);
+        })
+        ->when($sqft, function ($query) use ($sqft) {
+            return $query->where('tot_heat_sqft', '>=', $sqft);
+        })
+        ->when($acreage, function ($query) use ($acreage) {
+            return $query->where('acreage', '>=', $acreage);
+        })
+        ->when($waterfront, function ($query) use ($waterfront) {
+            return $query->where('ftr_waterfront', '!=', '');
+        })
+        ->when($waterview, function ($query) use ($waterview) {
+            return $query->where('ftr_waterview', '!=', '');
+        })
+        ->when($forclosure, function ($query) use ($forclosure) {
+            return $query->where('ftr_ownership', 'like', '%Bankruptcy%')
+                ->orWhere('ftr_ownership', 'like', '%Foreclosure%')
+                ->orWhere('ftr_ownership', 'like', '%Short Sale%')
+                ->orWhere('ftr_ownership', 'like', '%Real Estate Owned%');
+        })
+        ->get();
 
-            // topleft: 30.165258486974857, -85.46492062293166
-            // bottom left: 29.59573798728863, -85.48682166875159
-            // top right: 30.233106258983756, -84.55332212763554
-            // bottom right: 29.577546640745005, -84.50283175057893
+        // topleft: 30.165258486974857, -85.46492062293166
+        // bottom left: 29.59573798728863, -85.48682166875159
+        // top right: 30.233106258983756, -84.55332212763554
+        // bottom right: 29.577546640745005, -84.50283175057893
 
         foreach($listings as $listing){
             if($listing->longitude > -85.48682166875159 && $listing->longitude < -84.50283175057893 && $listing->latitude > 29.577546640745005 && $listing->latitude < 30.233106258983756 ){
