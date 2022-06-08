@@ -328,7 +328,7 @@ class Search
                 'mls_acct',
                 'latitude',
                 'longitude',
-                'status',
+                'status'
             )
             ->when($omni, function ($query) use ($omni) {
                 $query->where(function ($query) use ($omni) {
