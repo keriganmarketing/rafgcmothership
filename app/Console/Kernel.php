@@ -39,13 +39,13 @@ class Kernel extends ConsoleKernel
         $schedule->job(new UpdateListings,'updaters')->hourly()->withOutOverlapping();
         $schedule->job(new UpdateOmni,'updaters')->hourly()->withOutOverlapping();
         $schedule->job(new UploadNewPhotos,'updaters')->hourlyAt(1)->withOutOverlapping();
-        $schedule->job(new CheckPhotoConsistency,'updaters')->hourlyAt(2)->withOutOverlapping();
+        $schedule->job(new CheckPhotoConsistency,'updaters')->dailyAt('07:00')->withOutOverlapping();
         $schedule->job(new UpdateOpenHouses,'updaters')->hourly()->withOutOverlapping();
 
         $schedule->job(new UpdateOffices,'updaters')->hourly()->withOutOverlapping();
         $schedule->job(new UpdateAgents,'updaters')->hourly()->withOutOverlapping();
 
-        $schedule->job(new CleanListings,'updaters')->dailyAt('01:00')->withOutOverlapping();
+        $schedule->job(new CleanListings,'updaters')->dailyAt('06:30')->withOutOverlapping();
 
         $schedule->command('horizon:snapshot')->everyFiveMinutes();
     }
