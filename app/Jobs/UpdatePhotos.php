@@ -37,13 +37,15 @@ class UpdatePhotos implements ShouldQueue
         $mlsNumbers = [];
 
         Listing::whereIn('mls_acct',$this->mlsNumbers)->chunk(1500, function ($listings) use (&$mlsNumbers) {
-            foreach ($listings as $listing) { 
+            foreach ($listings as $listing) {
                 $mlsNumbers[$listing->id] = $listing->mls_acct;
             }
         });
 
-        (new Photo)->fullUpdate($mlsNumbers);
-        
+        if(count($mlsNumbers) > 0) {
+            (new Photo)->fullUpdate($mlsNumbers);
+        }
+
     }
 
     /**

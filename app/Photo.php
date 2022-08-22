@@ -54,8 +54,21 @@ class Photo extends RetsModel
 
     public function fullUpdate($mlsNumbers)
     {
+        // if not an array, end silently
+        if(!is_array($mlsNumbers)){
+            return null;
+        }
+
+        // remove all null values from array (TODO: why is this happening?)
+        $filteredArr = array_filter($mlsNumbers, fn ($item) => null !== $item);
+
+        // if array is empty, end silently
+        if(count($filteredArr) < 1) {
+            return null;
+        }
+
         $navica = $this->connect();
-        $navica->connect()->buildPhotos($mlsNumbers);
+        $navica->connect()->buildPhotos($filteredArr);
         MediaObject::labelPreferredImages();
     }
 
