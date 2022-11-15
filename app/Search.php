@@ -157,7 +157,7 @@ class Search
                 $query->where('ftr_ownership', 'like', '%Bankruptcy%')
                     ->orWhere('ftr_ownership', 'like', '%Foreclosure%')
                     ->orWhere('ftr_ownership', 'like', '%Short Sale%')
-                    ->orWhere('ftr_ownership', 'like', '%Real Estate Owned%');
+                    ->orWhere('ftr_ownership', 'like', '%REO%');
             });
         })
         ->whereHas('mediaObjects', function ($query) {
@@ -283,7 +283,7 @@ class Search
                 return $query->where('listings.ftr_ownership', 'like', '%Bankruptcy%')
                                 ->orWhere('ftr_ownership', 'like', '%Foreclosure%')
                                 ->orWhere('ftr_ownership', 'like', '%Short Sale%')
-                                ->orWhere('ftr_ownership', 'like', '%Real Estate Owned%');
+                                ->orWhere('ftr_ownership', 'like', '%REO%');
             })
             ->get();
 
@@ -429,7 +429,7 @@ class Search
                 $query->where('ftr_ownership', 'like', '%Bankruptcy%')
                     ->orWhere('ftr_ownership', 'like', '%Foreclosure%')
                     ->orWhere('ftr_ownership', 'like', '%Short Sale%')
-                    ->orWhere('ftr_ownership', 'like', '%Real Estate Owned%');
+                    ->orWhere('ftr_ownership', 'like', '%REO%');
             });
         })
         ->get();
