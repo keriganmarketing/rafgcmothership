@@ -51,14 +51,6 @@ trait HasScopes {
             ->whereNotNull('sold_date');
     }
 
-    public function activeOrRecentlySold($query)
-    {
-        $oneYearAgo = \Carbon\Carbon::now()->copy()->subYearNoOverflow();
-        return $query->where('status', 'Sold')
-            ->where('sold_date', '>=', $oneYearAgo)
-            ->orWhereNull('sold_date');
-    }
-
     public function scopeWaterFront($query)
     {
         return $query->where('ftr_waterfront', '!=', '');
@@ -68,19 +60,18 @@ trait HasScopes {
     {
 
         $oneYearAgo = \Carbon\Carbon::now()->copy()->subYearNoOverflow();
-        return $query->where(function ($q) use ($oneYearAgo) {
-            return $q->where('sold_date', '>=', $oneYearAgo)
-                ->orWhereNull('sold_date');
-        })->where(function ($q) {
-            return $q->where('ftr_ownership', 'like', '%Bankruptcy%')
+        return $query->where(function ($t) {
+            return $t->where('ftr_ownership', 'like', '%Bankruptcy%')
                 ->orWhere('ftr_ownership', 'like', '%Foreclosure%')
                 ->orWhere('ftr_ownership', 'like', '%Short Sale%')
                 ->orWhere('ftr_ownership', 'like', '%REO%')
                 ->orWhere('ftr_ownership', 'like', '%Pre-foreclosure%')
                 ->orWhere('ftr_ownership', 'like', '%Assignment%')
                 ->orWhere('ftr_ownership', 'like', '%Auction%');
+        })->where(function ($q) use ($oneYearAgo) {
+            return $q->where('sold_date', '>=', $oneYearAgo)
+                ->orWhere('status', 'Active');
         });
-
 
         // return $query->where('ftr_ownership', 'like', '%Bankruptcy%')
         //     ->orWhere('ftr_ownership', 'like', '%Foreclosure%')
