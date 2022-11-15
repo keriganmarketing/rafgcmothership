@@ -61,7 +61,10 @@ trait HasScopes {
         return $query->where('ftr_ownership', 'like', '%Bankruptcy%')
             ->orWhere('ftr_ownership', 'like', '%Foreclosure%')
             ->orWhere('ftr_ownership', 'like', '%Short Sale%')
-            ->orWhere('ftr_ownership', 'like', '%REO%');
+            ->orWhere('ftr_ownership', 'like', '%REO%')
+            ->orWhere('ftr_ownership', 'like', '%Pre-foreclosure%')
+            ->orWhere('ftr_ownership', 'like', '%Assignment%')
+            ->orWhere('ftr_ownership', 'like', '%Auction%');
     }
 
     public function scopeContingentOrPending($query)

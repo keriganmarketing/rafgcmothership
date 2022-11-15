@@ -157,7 +157,10 @@ class Search
                 $query->where('ftr_ownership', 'like', '%Bankruptcy%')
                     ->orWhere('ftr_ownership', 'like', '%Foreclosure%')
                     ->orWhere('ftr_ownership', 'like', '%Short Sale%')
-                    ->orWhere('ftr_ownership', 'like', '%REO%');
+                    ->orWhere('ftr_ownership', 'like', '%REO%')
+                    ->orWhere('ftr_ownership', 'like', '%Pre-foreclosure%')
+                    ->orWhere('ftr_ownership', 'like', '%Assignment%')
+                    ->orWhere('ftr_ownership', 'like', '%Auction%');
             });
         })
         ->whereHas('mediaObjects', function ($query) {
@@ -283,7 +286,10 @@ class Search
                 return $query->where('listings.ftr_ownership', 'like', '%Bankruptcy%')
                                 ->orWhere('ftr_ownership', 'like', '%Foreclosure%')
                                 ->orWhere('ftr_ownership', 'like', '%Short Sale%')
-                                ->orWhere('ftr_ownership', 'like', '%REO%');
+                                ->orWhere('ftr_ownership', 'like', '%REO%')
+                                ->orWhere('ftr_ownership', 'like', '%Pre-foreclosure%')
+                                ->orWhere('ftr_ownership', 'like', '%Assignment%')
+                                ->orWhere('ftr_ownership', 'like', '%Auction%');
             })
             ->get();
 
@@ -429,7 +435,10 @@ class Search
                 $query->where('ftr_ownership', 'like', '%Bankruptcy%')
                     ->orWhere('ftr_ownership', 'like', '%Foreclosure%')
                     ->orWhere('ftr_ownership', 'like', '%Short Sale%')
-                    ->orWhere('ftr_ownership', 'like', '%REO%');
+                    ->orWhere('ftr_ownership', 'like', '%REO%')
+                    ->orWhere('ftr_ownership', 'like', '%Pre-foreclosure%')
+                    ->orWhere('ftr_ownership', 'like', '%Assignment%')
+                    ->orWhere('ftr_ownership', 'like', '%Auction%');
             });
         })
         ->get();
