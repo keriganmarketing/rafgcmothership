@@ -67,9 +67,9 @@ trait HasScopes {
                 ->orWhere('ftr_ownership', 'like', '%Pre-foreclosure%')
                 ->orWhere('ftr_ownership', 'like', '%Assignment%')
                 ->orWhere('ftr_ownership', 'like', '%Auction%');
-            })
-            ->where('sold_date', '>=', $oneYearAgo)
-            ->orWhere('status', 'Active');
+            });
+            // ->where('sold_date', '>=', $oneYearAgo)
+            // ->orWhere('status', 'Active');
     }
 
     public function scopeContingentOrPending($query)
