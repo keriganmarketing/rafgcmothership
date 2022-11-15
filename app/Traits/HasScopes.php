@@ -58,13 +58,18 @@ trait HasScopes {
 
     public function scopeForclosures($query)
     {
-        return $query->where('ftr_ownership', 'like', '%Bankruptcy%')
-            ->orWhere('ftr_ownership', 'like', '%Foreclosure%')
-            ->orWhere('ftr_ownership', 'like', '%Short Sale%')
-            ->orWhere('ftr_ownership', 'like', '%REO%')
-            ->orWhere('ftr_ownership', 'like', '%Pre-foreclosure%')
-            ->orWhere('ftr_ownership', 'like', '%Assignment%')
-            ->orWhere('ftr_ownership', 'like', '%Auction%');
+        $oneYearAgo = \Carbon\Carbon::now()->copy()->subYearNoOverflow();
+        return $query->where(function ($q) {
+            return $q->where('ftr_ownership', 'like', '%Bankruptcy%')
+                ->orWhere('ftr_ownership', 'like', '%Foreclosure%')
+                ->orWhere('ftr_ownership', 'like', '%Short Sale%')
+                ->orWhere('ftr_ownership', 'like', '%REO%')
+                ->orWhere('ftr_ownership', 'like', '%Pre-foreclosure%')
+                ->orWhere('ftr_ownership', 'like', '%Assignment%')
+                ->orWhere('ftr_ownership', 'like', '%Auction%');
+            })
+            ->where('sold_date', '>=', $oneYearAgo)
+            ->orWhere('status', 'Active');
     }
 
     public function scopeContingentOrPending($query)
