@@ -89,7 +89,7 @@ class ListingTransformer extends TransformerAbstract
             'status'              => $listing->status,
             'stories'             => $listing->stories,
             'street_name'         => $listing->street_name,
-            'street_num'          => (int) $listing->street_num,
+            'street_num'          => $listing->street_num,
             'subdivision'         => $listing->subdivision,
             'sub_area'            => $listing->sub_area,
             'total_hc_sqft'       => $listing->tot_heat_sqft,

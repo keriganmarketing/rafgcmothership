@@ -33,8 +33,8 @@ class MapSearchTransformer extends TransformerAbstract
             'state'          => $listing->state,
             'status'         => $listing->status,
             'street_name'    => $listing->street_name,
-            'street_number'  => (int) $listing->street_num,
-            'unit_number'    => (int) $listing->unit_num
+            'street_number'  => $listing->street_num,
+            'unit_number'    => $listing->unit_num
         ];
     }
 }

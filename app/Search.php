@@ -460,7 +460,7 @@ class Search
                     ],
                     "type" => "Feature",
                     "properties" => [
-                        "title"  => (int) $listing->street_num . ' ' . $listing->street_name . ' ' . $listing->unit_num,
+                        "title"  => $listing->street_num . ' ' . $listing->street_name . ' ' . $listing->unit_num,
                         "mls"    => $listing->mls_acct,
                         "price"  => '$' . number_format($listing->list_price),
                         "status" => $listing->status
