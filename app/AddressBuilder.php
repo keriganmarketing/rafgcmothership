@@ -13,7 +13,7 @@ class AddressBuilder
                     $streetNumber = $listing->street_num ?? '';
                     $streetName   = $listing->street_name ?? 'No Street Name Provided';
                     // $unit         = isset($listing->unit_num) && $listing->unit_num != '' ? ' ' . (int) $listing->unit_num : '';
-                    $address      = (int) $streetNumber . ' ' . $streetName . ' ' . $listing->unit_num;
+                    $address      = $streetNumber . ' ' . $streetName . ' ' . $listing->unit_num;
 
                     $listing->update([
                         'full_address' => $address
@@ -34,7 +34,7 @@ class AddressBuilder
                 $streetNumber = $listing->street_num ?? '';
                 $streetName   = $listing->street_name ?? 'No Street Name Provided';
                 // $unit         = isset($listing->unit_num) && $listing->unit_num != '' ? ' ' . (int) $listing->unit_num : '';
-                $address      = (int) $streetNumber . ' ' . $streetName . ' ' . $listing->unit_num;
+                $address      = $streetNumber . ' ' . $streetName . ' ' . $listing->unit_num;
 
                 $listing->update([
                     'full_address' => $address
