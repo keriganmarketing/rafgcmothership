@@ -27,7 +27,7 @@ class MediaObject extends Model
 
     public static function uploadIfNotUploaded($path, $photo)
     {
-        if(MediaObject::remotePhotoExists($path)){
+        if(MediaObject::remotePhotoExists('https://navicaphotos.kerigan.com/' . $path)){
             return Storage::disk('s3')->put($path, $photo->getContent());
         }
         return false;
@@ -66,7 +66,7 @@ class MediaObject extends Model
                 'media_type'    => $photo->getContentType(),
                 'media_order'   => $photo->getObjectId(),
                 'mls_acct'      => $photo->getContentId(),
-                'url'           => $path,
+                'url'           => 'https://s3.amazonaws.com/navicaphotos.kerigan.com/images/' . $path,
                 'is_preferred'  => $photo->isPreferred(),
             ]);
         }

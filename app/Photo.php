@@ -94,7 +94,7 @@ class Photo extends RetsModel
         foreach($photos as $photo) {
             if (! $photo->isError()) {
 
-                $path = 'https://s3.amazonaws.com/navicaphotos.kerigan.com/images/' . $photo->getContentId() . '/' . $photo->getObjectId() . '.jpg';
+                $path = 'images/' . $photo->getContentId() . '/' . $photo->getObjectId() . '.jpg';
                 $uploaded = MediaObject::uploadIfNotUploaded($path, $photo);
                 if ($uploaded && $photo->getContentType() == 'image/jpeg') {
                     MediaObject::create([
@@ -103,7 +103,7 @@ class Photo extends RetsModel
                         'media_type'    => $photo->getContentType(),
                         'media_order'   => $photo->getObjectId(),
                         'mls_acct'      => $photo->getContentId(),
-                        'url'           => $path,
+                        'url'           => 'https://s3.amazonaws.com/navicaphotos.kerigan.com/images/' . $path,
                         'is_preferred'  => $photo->isPreferred(),
                     ]);
                     echo ($output ? '0' : null );
@@ -115,7 +115,7 @@ class Photo extends RetsModel
                     ],
                     [
                         'listing_id'    => $listing->id,
-                        'url'           => $path,
+                        'url'           => 'https://s3.amazonaws.com/navicaphotos.kerigan.com/images/' . $path,
                         'media_remarks' => $photo->getContentDescription(),
                         'is_preferred'  => $photo->isPreferred(),
                         'media_type'    => $photo->getContentType(),
