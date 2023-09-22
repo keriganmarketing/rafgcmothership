@@ -260,4 +260,25 @@ class Photo extends RetsModel
             echo ($output ? PHP_EOL : null);
         }
     }
+
+    public function rebuild()
+    {
+        $output = true;
+
+        echo ($output ? '-- Rebuilding All Photos ------------' . PHP_EOL : null);
+        $updateList = [];
+
+        Listing::chunk(10000, function($listings) use (&$updateList, &$output){
+            foreach ($listings as $listing) {
+                $updateList[] = $listing;
+            }
+            echo ($output ? '|' : null);
+        });
+
+        foreach ($updateList as $listing) {
+            echo ($output ? '-- ' . $listing->mls_acct . ' ---------' . PHP_EOL : null );
+            $this->listingPhotos($listing, $output);
+        }
+        echo ($output ? PHP_EOL : null);
+    }
 }
