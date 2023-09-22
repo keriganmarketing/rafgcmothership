@@ -94,7 +94,7 @@ class Photo extends RetsModel
         foreach($photos as $photo) {
             if (! $photo->isError()) {
 
-                $path = 'images/' . $photo->getContentId() . '/' . $photo->getObjectId() . '.jpg';
+                $path = 'https://s3.amazonaws.com/navicaphotos.kerigan.com/images/' . $photo->getContentId() . '/' . $photo->getObjectId() . '.jpg';
                 $uploaded = MediaObject::uploadIfNotUploaded($path, $photo);
                 if ($uploaded && $photo->getContentType() == 'image/jpeg') {
                     MediaObject::create([
