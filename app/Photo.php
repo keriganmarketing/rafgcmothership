@@ -268,9 +268,15 @@ class Photo extends RetsModel
         echo ($output ? '-- Rebuilding All Photos ------------' . PHP_EOL : null);
         $updateList = [];
 
-        Listing::chunk(10000, function($listings) use (&$updateList, &$output){
+        $photos = MediaObject::where('url', 'LIKE', 'images/%')->delete();
+        echo ($output ? '-- photos deleted ---------' . PHP_EOL : null );
+
+        Listing::chunk(1000, function($listings) use (&$updateList, &$output){
             foreach ($listings as $listing) {
-                $updateList[] = $listing;
+                $numPhotos = MediaObject::where('mls_acct', '=', $listing->mls_acct)->count();
+                if($listing->photo_count != $numPhotos){
+                    $updateList[] = $listing;
+                }
             }
             echo ($output ? '|' : null);
         });
