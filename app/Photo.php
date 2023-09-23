@@ -290,5 +290,6 @@ class Photo extends RetsModel
             $this->listingPhotos($listing, $output);
         }
         echo ($output ? PHP_EOL : null);
+        MediaObject::labelPreferredImages();
     }
 }
