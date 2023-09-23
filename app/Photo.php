@@ -103,7 +103,7 @@ class Photo extends RetsModel
                         'media_type'    => $photo->getContentType(),
                         'media_order'   => $photo->getObjectId(),
                         'mls_acct'      => $photo->getContentId(),
-                        'url'           => 'https://s3.amazonaws.com/navicaphotos.kerigan.com/images/' . $path,
+                        'url'           => 'https://s3.amazonaws.com/navicaphotos.kerigan.com/' . $path,
                         'is_preferred'  => $photo->isPreferred(),
                     ]);
                     echo ($output ? '0' : null );
@@ -115,7 +115,7 @@ class Photo extends RetsModel
                     ],
                     [
                         'listing_id'    => $listing->id,
-                        'url'           => 'https://s3.amazonaws.com/navicaphotos.kerigan.com/images/' . $path,
+                        'url'           => 'https://s3.amazonaws.com/navicaphotos.kerigan.com/' . $path,
                         'media_remarks' => $photo->getContentDescription(),
                         'is_preferred'  => $photo->isPreferred(),
                         'media_type'    => $photo->getContentType(),

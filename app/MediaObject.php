@@ -66,7 +66,7 @@ class MediaObject extends Model
                 'media_type'    => $photo->getContentType(),
                 'media_order'   => $photo->getObjectId(),
                 'mls_acct'      => $photo->getContentId(),
-                'url'           => 'https://s3.amazonaws.com/navicaphotos.kerigan.com/images/' . $path,
+                'url'           => 'https://s3.amazonaws.com/navicaphotos.kerigan.com/' . $path,
                 'is_preferred'  => $photo->isPreferred(),
             ]);
         }
