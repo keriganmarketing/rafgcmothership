@@ -271,6 +271,7 @@ class Photo extends RetsModel
         $photos = MediaObject::where('url', 'LIKE', 'images/%')->get();
         foreach($photos as $photo) {
             $photo->delete();
+            echo ($output ? '.' : null);
         }
         echo ($output ? '-- '. $photos->count() .' photos deleted ---------' . PHP_EOL : null );
 
