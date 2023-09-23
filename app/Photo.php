@@ -275,15 +275,14 @@ class Photo extends RetsModel
         }
         echo ($output ? '-- '. $photos->count() .' photos deleted ---------' . PHP_EOL : null );
 
-        Listing::chunk(1000, function($listings) use (&$updateList, &$output){
-            foreach ($listings as $listing) {
-                $numPhotos = MediaObject::where('mls_acct', '=', $listing->mls_acct)->count();
-                if($listing->photo_count != $numPhotos){
-                    $updateList[] = $listing;
-                }
+        $listings = Listing::where('mls_acct','!=','')->orderBy('date_modified','DESC')->get();
+        foreach ($listings as $listing) {
+            $numPhotos = MediaObject::where('mls_acct', '=', $listing->mls_acct)->count();
+            if($listing->photo_count != $numPhotos){
+                $updateList[] = $listing;
             }
-            echo ($output ? '|' : null);
-        });
+        }
+        echo ($output ? '-- '. count($updateList) .' listings need photos ---------' . PHP_EOL : null );
 
         foreach ($updateList as $listing) {
             echo ($output ? '-- ' . $listing->mls_acct . ' ---------' . PHP_EOL : null );
