@@ -229,21 +229,34 @@ class Photo extends RetsModel
     {
         echo ($output ? '-- Fixing Photos ------------' . PHP_EOL : null);
         $updateList = [];
-        Listing::chunk(10000, function($listings) use (&$updateList, &$output){
+        $dedupeList = [];
+        Listing::chunk(10000, function($listings) use (&$updateList, &$dedupeList, &$output){
             foreach ($listings as $listing) {
                 $numPhotos = MediaObject::where('mls_acct', '=', $listing->mls_acct)->count();
-                if($numPhotos != $listing->photo_count) {
+                if($numPhotos < round($listing->photo_count)) {
                     $updateList[] = $listing;
-                    echo ($output ? 'X' : null);
+                    echo ($output ? '<' : null);
+                }elseif($numPhotos > round($listing->photo_count)) {
+                    $dedupeList[] = $listing;
+                    $updateList[] = $listing;
+                    echo ($output ? '>' : null);
                 }else{
-                    echo ($output ? '|' : null);
+                    echo ($output ? '=' : null);
                 }
             }
         });
 
-        echo ($output ? PHP_EOL . count($updateList) . ' listings need updating.' . PHP_EOL : null);
+        echo ($output ? PHP_EOL . PHP_EOL . count($updateList) . ' listings are missing photos.' . PHP_EOL : null);
+        echo ($output ? count($dedupeList) . ' listings contain duplicate photos.' . PHP_EOL : null);
 
         if(!$dryrun){
+            foreach ($dedupeList as $listing) {
+                echo ($output ? '-- ' . $listing->mls_acct . ' ---------' . PHP_EOL : null );
+                echo $listing->mls_acct;
+                MediaObject::where('mls_acct', $listing->mls_acct)->delete();
+            }
+            echo ($output ? PHP_EOL : null);
+
             foreach ($updateList as $listing) {
                 echo ($output ? '-- ' . $listing->mls_acct . ' ---------' . PHP_EOL : null );
                 $this->listingPhotos($listing, $output);
