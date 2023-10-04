@@ -16,13 +16,10 @@ class MediaObject extends Model
 
     public static function remotePhotoExists($url)
     {
-        $photoHeaders = @get_headers($url);
-        if($photoHeaders[0] != 'HTTP/1.1 200 OK'){
+        if(@get_headers($url)[0] != 'HTTP/1.1 200 OK'){
             return true;
         }
-
         return false;
-
     }
 
     public static function uploadIfNotUploaded($path, $photo)
