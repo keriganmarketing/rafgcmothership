@@ -94,8 +94,11 @@ class Photo extends RetsModel
         foreach($photos as $photo) {
             if (! $photo->isError()) {
 
-                $path = 'images/' . $photo->getContentId() . '/' . $photo->getObjectId() . '.jpg';
-                $uploaded = MediaObject::uploadIfNotUploaded($path, $photo);
+                $path = env('AWS_URL') . '/images/' . $photo->getContentId() . '/' . $photo->getObjectId() . '.jpg';
+                $uploadPath = '/images/' . $photo->getContentId() . '/' . $photo->getObjectId() . '.jpg';
+
+                $uploaded = MediaObject::uploadIfNotUploaded($uploadPath, $photo);
+
                 if ($uploaded && $photo->getContentType() == 'image/jpeg') {
                     MediaObject::create([
                         'listing_id'    => $listing->id,
@@ -103,7 +106,7 @@ class Photo extends RetsModel
                         'media_type'    => $photo->getContentType(),
                         'media_order'   => $photo->getObjectId(),
                         'mls_acct'      => $photo->getContentId(),
-                        'url'           => 'https://s3.amazonaws.com/navicaphotos.kerigan.com/' . $path,
+                        'url'           => $path,
                         'is_preferred'  => $photo->isPreferred(),
                     ]);
                     echo ($output ? '0' : null );
@@ -115,7 +118,7 @@ class Photo extends RetsModel
                     ],
                     [
                         'listing_id'    => $listing->id,
-                        'url'           => 'https://s3.amazonaws.com/navicaphotos.kerigan.com/' . $path,
+                        'url'           => $path,
                         'media_remarks' => $photo->getContentDescription(),
                         'is_preferred'  => $photo->isPreferred(),
                         'media_type'    => $photo->getContentType(),
@@ -241,7 +244,7 @@ class Photo extends RetsModel
         Listing::chunk(10000, function($listings) use (&$updateList, &$output){
             foreach ($listings as $listing) {
                 $numPhotos = MediaObject::where('mls_acct', '=', $listing->mls_acct)->count();
-                if($numPhotos < $listing->photo_count) {
+                if($numPhotos != $listing->photo_count) {
                     $updateList[] = $listing;
                     echo ($output ? 'X' : null);
                 }else{

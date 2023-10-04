@@ -27,7 +27,7 @@ class MediaObject extends Model
 
     public static function uploadIfNotUploaded($path, $photo)
     {
-        if(MediaObject::remotePhotoExists('https://navicaphotos.kerigan.com/' . $path)){
+        if(MediaObject::remotePhotoExists($path)){
             return Storage::disk('s3')->put($path, $photo->getContent());
         }
         return false;
@@ -51,12 +51,13 @@ class MediaObject extends Model
 
     public static function savePhoto($listingIds, $photo, $forceReplace = false)
     {
-        $path = 'images/' . $photo->getContentId() . '/' . $photo->getObjectId() . '.jpg';
+        $path = env('AWS_URL') . '/images/' . $photo->getContentId() . '/' . $photo->getObjectId() . '.jpg';
+        $uploadPath = '/images/' . $photo->getContentId() . '/' . $photo->getObjectId() . '.jpg';
 
         if($forceReplace){
-            $uploaded = MediaObject::forceUpload($path, $photo);
+            $uploaded = MediaObject::forceUpload($uploadPath, $photo);
         } else {
-            $uploaded = MediaObject::uploadIfNotUploaded($path, $photo);
+            $uploaded = MediaObject::uploadIfNotUploaded($uploadPath, $photo);
         }
 
         if ($uploaded && $photo->getContentType() == 'image/jpeg') {
@@ -66,7 +67,7 @@ class MediaObject extends Model
                 'media_type'    => $photo->getContentType(),
                 'media_order'   => $photo->getObjectId(),
                 'mls_acct'      => $photo->getContentId(),
-                'url'           => 'https://s3.amazonaws.com/navicaphotos.kerigan.com/' . $path,
+                'url'           => $path,
                 'is_preferred'  => $photo->isPreferred(),
             ]);
         }
