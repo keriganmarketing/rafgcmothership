@@ -100,7 +100,11 @@ class Photo extends RetsModel
                 $uploaded = MediaObject::uploadIfNotUploaded($uploadPath, $photo);
 
                 if ($uploaded && $photo->getContentType() == 'image/jpeg') {
-                    MediaObject::create([
+                    MediaObject::updateOrCreate([
+                        'listing_id'    => $listing->id,
+                        'mls_acct'      => $photo->getContentId(),
+                        'media_order'   => $photo->getObjectId(),
+                    ],[
                         'listing_id'    => $listing->id,
                         'media_remarks' => $photo->getContentDescription(),
                         'media_type'    => $photo->getContentType(),
@@ -110,22 +114,6 @@ class Photo extends RetsModel
                         'is_preferred'  => $photo->isPreferred(),
                     ]);
                     echo ($output ? '0' : null );
-                }else{ //already uploaded but not in database
-                    MediaObject::updateOrCreate([
-                        'listing_id'    => $listing->id,
-                        'mls_acct'      => $photo->getContentId(),
-                        'media_order'   => $photo->getObjectId(),
-                    ],
-                    [
-                        'listing_id'    => $listing->id,
-                        'url'           => $path,
-                        'media_remarks' => $photo->getContentDescription(),
-                        'is_preferred'  => $photo->isPreferred(),
-                        'media_type'    => $photo->getContentType(),
-                        'media_order'   => $photo->getObjectId(),
-                        'mls_acct'      => $photo->getContentId(),
-                    ]);
-                    echo ($output ? '1' : null );
                 }
 
                 if($photo->isPreferred()){
