@@ -31,7 +31,7 @@ class CheckPhotoConsistency implements ShouldQueue
      */
     public function handle()
     {
-        (new Photo)->patchMissingPhotos();
+        (new Photo)->fixPhotos(true, false);
     }
 
     /**
