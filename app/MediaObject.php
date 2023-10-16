@@ -48,6 +48,7 @@ class MediaObject extends Model
 
     public static function savePhoto($listingIds, $photo, $forceReplace = false)
     {
+        $listing_id = array_search($photo->getContentID(), $listingIds);
         $path = env('AWS_URL') . '/images/' . $photo->getContentId() . '/' . $photo->getObjectId() . '.jpg';
         $uploadPath = '/images/' . $photo->getContentId() . '/' . $photo->getObjectId() . '.jpg';
 
@@ -58,8 +59,12 @@ class MediaObject extends Model
         }
 
         if ($uploaded && $photo->getContentType() == 'image/jpeg') {
-            MediaObject::create([
-                'listing_id'    => array_search($photo->getContentID(), $listingIds),
+            MediaObject::updateOrCreate([
+                'listing_id'    => $listing_id,
+                'mls_acct'      => $photo->getContentId(),
+                'media_order'   => $photo->getObjectId(),
+            ],[
+                'listing_id'    => $listing_id,
                 'media_remarks' => $photo->getContentDescription(),
                 'media_type'    => $photo->getContentType(),
                 'media_order'   => $photo->getObjectId(),
